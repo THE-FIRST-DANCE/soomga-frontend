@@ -1,14 +1,22 @@
-import { useState } from "react";
+import Router from './Router'
+import Layout from './components/Layout'
 
-import "./App.css";
-import Router from "./Router";
+import { reset } from 'styled-reset' // CSS 초기화
+import { createGlobalStyle } from 'styled-components' // CSS 초기화
+
+/* CSS 초기화 */
+const GlobalStyle = createGlobalStyle`
+  ${reset}
+  /* other styles */
+`
 
 function App() {
   return (
-    <>
+    <Layout>
+      <GlobalStyle />
       <Router />
-    </>
-  );
+    </Layout>
+  )
 }
 
-export default App;
+export default App
