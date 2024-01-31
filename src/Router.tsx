@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from 'pages/login'
+import { Routes, Route, Navigate } from 'react-router-dom'
 const Router = () => {
   return (
     <>
@@ -7,8 +8,8 @@ const Router = () => {
         <Route path="/main" element={<h1>메인</h1>} />
 
         {/* 2. 로그인 && 회원가입  */}
-        <Route path="/login" element={<h1>로그인</h1>} />
-        <Route path="/signup" element={<h1>회원 가입 </h1>} />
+        <Route path="/user/login" element={<LoginPage />} />
+        <Route path="/user/signup" element={<h1>회원 가입 </h1>} />
 
         {/* 3. 가이드 */}
         <Route path="/guides" element={<h1>가이드 리스트 </h1>} />
@@ -19,19 +20,13 @@ const Router = () => {
 
         {/* 5. 여행장소 추천 */}
         <Route path="/recommendations" element={<h1> 여행장소 추천 </h1>} />
-        <Route
-          path="/recommendations/region/:region_Id"
-          element={<h1> 지역 여행장소 추천 </h1>}
-        />
-        <Route
-          path="/recommendations/region/:region_Id/:detail_Id"
-          element={<h1> 여행 장소 상세 </h1>}
-        />
+        <Route path="/recommendations/region/:region_Id" element={<h1> 지역 여행장소 추천 </h1>} />
+        <Route path="/recommendations/region/:region_Id/:detail_Id" element={<h1> 여행 장소 상세 </h1>} />
 
         {/* 6. 여행 플래너 생성 */}
-        <Route path="/planner" element={<h1> 여행장 플레너 제작 </h1>} />
+        <Route path="/planner" element={<h1> 여행장 플랜 </h1>} />
 
-        {/* 7. 여행 플래너 생성 */}
+        {/* 7. 채팅 페이지 */}
         <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
 
         {/* 8. SOS 페이지 */}
@@ -49,7 +44,7 @@ const Router = () => {
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
     </>
-  );
-};
+  )
+}
 
-export default Router;
+export default Router
