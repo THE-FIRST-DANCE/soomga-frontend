@@ -16,7 +16,6 @@ export default PlanList
 
 const Container = styled.div`
   flex: 1;
-  background-color: azure;
 `
 
 const PlanItems = styled.div`

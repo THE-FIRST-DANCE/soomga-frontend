@@ -33,5 +33,4 @@ const LeftSection = styled.div`
 const RightSection = styled.div`
   flex: 2;
   height: 100vh;
-  background-color: aquamarine;
 `
