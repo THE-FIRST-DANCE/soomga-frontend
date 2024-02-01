@@ -11,7 +11,7 @@ const PlanPage = () => {
         <PlanList />
       </LeftSection>
       <RightSection>
-        <Map />
+        <Map width="100%" height="100%" />
       </RightSection>
     </Container>
   )
