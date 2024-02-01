@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import PlanPage from 'pages/PlanPage'
+import { Routes, Route, Navigate } from 'react-router-dom'
 const Router = () => {
   return (
     <>
@@ -19,17 +20,11 @@ const Router = () => {
 
         {/* 5. 여행장소 추천 */}
         <Route path="/recommendations" element={<h1> 여행장소 추천 </h1>} />
-        <Route
-          path="/recommendations/region/:region_Id"
-          element={<h1> 지역 여행장소 추천 </h1>}
-        />
-        <Route
-          path="/recommendations/region/:region_Id/:detail_Id"
-          element={<h1> 여행 장소 상세 </h1>}
-        />
+        <Route path="/recommendations/region/:region_Id" element={<h1> 지역 여행장소 추천 </h1>} />
+        <Route path="/recommendations/region/:region_Id/:detail_Id" element={<h1> 여행 장소 상세 </h1>} />
 
         {/* 6. 여행 플래너 생성 */}
-        <Route path="/planner" element={<h1> 여행장 플레너 제작 </h1>} />
+        <Route path="/planner" element={<PlanPage />} />
 
         {/* 7. 여행 플래너 생성 */}
         <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
@@ -49,7 +44,7 @@ const Router = () => {
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
     </>
-  );
-};
+  )
+}
 
-export default Router;
+export default Router
