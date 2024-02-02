@@ -1,8 +1,8 @@
 import Modal from 'components/shared/Modal'
-import Cancel from 'components/icon/Cancel'
+import Cancel from 'components/icons/Cancel'
 import styled from 'styled-components'
 import { TravelSvg } from './CreatePlan'
-import Arrow from 'components/icon/Arrow'
+import Arrow from 'components/icons/Arrow'
 import { provinces } from 'data/region'
 import useCreatePlan from 'hooks/useCreatePlan'
 
