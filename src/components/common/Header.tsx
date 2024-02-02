@@ -150,8 +150,9 @@ const HeaderLayout_div = styled.div`
   left: 50%;
   transform: translateX(-50%);
   background-color: transparent;
-  backdrop-filter: blur(3px) !important;
+  backdrop-filter: blur(5px) !important;
   border-radius: 10px;
+  z-index: 100;
 `
 
 /* 左 */
