@@ -1,5 +1,6 @@
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
+import LoginPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
 const Router = () => {
   return (
@@ -9,8 +10,8 @@ const Router = () => {
         <Route path="/main" element={<h1>메인</h1>} />
 
         {/* 2. 로그인 && 회원가입  */}
-        <Route path="/login" element={<h1>로그인</h1>} />
-        <Route path="/signup" element={<h1>회원 가입 </h1>} />
+        <Route path="/user/login" element={<LoginPage />} />
+        <Route path="/user/signup" element={<h1>회원 가입 </h1>} />
 
         {/* 3. 가이드 */}
         <Route path="/guides" element={<h1>가이드 리스트 </h1>} />
@@ -28,7 +29,7 @@ const Router = () => {
         <Route path="/planner" element={<PlanPage />} />
         <Route path="/planner/create" element={<PlanCreatePage />} />
 
-        {/* 7. 여행 플래너 생성 */}
+        {/* 7. 채팅 페이지 */}
         <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
 
         {/* 8. SOS 페이지 */}
