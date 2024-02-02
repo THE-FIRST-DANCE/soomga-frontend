@@ -1,5 +1,5 @@
-import Arrow from 'components/icon/Arrow'
-import Time from 'components/icon/Time'
+import Arrow from 'components/icons/Arrow'
+import Time from 'components/icons/Time'
 import styled from 'styled-components'
 
 const PlanItem = ({ ...props }: PlanItem) => {

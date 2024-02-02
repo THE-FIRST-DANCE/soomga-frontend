@@ -2,6 +2,7 @@ import Router from './Router'
 
 import { reset } from 'styled-reset' // CSS 초기화
 import { createGlobalStyle } from 'styled-components' // CSS 초기화
+import Layout from 'components/Layout'
 
 /* CSS 초기화 */
 const GlobalStyle = createGlobalStyle`
@@ -35,10 +36,10 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   return (
-    <>
+    <Layout>
       <GlobalStyle />
       <Router />
-    </>
+    </Layout>
   )
 }
 
