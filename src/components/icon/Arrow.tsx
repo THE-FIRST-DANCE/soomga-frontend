@@ -5,6 +5,7 @@ interface ArrowProps {
   $height?: string
   $color?: string
   $hoverColor?: string
+  $angle?: string
 }
 
 const Arrow = ({ ...props }: ArrowProps) => {
@@ -24,4 +25,5 @@ const ArrowStyle = styled.svg<ArrowProps>`
   &:hover {
     fill: ${(props) => props.$hoverColor};
   }
+  transform: rotate(${(props) => props.$angle});
 `
