@@ -10,7 +10,7 @@ const useClickOutsideToggle = () => {
   }
 
   // 토글 밖 클릭
-  const handleOutClick = (e: MouseEvent) => {
+  const handleOutClick = (e: MouseEvent & { target: Node | null }) => {
     /* 토글상태  &&  Ref가 유효한 요소를 가리키는지 체크 && 클릭을 토글 밖에서 한지 */
     if (isOpen && refForToggle.current && !refForToggle.current.contains(e.target)) {
       setIsOpen(false)
