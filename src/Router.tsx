@@ -1,3 +1,4 @@
+import PlanPage from 'pages/PlanPage'
 import LoginPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
 const Router = () => {
@@ -24,7 +25,7 @@ const Router = () => {
         <Route path="/recommendations/region/:region_Id/:detail_Id" element={<h1> 여행 장소 상세 </h1>} />
 
         {/* 6. 여행 플래너 생성 */}
-        <Route path="/planner" element={<h1> 여행장 플랜 </h1>} />
+        <Route path="/planner" element={<PlanPage />} />
 
         {/* 7. 채팅 페이지 */}
         <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
