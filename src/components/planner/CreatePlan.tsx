@@ -1,11 +1,16 @@
 import Button from 'components/shared/Button'
+
+import { useState } from 'react'
 import styled from 'styled-components'
+import CreatePlanModal from './CreatePlanModal'
 
 const CreatePlan = () => {
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+
   return (
     <Container>
       <PlanBox>
-        <TravelSvg></TravelSvg>
+        <TravelSvg />
         <CreateBox>
           <CreateBoxTitle>새로운 플래너</CreateBoxTitle>
           <Button
@@ -18,9 +23,11 @@ const CreatePlan = () => {
             $fontWeight="700"
             $borderRadius="1rem"
             $boxShadow="var(--bs-box-shadow)"
+            onClick={() => setModalOpen(true)}
           />
         </CreateBox>
       </PlanBox>
+      <CreatePlanModal isOpen={modalOpen} onRequestClose={() => setModalOpen(false)} />
     </Container>
   )
 }
@@ -53,9 +60,17 @@ const CreateBoxTitle = styled.div`
 `
 
 // Travel 아이콘 SVG
-const TravelSvg = () => {
+export const TravelSvg = ({ width, height }: { width?: string; height?: string }) => {
   return (
-    <TravelSvgStyle enableBackground="new 0 0 64 64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      style={{
+        width: width || '64px',
+        height: height || '64px',
+      }}
+      enableBackground="new 0 0 64 64"
+      viewBox="0 0 64 64"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <polyline fill="#E5E5E5" points="56,22 56,54.5 40,59.5 24,54.5 8,59.5 8,26.5 24,21.8 " />
       <polygon fill="#B7B7B7" points="24,21.8 24,54.5 40,59.5 40,21.9 " />
       <path
@@ -140,12 +155,6 @@ const TravelSvg = () => {
         strokeMiterlimit="10"
         strokeWidth="2"
       />
-    </TravelSvgStyle>
+    </svg>
   )
 }
-
-// Travel 아이콘 SVG 스타일
-const TravelSvgStyle = styled.svg`
-  width: 64px;
-  height: 64px;
-`
