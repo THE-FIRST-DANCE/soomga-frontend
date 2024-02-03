@@ -1,5 +1,6 @@
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
+import MainPage from 'pages/home'
 import LoginPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
 const Router = () => {
@@ -7,7 +8,7 @@ const Router = () => {
     <>
       <Routes>
         {/* 1. 메인  */}
-        <Route path="/main" element={<h1>메인</h1>} />
+        <Route path="/" element={<MainPage />} />
 
         {/* 2. 로그인 && 회원가입  */}
         <Route path="/user/login" element={<LoginPage />} />

@@ -44,7 +44,7 @@ const Header = () => {
     <HeaderLayout_div>
       {/* 1. 좌측 : 로고 */}
       <HeaderLeftWrapper_div>
-        <img src={logo} alt="Logo" />
+        <img src={logo} alt="HeaderLogo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
       </HeaderLeftWrapper_div>
 
       {/* 2. 중앙 : 버튼 Container*/}
@@ -60,35 +60,44 @@ const Header = () => {
       {/* 3. 우측 : 언어 | 버거 + 사용자 아이콘 */}
       <HeaderRightContainer_div>
         {/* 3.1 우측 : 언어 선택 버튼 */}
-        <HeaderIconContainer_div
-          flex={0.3}
-          ref={refForLangToggle}
-          onClick={(e) => {
-            e.preventDefault()
-            handleLangOnClick()
-          }}
-        >
-          {/* 3.1.1 지구본 아이콘 */}
-          <LanguageIcon height="40px" width="40px" />
-          {/* 3.1.2 우측 : 토글  [ KO | EN | JP ]*/}
-          <LanguageDropdown_ul id="languageDropdown">
-            {isLangOpen ? (
-              <>
-                <li onClick={handleLangClick} data-lang="KO">
-                  KO
-                </li>
-                <li onClick={handleLangClick} data-lang="EN">
-                  EN
-                </li>
-                <li onClick={handleLangClick} data-lang="JP">
-                  JP
-                </li>
-              </>
-            ) : (
-              nowLang
-            )}
-          </LanguageDropdown_ul>
-        </HeaderIconContainer_div>
+        <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}>
+          <HeaderIconContainer_div
+            flex={0.3}
+            ref={refForLangToggle}
+            onClick={(e) => {
+              e.preventDefault()
+              handleLangOnClick()
+            }}
+          >
+            {/* 3.1.1 지구본 아이콘 */}
+
+            <StyledLanguageIcon height="40px" width="40px" />
+
+            {/* 3.1.2 우측 : 토글  [ KO | EN | JP ]*/}
+            <LanguageDropdown_ul>
+              {isLangOpen ? (
+                /* //! 여기를 감싸야 한다 */
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  // transition={{ duration: 0.5 }}
+                >
+                  <li onClick={handleLangClick} data-lang="KO">
+                    KO
+                  </li>
+                  <li onClick={handleLangClick} data-lang="EN">
+                    EN
+                  </li>
+                  <li onClick={handleLangClick} data-lang="JP">
+                    JP
+                  </li>
+                </motion.div>
+              ) : (
+                nowLang
+              )}
+            </LanguageDropdown_ul>
+          </HeaderIconContainer_div>
+        </motion.div>
 
         {/* 3.2 우측 로그인 버튼 */}
         <HeaderIconContainer_div
@@ -106,7 +115,7 @@ const Header = () => {
               width: '100px',
               padding: '15px',
               borderRadius: '50px',
-              border: '3px solid black',
+              border: '3px solid lightgray',
               backgroundColor: 'white',
               display: 'flex',
               gap: '20px',
@@ -139,7 +148,7 @@ const Header = () => {
 
 /* ----------------------------- 💅 StyledComponent -----------------------------*/
 
-// 전체 Wrapper div
+// 전체 Layout div
 const HeaderLayout_div = styled.div`
   position: fixed;
   display: flex;
@@ -150,8 +159,9 @@ const HeaderLayout_div = styled.div`
   left: 50%;
   transform: translateX(-50%);
   background-color: transparent;
-  backdrop-filter: blur(3px) !important;
+  backdrop-filter: blur(5px) !important;
   border-radius: 10px;
+  z-index: 50;
 `
 
 /* 左 */
@@ -187,10 +197,15 @@ const HeaderMiddleBtn = styled.button<{ value?: string }>`
   padding: 0 20px;
   height: 100%;
   font-size: 25px;
-  font-family: 700;
+  font-weight: 700;
   background-color: transparent;
   border: none;
   cursor: pointer;
+  z-index: 100;
+
+  &:hover {
+    color: var(--color-original);
+  }
 `
 
 /* 右 */
@@ -211,13 +226,23 @@ const HeaderIconContainer_div = styled.div<IconWrapperProps>`
   align-items: center;
   margin-right: 30px;
 `
+const StyledLanguageIcon = styled(motion(LanguageIcon))`
+  :hover {
+  }
+`
 
 // 3.1.2 우측 : 토글 [ KO | EN | JP ]
 const LanguageDropdown_ul = styled.ul`
-  padding: 0 10px;
+  padding: 10px;
   box-sizing: border-box;
   width: 50px;
+  font-weight: 700;
   cursor: pointer;
+
+  li {
+    padding-bottom: 15px;
+    box-sizing: border-box;
+  }
 `
 
 // 3.2.2 우측 :토글 [ 회원가입 | 로그인 ]
@@ -230,6 +255,7 @@ const LoginDropdown_div = styled(motion.div)`
   border: 1px solid lightgray;
   border-radius: 20px;
   box-shadow: 1px 1px 16px 2px lightgray;
+  background-color: white;
 `
 
 // 3.2.2.1 우측 : 유저 버튼
@@ -237,6 +263,8 @@ const UseTab_btn = styled(HeaderMiddleBtn)`
   height: 50%;
   width: 100%;
   border-radius: 20px;
+  color: #403f3f;
+
   &:hover {
     background-color: #edeaea;
   }
