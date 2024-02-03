@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
   /* other styles */
   :root {
     --color-primary: #FFD766;
+    --color-original: rgba(220, 38, 38, 1);
     --bs-success: #198754;
     --bs-info: #0dcaf0;
     --bs-warning: #ffc107;
