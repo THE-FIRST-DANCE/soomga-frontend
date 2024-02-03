@@ -1,3 +1,4 @@
+import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
 import MainPage from 'pages/home'
 import LoginPage from 'pages/login'
@@ -27,6 +28,7 @@ const Router = () => {
 
         {/* 6. 여행 플래너 생성 */}
         <Route path="/planner" element={<PlanPage />} />
+        <Route path="/planner/create" element={<PlanCreatePage />} />
 
         {/* 7. 채팅 페이지 */}
         <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
