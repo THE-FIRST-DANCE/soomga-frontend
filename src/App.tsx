@@ -7,6 +7,15 @@ import Layout from 'components/Layout'
 /* CSS 초기화 */
 const GlobalStyle = createGlobalStyle`
   ${reset}
+
+
+  /* 임의 폰트 (구글) */
+  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');  
+  body {
+    font-family: 'Black Han Sans', sans-serif;
+    
+  }
+  
   /* other styles */
   :root {
     --color-primary: #FFD766;
