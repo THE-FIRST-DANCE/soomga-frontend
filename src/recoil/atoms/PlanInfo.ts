@@ -5,6 +5,8 @@ export interface PlanInfo {
   province: string
   startTime: string
   endTime: string
+  lat: number
+  lng: number
 }
 
 export const planInfo = atom<PlanInfo>({
@@ -14,5 +16,7 @@ export const planInfo = atom<PlanInfo>({
     province: '',
     startTime: '',
     endTime: '',
+    lat: 0,
+    lng: 0,
   },
 })

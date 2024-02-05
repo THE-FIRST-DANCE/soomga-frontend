@@ -12,7 +12,7 @@ interface ICreatePlanModal {
 }
 
 const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
-  const { province, setProvince, openProvince, setOpenProvince, onChange, createPlan } = useCreatePlan()
+  const { province, setProvince, openProvince, setOpenProvince, onChange, createPlan, setLat, setLng } = useCreatePlan()
 
   return (
     <Modal
@@ -78,6 +78,8 @@ const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
                         key={prov.id}
                         onClick={() => {
                           setProvince(prov.name)
+                          setLat(prov.lat)
+                          setLng(prov.lng)
                           setOpenProvince(false)
                         }}
                       >
