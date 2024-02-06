@@ -1,5 +1,5 @@
 import CreatePlan from 'components/planner/CreatePlan'
-import Map from 'components/planner/Map'
+import GoogleMapLoad from 'components/planner/GoogleMap'
 import PlanList from 'components/planner/PlanList'
 import styled from 'styled-components'
 
@@ -11,7 +11,7 @@ const PlanPage = () => {
         <PlanList />
       </LeftSection>
       <RightSection>
-        <Map width="100%" height="100%" />
+        <GoogleMapLoad mapContainerStyle={{ width: '100%', height: '100%' }} />
       </RightSection>
     </Container>
   )
