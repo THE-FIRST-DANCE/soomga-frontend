@@ -35,7 +35,7 @@ const RecommendedRegions = () => {
 
   return (
     // 1. Soomga의 추천지역 Layout
-    <RecommendedRegionsLayout>
+    <SRecommendedRegionsLayout>
       {/* 2. Soomga의 추천 지역 : Logo + letter */}
       <LogoAndLetterContainer>
         {/* 2.1 Logo : 그림 이미지 */}
@@ -57,7 +57,7 @@ const RecommendedRegions = () => {
           </Region>
         ))}
       </RegionsContainer>
-    </RecommendedRegionsLayout>
+    </SRecommendedRegionsLayout>
   )
 }
 export default RecommendedRegions
@@ -65,7 +65,7 @@ export default RecommendedRegions
 /* ----------------------------- 💅 StyledComponent -----------------------------*/
 
 /*  1. Soomga의 추천지역 Layout */
-const RecommendedRegionsLayout = styled.div`
+const SRecommendedRegionsLayout = styled.div`
   width: 100%;
   height: auto;
   /* background-color: orange; */
