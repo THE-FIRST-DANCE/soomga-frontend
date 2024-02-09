@@ -1,14 +1,23 @@
 import GoogleMapLoad from 'components/planner/GoogleMap'
-import Places from 'components/planner/PlaceTab'
+import Places from 'components/planner/place/PlaceTab'
 import PlanOrder from 'components/planner/PlanOrder'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { planInfo } from 'recoil/atoms/PlanInfo'
+import { PlanListRecoil } from 'recoil/atoms/PlanList'
 import styled from 'styled-components'
 
 const PlanCreatePage = () => {
   const [plan] = useRecoilState(planInfo)
+  const planList = useRecoilValue(PlanListRecoil)
+
+  const marker = planList.map((item) => {
+    return {
+      lat: item.item.latitude,
+      lng: item.item.longitude,
+    }
+  })
 
   const navigate = useNavigate()
 
@@ -38,7 +47,7 @@ const PlanCreatePage = () => {
     <Container>
       <LeftSection>
         <Places plan={plan} />
-        <PlanOrder />
+        <PlanOrder plan={plan} />
       </LeftSection>
       <RightSection>
         <GoogleMapLoad
@@ -47,6 +56,7 @@ const PlanCreatePage = () => {
             lat: plan.lat,
             lng: plan.lng,
           }}
+          marker={marker}
         />
       </RightSection>
     </Container>
