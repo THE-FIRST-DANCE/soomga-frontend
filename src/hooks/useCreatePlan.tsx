@@ -5,6 +5,8 @@ import { planInfo } from 'recoil/atoms/PlanInfo'
 
 const useCreatePlan = () => {
   const [province, setProvince] = useState<string>('시/도')
+  const [lat, setLat] = useState<number>(0)
+  const [lng, setLng] = useState<number>(0)
   const [openProvince, setOpenProvince] = useState<boolean>(false)
 
   const [planTitle, setPlanTitle] = useState<string>('')
@@ -37,6 +39,8 @@ const useCreatePlan = () => {
       province,
       startTime,
       endTime,
+      lat,
+      lng,
     })
 
     navigate('/planner/create')
@@ -47,14 +51,11 @@ const useCreatePlan = () => {
     setProvince,
     openProvince,
     setOpenProvince,
-    planTitle,
-    setPlanTitle,
-    startTime,
-    setStartTime,
-    endTime,
     setEndTime,
     onChange,
     createPlan,
+    setLat,
+    setLng,
   }
 }
 
