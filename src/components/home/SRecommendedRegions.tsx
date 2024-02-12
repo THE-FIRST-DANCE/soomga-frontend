@@ -122,7 +122,7 @@ const Region = styled.div`
   img {
     width: 100%;
     height: 100%;
-    transition: transform 0.3s;
+    transition: transform 0.8s;
   }
 
   /* 추천 지역 글자 : 지역 이름 */
@@ -139,7 +139,7 @@ const Region = styled.div`
     transform: translate(-50%, -50%);
     font-size: 20px;
     font-weight: 700;
-    background-color: #ffffff92;
-    /* background-color: #ffffff54; */
+    color: white;
+    background-image: linear-gradient(to top, #000000ae, #00000045);
   }
 `
