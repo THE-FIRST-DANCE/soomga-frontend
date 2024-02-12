@@ -113,6 +113,9 @@ const Region = styled.div`
   margin: 30px;
   border-radius: 20px;
   cursor: pointer;
+  box-shadow:
+    5px 19px 38px rgba(0, 0, 0, 0.3),
+    5px 15px 12px rgba(0, 0, 0, 0.22);
 
   &:hover img {
     transform: scale(1.2);
