@@ -10,7 +10,7 @@ interface GoogleMapProps {
     lat: number
     lng: number
   }
-  zoom?: number
+  zoom?: number | 12
   marker?: {
     lat: number
     lng: number
@@ -23,7 +23,7 @@ const GoogleMapLoad = ({
     lat: 37.5,
     lng: 127,
   },
-  zoom = 12,
+  zoom,
   marker = [],
 }: GoogleMapProps) => {
   const { isLoaded } = useJsApiLoader({
