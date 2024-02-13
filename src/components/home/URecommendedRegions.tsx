@@ -96,7 +96,7 @@ const URecommendedRegions = () => {
               <img src={logo} alt="logo" />
             </RightLogoWrapper>
             {/* 2.1.2 타이틀 */}
-            <span>내 취향에 맞는 여행지를 찾아봐!</span>
+            <span>내 취향에 맞는 여행지를 찾아봐!{tets}</span>
           </RightTitleContainer>
 
           {/* 2.2 추천 지역들 */}
@@ -184,7 +184,7 @@ const LeftLogoWrapper = styled.div`
 // 1.2 이미지 링크
 const LeftImgContainer = styled.div`
   width: 500px;
-  height: 900px;
+  height: 1200px;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -267,28 +267,23 @@ const RightLogoWrapper = styled.div`
 /* 2.2 추천 지역들  */
 const RightRegionsContainer = styled.div`
   width: 100%;
-  height: 900px;
+  height: 1200px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-
-  //! 화면 넓이가 1360px 이상일 때 적용되는 스타일
-  @media (min-width: 1360px) {
-    width: 100%;
-  }
 `
 
 // 2.2.1 추천지역 Wrapper : Img + Title + Info
 const RegionsWrapper = styled.div`
-  width: 300px;
+  width: 500px;
   height: 400px;
   margin: 0 30px;
   cursor: pointer;
 
   //! 화면 넓이가 1360px 이상일 때 적용되는 스타일
-  @media (min-width: 1360px) {
+  @media (min-width: 2270px) {
     width: 500px;
-    height: 400px;
+    height: 550px;
     margin: 0 80px;
   }
 
@@ -299,7 +294,7 @@ const RegionsWrapper = styled.div`
 // 2.2.1.1 추천지역 Img
 const RegionImg = styled.div`
   width: 100%;
-  height: 300px;
+  height: 400px;
   overflow: hidden;
   position: relative;
   border-radius: 20px;
