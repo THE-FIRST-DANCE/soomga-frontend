@@ -34,6 +34,11 @@ const useCreatePlan = () => {
   }
 
   const createPlan = () => {
+    if (!planTitle || !province || !startTime || !endTime || !lat || !lng) {
+      alert('모든 항목을 입력해주세요')
+      return
+    }
+
     setPlanInfo({
       title: planTitle,
       province,
