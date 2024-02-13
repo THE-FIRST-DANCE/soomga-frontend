@@ -1,3 +1,4 @@
+import CommentCarousel from 'components/home/CommentCarousel'
 import MainVideo from 'components/home/MainVideo'
 import RegionCarousel from 'components/home/RegionCarousel'
 import RecommendedRegions from 'components/home/SRecommendedRegions'
@@ -29,8 +30,11 @@ const MainPage = () => {
       {/* 4. sos페이지(갑자기 도움이 필요할 때) + 추천 지역(내 취향에 맞는 여행지를 찾아봐) */}
       <URecommendedRegions />
 
-      {/* 5. 좋아요 수에 의한 추천 지역 캐러셀*/}
+      {/* 5. 좋아요 수에 의한 추천 지역 캐러셀 */}
       <RegionCarousel />
+
+      {/* 6. 사용자 댓글 캐러셀 */}
+      <CommentCarousel />
     </>
   )
 }
