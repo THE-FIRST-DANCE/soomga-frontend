@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 
 const MainVideo = () => {
-  const [scrollPosition, setScrollPosition] = useState(0)
+  // const [scrollPosition, setScrollPosition] = useState(0)
 
-  const updateScroll = () => {
-    setScrollPosition(window.scrollY)
-  }
+  // const updateScroll = () => {
+  //   setScrollPosition(window.scrollY)
+  // }
 
-  useEffect(() => {
-    window.addEventListener('scroll', updateScroll)
-    console.log(window.scrollY)
-  }, [scrollPosition])
+  // useEffect(() => {
+  //   window.addEventListener('scroll', updateScroll)
+  //   console.log(window.scrollY)
+  // }, [scrollPosition])
 
   return (
     <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>

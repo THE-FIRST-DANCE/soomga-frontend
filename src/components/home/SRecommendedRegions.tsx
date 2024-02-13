@@ -35,7 +35,7 @@ const RecommendedRegions = () => {
 
   return (
     // 1. Soomga의 추천지역 Layout
-    <RecommendedRegionsLayout>
+    <SRecommendedRegionsLayout>
       {/* 2. Soomga의 추천 지역 : Logo + letter */}
       <LogoAndLetterContainer>
         {/* 2.1 Logo : 그림 이미지 */}
@@ -57,7 +57,7 @@ const RecommendedRegions = () => {
           </Region>
         ))}
       </RegionsContainer>
-    </RecommendedRegionsLayout>
+    </SRecommendedRegionsLayout>
   )
 }
 export default RecommendedRegions
@@ -65,7 +65,7 @@ export default RecommendedRegions
 /* ----------------------------- 💅 StyledComponent -----------------------------*/
 
 /*  1. Soomga의 추천지역 Layout */
-const RecommendedRegionsLayout = styled.div`
+const SRecommendedRegionsLayout = styled.div`
   width: 100%;
   height: auto;
   /* background-color: orange; */
@@ -113,6 +113,9 @@ const Region = styled.div`
   margin: 30px;
   border-radius: 20px;
   cursor: pointer;
+  box-shadow:
+    5px 19px 38px rgba(0, 0, 0, 0.3),
+    5px 15px 12px rgba(0, 0, 0, 0.22);
 
   &:hover img {
     transform: scale(1.2);
@@ -122,7 +125,7 @@ const Region = styled.div`
   img {
     width: 100%;
     height: 100%;
-    transition: transform 0.3s;
+    transition: transform 0.8s;
   }
 
   /* 추천 지역 글자 : 지역 이름 */
@@ -139,7 +142,7 @@ const Region = styled.div`
     transform: translate(-50%, -50%);
     font-size: 20px;
     font-weight: 700;
-    background-color: #ffffff92;
-    /* background-color: #ffffff54; */
+    color: white;
+    background-image: linear-gradient(to top, #000000ae, #00000045);
   }
 `
