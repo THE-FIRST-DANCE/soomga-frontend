@@ -1,4 +1,5 @@
 import Cancel from 'components/icons/Cancel'
+import { motion } from 'framer-motion'
 import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import { useSetRecoilState } from 'recoil'
@@ -43,7 +44,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
     )
 
   return (
-    <Container>
+    <Container initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 0.5 }} key={item.item.placeId}>
       <Order>{item.order}</Order>
       <Item>
         {timeMod ? (
@@ -88,7 +89,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
 
 export default PlanOrderItem
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   width: 100%;
   height: 3rem;
   display: flex;
