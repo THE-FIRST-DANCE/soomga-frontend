@@ -7,10 +7,13 @@ import { categories } from './PlaceSelect'
 import { useRecoilState } from 'recoil'
 import { PlanListRecoil } from 'recoil/atoms/PlanList'
 import useSubstring from 'hooks/useSubstring'
+import { useState } from 'react'
+import PlaceDetail from './PlaceDetail'
 
 const PlaceItem = ({ data }: { data: PlaceData }) => {
   const address = useSubstring(data.address, 20)
   const [placeList, setPlaceList] = useRecoilState(PlanListRecoil)
+  const [detailModal, setDetailModal] = useState<boolean>(false)
   const category = categories.find((category) => category.value === data.category)
   const currentItem = placeList.find((item) => item.item.placeId === data.placeId)
   const checked = currentItem ? currentItem.checked : false
@@ -37,7 +40,11 @@ const PlaceItem = ({ data }: { data: PlaceData }) => {
         <img src="https://cdn.pixabay.com/photo/2022/10/15/16/44/night-view-7523474_1280.jpg" alt="장소 이미지" />
       </Image>
 
-      <Info>
+      <Info
+        onClick={() => {
+          setDetailModal(true)
+        }}
+      >
         <Title>{data.name}</Title>
         <SubInfo>
           <Category>{category?.label}</Category>
@@ -64,6 +71,8 @@ const PlaceItem = ({ data }: { data: PlaceData }) => {
           <Plus style={{ width: '1rem', height: '1rem', fill: 'var(--bs-gray-500)' }} />
         )}
       </CheckContainer>
+
+      <PlaceDetail place={data} isOpen={detailModal} onRequestClose={() => setDetailModal(false)} />
     </Container>
   )
 }
