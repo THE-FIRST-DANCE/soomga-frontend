@@ -123,7 +123,8 @@ export default RegionCarousel
 const CarouselLayout = styled.div`
   display: flex;
   justify-content: center;
-  margin: 300px 0;
+  margin-top: 300px;
+  margin-bottom: 200px;
   /* background-color: #b725f6; */
 `
 
