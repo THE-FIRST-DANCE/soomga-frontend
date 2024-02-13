@@ -39,7 +39,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
   if (fold)
     return (
       <FoldOrder>
-        <Order fold={fold}>{item.order}</Order>
+        <Order $fold={fold}>{item.order}</Order>
       </FoldOrder>
     )
 
@@ -104,12 +104,12 @@ const FoldOrder = styled.div`
   margin-top: 1.5rem;
 `
 
-const Order = styled.div<{ fold?: boolean }>`
+const Order = styled.div<{ $fold?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ fold }) => (fold ? '2rem' : '1.5rem')};
-  height: ${({ fold }) => (fold ? '2rem' : '1.5rem')};
+  width: ${({ $fold }) => ($fold ? '2rem' : '1.5rem')};
+  height: ${({ $fold }) => ($fold ? '2rem' : '1.5rem')};
   box-sizing: border-box;
   border-radius: 50%;
   background-color: var(--bs-gray-600);
