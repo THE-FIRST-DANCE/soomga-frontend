@@ -22,7 +22,6 @@ const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
       style={{
         content: {
           maxWidth: '400px',
-          height: '60vh',
         },
       }}
     >
