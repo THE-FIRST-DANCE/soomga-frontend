@@ -48,4 +48,15 @@ export interface PlaceData {
   latitude: number
   longitude: number
   region: string
+  url?: string
+  phone?: string
+  detailAddress?: string
+  openingHours?: openingHours[]
+}
+
+interface openingHours {
+  dayOfWeek: number
+  openTime: string
+  closeTime: string
+  id: number
 }
