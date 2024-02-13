@@ -33,7 +33,7 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
     const data = {
       name: place.name,
       placeId: place.place_id,
-      rating: place.rating,
+      rating: place.rating ? place.rating : 0.0,
       address: place.vicinity,
       photo: place.icon,
       category,
@@ -53,7 +53,6 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
       style={{
         content: {
           maxWidth: '400px',
-          height: '300px',
         },
       }}
     >
@@ -75,7 +74,6 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
           <option value="cafe">카페</option>
           <option value="lodging">숙소</option>
         </PlaceCategory>
-
         <p
           style={{
             fontSize: '1rem',
@@ -84,7 +82,6 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
         >
           이 장소를 등록하시겠습니까?
         </p>
-
         <PlaceButton
           onClick={() => {
             handleAddPlace()

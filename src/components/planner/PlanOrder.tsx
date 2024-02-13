@@ -128,5 +128,5 @@ const FoldButton = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  z-index: 100;
+  z-index: 10;
 `

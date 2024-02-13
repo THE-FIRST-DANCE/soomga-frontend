@@ -19,6 +19,7 @@ const Modal = ({ children, ...props }: ReactModal.Props) => {
       transform: 'translate(-50%, -50%)',
       borderRadius: '10px',
       border: 'none',
+      height: 'fit-content',
       ...props.style?.content,
     },
   }
