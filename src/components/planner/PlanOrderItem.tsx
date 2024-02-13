@@ -1,4 +1,5 @@
 import Cancel from 'components/icons/Cancel'
+import { motion } from 'framer-motion'
 import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import { useSetRecoilState } from 'recoil'
@@ -38,12 +39,12 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
   if (fold)
     return (
       <FoldOrder>
-        <Order fold={fold}>{item.order}</Order>
+        <Order $fold={fold}>{item.order}</Order>
       </FoldOrder>
     )
 
   return (
-    <Container>
+    <Container initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 0.5 }} key={item.item.placeId}>
       <Order>{item.order}</Order>
       <Item>
         {timeMod ? (
@@ -88,7 +89,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
 
 export default PlanOrderItem
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   width: 100%;
   height: 3rem;
   display: flex;
@@ -103,12 +104,12 @@ const FoldOrder = styled.div`
   margin-top: 1.5rem;
 `
 
-const Order = styled.div<{ fold?: boolean }>`
+const Order = styled.div<{ $fold?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ fold }) => (fold ? '2rem' : '1.5rem')};
-  height: ${({ fold }) => (fold ? '2rem' : '1.5rem')};
+  width: ${({ $fold }) => ($fold ? '2rem' : '1.5rem')};
+  height: ${({ $fold }) => ($fold ? '2rem' : '1.5rem')};
   box-sizing: border-box;
   border-radius: 50%;
   background-color: var(--bs-gray-600);

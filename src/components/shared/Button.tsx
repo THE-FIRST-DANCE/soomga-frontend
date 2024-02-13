@@ -33,12 +33,12 @@ const ButtonStyle = styled.button<ButtonProps>`
   width: ${(props) => props.$width};
   height: ${(props) => props.$height};
   color: ${(props) => props.$fontColor};
-  background-color: ${(props) => props.color};
   border: ${(props) => (props.$hasBorder ? `1px solid ${props.$borderColor}` : 'none')};
   border-radius: ${(props) => props.$borderRadius};
   font-size: ${(props) => props.$fontSize};
   font-weight: ${(props) => props.$fontWeight};
   box-shadow: ${(props) => props.$boxShadow};
+  background-color: ${(props) => props.$color};
   &:hover {
     background-color: ${(props) => props.$hoverColor};
     color: ${(props) => props.$hoverFontColor};

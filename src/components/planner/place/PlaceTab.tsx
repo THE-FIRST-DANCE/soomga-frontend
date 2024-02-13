@@ -58,6 +58,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #f5f5f5;
+  position: relative;
 `
 
 const Title = styled.div`
