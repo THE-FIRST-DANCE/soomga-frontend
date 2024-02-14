@@ -1,3 +1,4 @@
+import ChatButton from 'components/home/ChatButton'
 import CommentCarousel from 'components/home/CommentCarousel'
 import MainVideo from 'components/home/MainVideo'
 import RegionCarousel from 'components/home/RegionCarousel'
@@ -35,6 +36,9 @@ const MainPage = () => {
 
       {/* 6. 사용자 댓글 캐러셀 */}
       <CommentCarousel />
+
+      {/* 7. 대화 버튼 */}
+      <ChatButton />
     </>
   )
 }
