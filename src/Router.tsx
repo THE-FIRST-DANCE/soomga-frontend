@@ -11,8 +11,9 @@ const Router = () => {
         <Route path="/" element={<MainPage />} />
 
         {/* 2. 로그인 && 회원가입  */}
-        <Route path="/user/login" element={<LoginPage />} />
-        <Route path="/user/signup" element={<h1>회원 가입 </h1>} />
+        <Route path="/user/:id" element={<LoginPage />} />
+        {/* <Route path="/user/login" element={<LoginPage />} />
+        <Route path="/user/signup" element={<h1>회원 가입 </h1>} /> */}
 
         {/* 3. 가이드 */}
         <Route path="/guides" element={<h1>가이드 리스트 </h1>} />
