@@ -136,8 +136,20 @@ const Header = () => {
               }}
             >
               {/* 3.2.2.1  우측 : 유저 버튼  */}
-              <UseTab_btn>회원가입</UseTab_btn>
-              <UseTab_btn>로그인</UseTab_btn>
+              <UseTab_btn
+                onClick={() => {
+                  navigate('/user/signup')
+                }}
+              >
+                회원가입
+              </UseTab_btn>
+              <UseTab_btn
+                onClick={() => {
+                  navigate('/user/login')
+                }}
+              >
+                로그인
+              </UseTab_btn>
             </LoginDropdown_div>
           ) : null}
         </HeaderIconContainer_div>
