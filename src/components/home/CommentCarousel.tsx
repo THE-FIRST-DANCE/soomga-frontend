@@ -102,7 +102,7 @@ const CommentCarousel = () => {
 }
 
 export default CommentCarousel
-
+/* ----------------------------- 💅 StyledComponent -----------------------------*/
 const CarouselLayout = styled.div`
   display: flex;
   justify-content: center;

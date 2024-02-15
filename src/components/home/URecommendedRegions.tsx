@@ -169,7 +169,7 @@ const LeftTitleContainer = styled.div`
   align-items: center;
 `
 
-// 1.1.1 로고
+// 1.1.1 로고 이미지
 const LeftLogoWrapper = styled.div`
   width: 60px;
   height: 60px;

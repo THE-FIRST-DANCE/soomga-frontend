@@ -119,7 +119,7 @@ const RegionCarousel = () => {
 }
 
 export default RegionCarousel
-
+/* ----------------------------- 💅 StyledComponent -----------------------------*/
 const CarouselLayout = styled.div`
   display: flex;
   justify-content: center;
