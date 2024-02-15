@@ -28,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
     --bs-white: #fff;
     --bs-gray: #6c757d;
     --bs-gray-dark: #343a40;
+    --bs-gray-original: #C1CCD3;
     --bs-gray-100: #f8f9fa;
     --bs-gray-200: #e9ecef;
     --bs-gray-300: #dee2e6;
