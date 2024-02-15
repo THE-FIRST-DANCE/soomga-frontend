@@ -76,7 +76,7 @@ const RegionCarousel = () => {
           loop={true}
           speed={400}
           mousewheel={true}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
           // navigation={true} // 좌우 버튼
           // pagination={{ clickable: true }}
           onSwiper={(swiper) => console.log(swiper)}
