@@ -96,7 +96,7 @@ const URecommendedRegions = () => {
               <img src={logo} alt="logo" />
             </RightLogoWrapper>
             {/* 2.1.2 타이틀 */}
-            <span>내 취향에 맞는 여행지를 찾아봐!{tets}</span>
+            <span>내 취향에 맞는 여행지를 찾아봐!</span>
           </RightTitleContainer>
 
           {/* 2.2 추천 지역들 */}
