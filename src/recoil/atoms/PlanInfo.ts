@@ -9,7 +9,7 @@ export interface PlanInfo {
   lng: number
 }
 
-export const planInfo = atom<PlanInfo>({
+export const PlanInfo = atom<PlanInfo>({
   key: 'planInfo',
   default: {
     title: '',
