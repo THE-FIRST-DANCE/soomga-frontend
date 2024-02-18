@@ -129,7 +129,7 @@ interface IconProps {
   style: CSSProp
 }
 
-const SubwayIcon = ({ ...props }: IconProps) => {
+export const SubwayIcon = ({ ...props }: IconProps) => {
   return (
     <IconStyle {...props} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g>
@@ -140,7 +140,7 @@ const SubwayIcon = ({ ...props }: IconProps) => {
   )
 }
 
-const CarIcon = ({ ...props }: IconProps) => {
+export const CarIcon = ({ ...props }: IconProps) => {
   return (
     <IconStyle {...props} fill="none" viewBox="0 0 184 134" xmlns="http://www.w3.org/2000/svg">
       <path
