@@ -86,7 +86,7 @@ const PlaceSelect = ({ region }: { region: string }) => {
       {isLoading ? (
         <Spinner type="ClipLoader" loading={isLoading} />
       ) : places.length > 0 ? (
-        filteredPlaces.map((item) => <PlaceItem key={item.placeId} data={item} />)
+        filteredPlaces.map((item) => <PlaceItem key={item.id} data={item} />)
       ) : (
         <div
           style={{
