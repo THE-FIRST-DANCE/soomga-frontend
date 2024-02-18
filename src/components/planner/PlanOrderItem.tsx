@@ -19,7 +19,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
 
   if (!item) return null
 
-  const address = useSubstring(item.item.address, 20)
+  const address = useSubstring(item.item.address, 15)
   const name = useSubstring(item.item.name, 10)
 
   const deleteItem = () => {
