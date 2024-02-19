@@ -1,7 +1,7 @@
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
 import MainPage from 'pages/home'
-import LoginPage from 'pages/login'
+import LoginSignupPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
 const Router = () => {
   return (
@@ -11,7 +11,7 @@ const Router = () => {
         <Route path="/" element={<MainPage />} />
 
         {/* 2. 로그인 && 회원가입  */}
-        <Route path="/user/:id" element={<LoginPage />} />
+        <Route path="/user/:id" element={<LoginSignupPage />} />
         {/* <Route path="/user/login" element={<LoginPage />} />
         <Route path="/user/signup" element={<h1>회원 가입 </h1>} /> */}
 
