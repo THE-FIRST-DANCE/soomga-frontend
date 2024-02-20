@@ -1,7 +1,8 @@
+import GuidePage from 'components/guide/leftSection/GuidePage'
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
 import MainPage from 'pages/home'
-import LoginPage from 'pages/login'
+// import LoginPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
 const Router = () => {
   return (
@@ -11,11 +12,11 @@ const Router = () => {
         <Route path="/" element={<MainPage />} />
 
         {/* 2. 로그인 && 회원가입  */}
-        <Route path="/user/login" element={<LoginPage />} />
-        <Route path="/user/signup" element={<h1>회원 가입 </h1>} />
+        {/* <Route path="/user/login" element={<LoginPage />} />
+        <Route path="/user/signup" element={<h1>회원 가입 </h1>} /> */}
 
         {/* 3. 가이드 */}
-        <Route path="/guides" element={<h1>가이드 리스트 </h1>} />
+        <Route path="/guides" element={<GuidePage />} />
         <Route path="/guides/detail/:id" element={<h1>가이드 리스트 </h1>} />
 
         {/* 4. 여행일정 */}
