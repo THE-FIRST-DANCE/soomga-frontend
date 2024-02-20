@@ -10,8 +10,7 @@ const useCreatePlan = () => {
   const [openProvince, setOpenProvince] = useState<boolean>(false)
 
   const [planTitle, setPlanTitle] = useState<string>('')
-  const [startTime, setStartTime] = useState<string>('')
-  const [endTime, setEndTime] = useState<string>('')
+  const [period, setPeriod] = useState<number>(1)
 
   const setPlanInfo = useSetRecoilState(PlanInfo)
 
@@ -24,17 +23,13 @@ const useCreatePlan = () => {
       setPlanTitle(value)
     }
 
-    if (name === 'startTime') {
-      setStartTime(value)
-    }
-
-    if (name === 'endTime') {
-      setEndTime(value)
+    if (name === 'period') {
+      setPeriod(Number(value))
     }
   }
 
   const createPlan = () => {
-    if (!planTitle || !province || !startTime || !endTime || !lat || !lng) {
+    if (!planTitle || !province || !period || !lat || !lng) {
       alert('모든 항목을 입력해주세요')
       return
     }
@@ -42,8 +37,7 @@ const useCreatePlan = () => {
     setPlanInfo({
       title: planTitle,
       province,
-      startTime,
-      endTime,
+      period,
       lat,
       lng,
     })
@@ -56,7 +50,7 @@ const useCreatePlan = () => {
     setProvince,
     openProvince,
     setOpenProvince,
-    setEndTime,
+    setPeriod,
     onChange,
     createPlan,
     setLat,
