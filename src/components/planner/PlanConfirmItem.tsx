@@ -27,16 +27,6 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
 
         <Duration>
           <CarIcon style={{ width: '24px', height: '24px' }} />
-          {data.nextTime && (
-            <TimeBox
-              onClick={() => {
-                onClick()
-              }}
-            >
-              {data.nextTime}
-              <Arrow $width="1rem" $height="1rem" />
-            </TimeBox>
-          )}
         </Duration>
 
         {data.nextTime && (
@@ -49,6 +39,16 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
         <Name>{data.item.name}</Name>
         <Category>{category?.label}</Category>
         <Time>{data.time}</Time>
+        {data.nextTime && (
+          <TimeBox
+            onClick={() => {
+              onClick()
+            }}
+          >
+            {data.nextTime}
+            <Arrow $width="1rem" $height="1rem" />
+          </TimeBox>
+        )}
       </Info>
       <Image>
         <img src={data.item.photo} alt={data.item.name} />
@@ -108,12 +108,12 @@ const Duration = styled.div`
 
 const TimeBox = styled.div`
   display: flex;
-  position: absolute;
   align-items: center;
-  bottom: 3vh;
-  width: 5rem;
-  right: -4vw;
+  margin-top: 1rem;
   cursor: pointer;
+  position: absolute;
+  bottom: 0.2rem;
+  left: -1rem;
 `
 
 const Info = styled.div`
@@ -121,6 +121,7 @@ const Info = styled.div`
   height: 100%;
   flex-direction: column;
   flex: 1;
+  position: relative;
 `
 
 const Name = styled.div`
