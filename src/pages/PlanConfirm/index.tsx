@@ -1,37 +1,91 @@
 import { getPlaceRoute } from 'api/PlanAPI'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import PlanConfirmItem from 'components/planner/PlanConfirmItem'
-import { PlanConfirmItemData } from 'interfaces/plan'
+import PlanLeftTab from 'components/planner/PlanLeftTab'
+import { PlanConfirmItemResponse } from 'interfaces/plan'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { PlanInfo } from 'recoil/atoms/PlanInfo'
+import { CurrentPeriod, PlanInfo } from 'recoil/atoms/PlanInfo'
 import { PlanListConfirm } from 'recoil/atoms/PlanList'
 import styled from 'styled-components'
 
 const PlanConfirm = () => {
-  const [planList, setPlanList] = useState<PlanConfirmItemData[]>([])
+  const [planConfirmList, setPlanConfirmList] = useState<PlanConfirmItemResponse>({})
+  const currentPeriod = useRecoilValue(CurrentPeriod)
 
   const planInfo = useRecoilValue(PlanInfo)
-  const plan = useRecoilValue(PlanListConfirm)
+  const planListConfirm = useRecoilValue(PlanListConfirm)
+
+  const planList = planConfirmList[currentPeriod] || []
+
+  const navigate = useNavigate()
 
   const onClick = async () => {
-    const data = await getPlaceRoute(plan.planList)
-    setPlanList(data)
+    try {
+      const data = await getPlaceRoute({
+        list: planListConfirm.planList,
+        transport: planListConfirm.transport,
+      })
+
+      setPlanConfirmList(data)
+    } catch (error) {
+      console.error(error)
+    }
   }
+
+  const onNext = () => {
+    console.log('다음')
+  }
+
+  const onPrev = () => {
+    navigate('/planner/create')
+  }
+
+  const svgToDataUrl = (svg: string) => {
+    const encoded = encodeURIComponent(svg).replace(/'/g, '%27').replace(/"/g, '%22')
+    const header = 'data:image/svg+xml,'
+    return header + encoded
+  }
+
+  const markers =
+    planList &&
+    planList.map((item, index) => {
+      const svgMarkup = `
+      <svg width="20" height="40" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#FFD766" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/>
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="300" fill="#000">${index + 1}</text>
+      </svg>
+      `
+      const svgIconUrl = svgToDataUrl(svgMarkup)
+
+      return {
+        position: {
+          lat: item.item.latitude,
+          lng: item.item.longitude,
+        },
+        icon: svgIconUrl,
+      }
+    })
 
   return (
     <Container>
       <LeftSection>
-        <Header>
-          <Title>{planInfo.title}</Title>
-          <Region>{planInfo.province}</Region>
-        </Header>
+        <PlanLeftTab onNext={onNext} onPrev={onPrev} />
+        <LeftItem>
+          <Header>
+            <Title>{planInfo.title}</Title>
+            <Region>{planInfo.province}</Region>
+          </Header>
 
-        {planList.length > 0 ? (
-          planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)
-        ) : (
-          <button onClick={onClick}>경로 확인</button>
-        )}
+          <PlanListDiv>
+            {planList.length > 0 ? (
+              planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)
+            ) : (
+              <button onClick={onClick}>경로 확인</button>
+            )}
+          </PlanListDiv>
+        </LeftItem>
       </LeftSection>
       <RightSection>
         <GoogleMapLoad
@@ -40,6 +94,7 @@ const PlanConfirm = () => {
             lat: planInfo.lat,
             lng: planInfo.lng,
           }}
+          customMarker={markers}
         />
       </RightSection>
     </Container>
@@ -54,7 +109,6 @@ const Container = styled.div`
 
 const LeftSection = styled.div`
   display: flex;
-  flex-direction: column;
   flex: 1;
   height: 100vh;
 `
@@ -62,6 +116,11 @@ const LeftSection = styled.div`
 const RightSection = styled.div`
   flex: 2;
   height: 100vh;
+`
+
+const LeftItem = styled.div`
+  display: flex;
+  flex-direction: column;
 `
 
 const Header = styled.div`
@@ -83,4 +142,13 @@ const Region = styled.div`
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 20px;
+`
+
+const PlanListDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-y: auto;
 `
