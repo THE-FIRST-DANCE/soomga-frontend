@@ -2,8 +2,9 @@ import Cancel from 'components/icons/Cancel'
 import { motion } from 'framer-motion'
 import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
-import { useSetRecoilState } from 'recoil'
-import { PlanListRecoil } from 'recoil/atoms/PlanList'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { CurrentPeriod } from 'recoil/atoms/PlanInfo'
+import { PeriodPlanRecoil, PlanListRecoil } from 'recoil/atoms/PlanList'
 import styled from 'styled-components'
 
 interface PlanOrderItemProps {
@@ -12,7 +13,9 @@ interface PlanOrderItemProps {
 }
 
 const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
-  const setPlanList = useSetRecoilState(PlanListRecoil)
+  const [periodPlan, setPlanList] = useRecoilState(PeriodPlanRecoil)
+  const currentPeriod = useRecoilValue(CurrentPeriod)
+
   const [timeMod, setTimeMod] = useState<boolean>(false)
   const [hour, setHour] = useState<number>(1)
   const [minute, setMinute] = useState<number>(0)
@@ -20,20 +23,40 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
   if (!item) return null
 
   const address = useSubstring(item.item.address, 15)
-  const name = useSubstring(item.item.name, 10)
+  const name = useSubstring(item.item.name, 5)
+
+  const currentPlan = periodPlan[currentPeriod] || []
 
   const deleteItem = () => {
-    setPlanList((prev) => prev.filter((prevItem) => prevItem.item.placeId !== item.item.placeId))
-    setPlanList((prev) => prev.map((prevItem, index) => ({ ...prevItem, order: index + 1 })))
+    const newPlan = currentPlan.filter((plan) => plan.item.placeId !== item.item.placeId)
+    const newPlanOrder = newPlan.map((plan, index) => {
+      return {
+        ...plan,
+        order: index + 1,
+      }
+    })
+    setPlanList({
+      ...periodPlan,
+      [currentPeriod]: newPlanOrder,
+    })
   }
 
   const changeTime = () => {
     setTimeMod(false)
-    setPlanList((prev) =>
-      prev.map((prevItem) =>
-        prevItem.item.placeId === item.item.placeId ? { ...prevItem, time: `${hour}시간 ${minute}분` } : prevItem,
-      ),
-    )
+    const newPlan = currentPlan.map((plan) => {
+      if (plan.item.placeId === item.item.placeId) {
+        return {
+          ...plan,
+          time: `${hour}시간 ${minute}분`,
+        }
+      }
+      return plan
+    })
+
+    setPlanList({
+      ...periodPlan,
+      [currentPeriod]: newPlan,
+    })
   }
 
   if (fold)
