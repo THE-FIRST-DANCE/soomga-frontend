@@ -4,34 +4,57 @@ import Check from 'components/icons/Check'
 import styled from 'styled-components'
 import { PlaceData } from 'interfaces/plan'
 import { categories } from './PlaceSelect'
-import { useRecoilState } from 'recoil'
-import { PlanListRecoil } from 'recoil/atoms/PlanList'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { PeriodPlanRecoil } from 'recoil/atoms/PlanList'
 import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import PlaceDetail from './PlaceDetail'
+import { CurrentPeriod } from 'recoil/atoms/PlanInfo'
 
 const PlaceItem = ({ data }: { data: PlaceData }) => {
   const address = useSubstring(data.address, 20)
-  const [placeList, setPlaceList] = useRecoilState(PlanListRecoil)
+  const currentPeriod = useRecoilValue(CurrentPeriod)
+  const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil)
   const [detailModal, setDetailModal] = useState<boolean>(false)
+
   const category = categories.find((category) => category.value === data.category)
-  const currentItem = placeList.find((item) => item.item.placeId === data.placeId)
-  const checked = currentItem ? currentItem.checked : false
+  const currentPlan = planPeriod[currentPeriod] || []
+  const checked = currentPlan.some((item) => item.item.placeId === data.placeId)
 
   const handleAddList = () => {
-    if (checked) {
-      setPlaceList((prev) => prev.filter((item) => item.item.placeId !== data.placeId))
-    } else {
-      setPlaceList((prev) => [
-        ...prev,
-        {
-          item: data,
-          order: prev.length + 1,
-          time: '1시간 0분',
-          checked: true,
-        },
-      ])
-    }
+    setPlanPeriod((prev) => {
+      const currentPlan = [...(prev[currentPeriod] || [])]
+
+      if (checked) {
+        // 아이템 삭제 로직
+        const newPlan = currentPlan.filter((item) => item.item.placeId !== data.placeId)
+        const newPlanOrder = newPlan.map((item, index) => {
+          return {
+            ...item,
+            order: index + 1,
+          }
+        })
+        return {
+          ...prev,
+          [currentPeriod]: newPlanOrder,
+        }
+      } else {
+        // 아이템 추가 로직
+        const newPlan = [
+          ...currentPlan,
+          {
+            item: data,
+            order: currentPlan.length + 1,
+            time: '1시간 0분',
+            checked: true,
+          },
+        ]
+        return {
+          ...prev,
+          [currentPeriod]: newPlan,
+        }
+      }
+    })
   }
 
   return (
