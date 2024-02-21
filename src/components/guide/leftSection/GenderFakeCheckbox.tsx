@@ -1,6 +1,6 @@
 import { styled } from 'styled-components'
 
-interface FakeCheckboxProps {
+interface GenderFakeCheckboxProps {
   onClick?: (name: string) => void // onClick prop 추가
 
   isAllChecked?: boolean
@@ -9,9 +9,15 @@ interface FakeCheckboxProps {
   name?: string // 프롭스로 안넘기는 경우도 잇어서 ? 를 쓰기 때문에 있는지 없는지 if문으로 확인해줘야한다.
 }
 
-const FakeCheckbox: React.FC<FakeCheckboxProps> = ({ name, onClick, isAllChecked, isManChecked, isWomanChecked }) => {
+const GenderFakeCheckbox: React.FC<GenderFakeCheckboxProps> = ({
+  name,
+  onClick,
+  isAllChecked,
+  isManChecked,
+  isWomanChecked,
+}) => {
   return (
-    <FakeCheckboxStyle
+    <GenderFakeCheckboxStyle
       // 가상 checkbox 프레임
       onClick={() => {
         {
@@ -27,28 +33,31 @@ const FakeCheckbox: React.FC<FakeCheckboxProps> = ({ name, onClick, isAllChecked
       <CheckStyle isAllChecked={isAllChecked} isManChecked={isManChecked} isWomanChecked={isWomanChecked}>
         ✓
       </CheckStyle>
-    </FakeCheckboxStyle>
+    </GenderFakeCheckboxStyle>
   )
 }
-export default FakeCheckbox
+export default GenderFakeCheckbox
 
 // 가상 checkbox 프레임
-const FakeCheckboxStyle = styled.div`
+const GenderFakeCheckboxStyle = styled.div`
   display: inline-block;
   width: 15px;
   height: 15px;
-  border: 6px solid var(--color-original);
+  border: 3px solid black;
+  border-radius: 5px;
   position: relative;
 `
 
 // 체크 표시
-const CheckStyle = styled.div<FakeCheckboxProps>`
+const CheckStyle = styled.div<GenderFakeCheckboxProps>`
   display: ${(props) => (props.isAllChecked || props.isManChecked || props.isWomanChecked ? 'block' : 'none')};
   position: absolute;
-  font-size: 25px;
+  font-size: 35px;
+  /* font-weight: 700; */
   width: 30px;
   height: 30px;
+  color: var(--color-original);
   text-align: center;
-  left: -6px;
-  top: -2px;
+  left: -8px;
+  top: -8px;
 `
