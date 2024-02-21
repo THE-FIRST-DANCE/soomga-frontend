@@ -2,8 +2,11 @@ import { getPlaceRoute } from 'api/PlanAPI'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import PlanConfirmItem from 'components/planner/PlanConfirmItem'
 import PlanLeftTab from 'components/planner/PlanLeftTab'
+import FullLoading from 'components/shared/FullLoading'
+import { motion } from 'framer-motion'
 import { PlanConfirmItemResponse } from 'interfaces/plan'
 import { useState } from 'react'
+import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import { CurrentPeriod, PlanInfo } from 'recoil/atoms/PlanInfo'
@@ -21,18 +24,20 @@ const PlanConfirm = () => {
 
   const navigate = useNavigate()
 
-  const onClick = async () => {
-    try {
-      const data = await getPlaceRoute({
+  const { isFetching } = useQuery(
+    'getPlaceRoute',
+    () =>
+      getPlaceRoute({
         list: planListConfirm.planList,
         transport: planListConfirm.transport,
-      })
-
-      setPlanConfirmList(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+      }),
+    {
+      refetchOnWindowFocus: false,
+      onSuccess(data) {
+        setPlanConfirmList(data)
+      },
+    },
+  )
 
   const onNext = () => {
     console.log('다음')
@@ -70,23 +75,24 @@ const PlanConfirm = () => {
 
   return (
     <Container>
-      <LeftSection>
-        <PlanLeftTab onNext={onNext} onPrev={onPrev} />
-        <LeftItem>
-          <Header>
-            <Title>{planInfo.title}</Title>
-            <Region>{planInfo.province}</Region>
-          </Header>
+      {isFetching ? (
+        <FullLoading isLoading={isFetching} />
+      ) : (
+        <LeftSection initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 1 }}>
+          <PlanLeftTab onNext={onNext} onPrev={onPrev} />
+          <LeftItem>
+            <Header>
+              <Title>{planInfo.title}</Title>
+              <Region>{planInfo.province}</Region>
+            </Header>
 
-          <PlanListDiv>
-            {planList.length > 0 ? (
-              planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)
-            ) : (
-              <button onClick={onClick}>경로 확인</button>
-            )}
-          </PlanListDiv>
-        </LeftItem>
-      </LeftSection>
+            <PlanListDiv>
+              {planList.length > 0 &&
+                planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)}
+            </PlanListDiv>
+          </LeftItem>
+        </LeftSection>
+      )}
       <RightSection>
         <GoogleMapLoad
           mapContainerStyle={{ width: '100%', height: '100%' }}
@@ -107,7 +113,7 @@ const Container = styled.div`
   display: flex;
 `
 
-const LeftSection = styled.div`
+const LeftSection = styled(motion.div)`
   display: flex;
   flex: 1;
   height: 100vh;
@@ -121,6 +127,11 @@ const RightSection = styled.div`
 const LeftItem = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const Header = styled.div`
