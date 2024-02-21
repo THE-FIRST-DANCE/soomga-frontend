@@ -5,7 +5,13 @@ interface MagnifieirProps {
 }
 const MagnifieirIcon = ({ ...props }: MagnifieirProps) => {
   return (
-    <MagnifieirStyle {...props} version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/MagnifieirStyle">
+    <MagnifieirStyle
+      width="50px"
+      {...props}
+      version="1.1"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/MagnifieirStyle"
+    >
       <g id="info" />
       <g id="icons">
         <path
