@@ -23,12 +23,21 @@ const useCreatePlan = () => {
       setPlanTitle(value)
     }
 
+    if (name === 'date') {
+      setPeriod(Number(value))
+    }
+
     if (name === 'period') {
       setPeriod(Number(value))
     }
   }
 
   const createPlan = () => {
+    if (period > 7) {
+      alert('최대 7일까지만 가능합니다')
+      return
+    }
+
     if (!planTitle || !province || !period || !lat || !lng) {
       alert('모든 항목을 입력해주세요')
       return
@@ -55,6 +64,7 @@ const useCreatePlan = () => {
     createPlan,
     setLat,
     setLng,
+    period,
   }
 }
 
