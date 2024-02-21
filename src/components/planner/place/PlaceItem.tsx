@@ -12,7 +12,7 @@ import PlaceDetail from './PlaceDetail'
 import { CurrentPeriod } from 'recoil/atoms/PlanInfo'
 
 const PlaceItem = ({ data }: { data: PlaceData }) => {
-  const address = useSubstring(data.address, 20)
+  const address = useSubstring(data.address, 10)
   const currentPeriod = useRecoilValue(CurrentPeriod)
   const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil)
   const [detailModal, setDetailModal] = useState<boolean>(false)
