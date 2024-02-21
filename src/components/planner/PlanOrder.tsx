@@ -13,7 +13,7 @@ const PlanOrder = () => {
   const [timeMod, setTimeMod] = useState<boolean>(false)
 
   const currentPeriod = useRecoilValue(CurrentPeriod)
-  const planPeriod = useRecoilValue(PeriodPlanRecoil)
+  const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil)
   const [planTime, setPlanTime] = useRecoilState(PlanTime)
 
   const hour = Number(planTime.split('시간')[0])
@@ -23,6 +23,14 @@ const PlanOrder = () => {
   const [minuteState, setMinuteState] = useState<number>(minute)
 
   const planList = planPeriod[currentPeriod] || []
+
+  const resetPlan = () => {
+    setPlanPeriod((prev) => {
+      const newPlan = { ...prev }
+      newPlan[currentPeriod] = []
+      return newPlan
+    })
+  }
 
   const handleFold = () => {
     setFold(!fold)
@@ -105,7 +113,13 @@ const PlanOrder = () => {
                 확인
               </div>
             ) : (
-              <ResetButton>장소 초기화</ResetButton>
+              <ResetButton
+                onClick={() => {
+                  resetPlan()
+                }}
+              >
+                장소 초기화
+              </ResetButton>
             )}
           </Header>
           <PlanOrderList>
