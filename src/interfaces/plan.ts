@@ -62,4 +62,5 @@ export interface PlanConfirmItemData {
   nextLng: number
   nextPlaceId: number
   nextPlaceGoogleId: string
+  nextPlaceName: string
 }
