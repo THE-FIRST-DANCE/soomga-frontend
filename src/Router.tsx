@@ -1,4 +1,4 @@
-import GuidePage from 'components/guide/leftSection/GuidePage'
+import GuidePage from 'components/guide/GuidePage'
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
 import MainPage from 'pages/home'
