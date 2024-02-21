@@ -50,3 +50,22 @@ export const getPlaceRoute = async ({ list, transport }: PlanListResponse) => {
 
   return response.data
 }
+
+export const getTransCoord = async (x: number, y: number): Promise<{ x: number; y: number }> => {
+  const response = await axios.get('https://dapi.kakao.com/v2/local/geo/transcoord.json', {
+    params: {
+      x: x,
+      y: y,
+      output_coord: 'WCONGNAMUL',
+      input_coord: 'WGS84',
+    },
+    headers: {
+      Authorization: `KakaoAK ${import.meta.env.VITE_KAKAO_CLIENT_ID}`,
+    },
+  })
+
+  return {
+    x: response.data.documents[0].x,
+    y: response.data.documents[0].y,
+  }
+}

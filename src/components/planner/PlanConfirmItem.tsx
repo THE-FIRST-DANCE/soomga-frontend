@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { categories } from './place/PlaceSelect'
 import { CarIcon } from './SelectTransportation'
 import Arrow from 'components/icons/Arrow'
+import { getTransCoord } from 'api/PlanAPI'
 
 interface PlanConfirmItemProps {
   index: number
@@ -12,11 +13,18 @@ interface PlanConfirmItemProps {
 const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
   const category = categories.find((category) => category.value === data.item.category)
 
-  const onClick = () => {
-    window.open(
-      `https://www.google.com/maps/dir/?api=1&origin=${data.item.latitude},${data.item.longitude}
-      &origin_place_id=${data.item.placeId}&destination=${data.nextLat},${data.nextLng}&destination_place_id=${data.nextPlaceGoogleId}`,
-    )
+  const onClick = async () => {
+    const { x: originX, y: originY } = await getTransCoord(data.item.longitude, data.item.latitude)
+    const { x: destX, y: destY } = await getTransCoord(data.nextLng, data.nextLat)
+
+    const mapType = 'TYPE_MAP'
+    const target = 'transit'
+    const rt = originX + ',' + originY + ',' + destX + ',' + destY
+    const rt1 = data.item.name
+    const rt2 = data.nextPlaceName
+
+    // 카카오
+    window.open(`https://map.kakao.com/?map_type=${mapType}&target=${target}&rt=${rt}&rt1=${rt1}&rt2=${rt2}`)
   }
 
   return (
