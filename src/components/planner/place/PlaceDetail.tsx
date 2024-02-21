@@ -22,13 +22,13 @@ const PlaceDetail = ({ isOpen, onRequestClose, place }: IPlaceDetail) => {
   }
 
   const defaultDays = [
-    { dayOfWeek: 0, dayName: '일요일', status: '휴무' },
-    { dayOfWeek: 1, dayName: '월요일', status: '휴무' },
-    { dayOfWeek: 2, dayName: '화요일', status: '휴무' },
-    { dayOfWeek: 3, dayName: '수요일', status: '휴무' },
-    { dayOfWeek: 4, dayName: '목요일', status: '휴무' },
-    { dayOfWeek: 5, dayName: '금요일', status: '휴무' },
-    { dayOfWeek: 6, dayName: '토요일', status: '휴무' },
+    { dayOfWeek: 0, dayName: '일요일', status: '정보없음' },
+    { dayOfWeek: 1, dayName: '월요일', status: '정보없음' },
+    { dayOfWeek: 2, dayName: '화요일', status: '정보없음' },
+    { dayOfWeek: 3, dayName: '수요일', status: '정보없음' },
+    { dayOfWeek: 4, dayName: '목요일', status: '정보없음' },
+    { dayOfWeek: 5, dayName: '금요일', status: '정보없음' },
+    { dayOfWeek: 6, dayName: '토요일', status: '정보없음' },
   ]
 
   place.openingHours?.forEach((time) => {

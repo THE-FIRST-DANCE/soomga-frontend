@@ -1,4 +1,7 @@
 import GuidePage from 'components/guide/GuidePage'
+
+import PlanConfirm from 'pages/PlanConfirm'
+
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
 import MainPage from 'pages/home'
@@ -30,6 +33,7 @@ const Router = () => {
         {/* 6. 여행 플래너 생성 */}
         <Route path="/planner" element={<PlanPage />} />
         <Route path="/planner/create" element={<PlanCreatePage />} />
+        <Route path="/planner/confirm" element={<PlanConfirm />} />
 
         {/* 7. 채팅 페이지 */}
         <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />

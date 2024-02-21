@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
-import { planInfo } from 'recoil/atoms/PlanInfo'
+import { PlanInfo } from 'recoil/atoms/PlanInfo'
 
 const useCreatePlan = () => {
   const [province, setProvince] = useState<string>('시/도')
@@ -10,10 +10,9 @@ const useCreatePlan = () => {
   const [openProvince, setOpenProvince] = useState<boolean>(false)
 
   const [planTitle, setPlanTitle] = useState<string>('')
-  const [startTime, setStartTime] = useState<string>('')
-  const [endTime, setEndTime] = useState<string>('')
+  const [period, setPeriod] = useState<number>(1)
 
-  const setPlanInfo = useSetRecoilState(planInfo)
+  const setPlanInfo = useSetRecoilState(PlanInfo)
 
   const navigate = useNavigate()
 
@@ -24,17 +23,22 @@ const useCreatePlan = () => {
       setPlanTitle(value)
     }
 
-    if (name === 'startTime') {
-      setStartTime(value)
+    if (name === 'date') {
+      setPeriod(Number(value))
     }
 
-    if (name === 'endTime') {
-      setEndTime(value)
+    if (name === 'period') {
+      setPeriod(Number(value))
     }
   }
 
   const createPlan = () => {
-    if (!planTitle || !province || !startTime || !endTime || !lat || !lng) {
+    if (period > 7) {
+      alert('최대 7일까지만 가능합니다')
+      return
+    }
+
+    if (!planTitle || !province || !period || !lat || !lng) {
       alert('모든 항목을 입력해주세요')
       return
     }
@@ -42,8 +46,7 @@ const useCreatePlan = () => {
     setPlanInfo({
       title: planTitle,
       province,
-      startTime,
-      endTime,
+      period,
       lat,
       lng,
     })
@@ -56,11 +59,12 @@ const useCreatePlan = () => {
     setProvince,
     openProvince,
     setOpenProvince,
-    setEndTime,
+    setPeriod,
     onChange,
     createPlan,
     setLat,
     setLng,
+    period,
   }
 }
 
