@@ -1,13 +1,13 @@
 import MagnifieirIcon from 'components/home/MagnifieirIcon'
 import { styled } from 'styled-components'
 import { useState } from 'react'
-import useGuideStateMethods from '../../components/guide/leftSection/GuidePageUtils'
-import RangeComponent from '../../components/guide/leftSection/RangeComponent'
-import CheckboxComponent from '../../components/guide/leftSection/CheckboxComponent' // 이름 변경
+import useGuideStateMethods from '../../components/guide/list/leftSection/GuidePageUtils'
+import RangeComponent from '../../components/guide/list/leftSection/RangeComponent'
+import CheckboxComponent from '../../components/guide/list/leftSection/CheckboxComponent' // 이름 변경
 
 import Star from 'components/icons/Star'
-import RatingFakeCheckbox from '../../components/guide/leftSection/RatingFakeCheckbox'
-import GuideCard from '../../components/guide/rightSection/GuideCard'
+import RatingFakeCheckbox from '../../components/guide/list/leftSection/RatingFakeCheckbox'
+import GuideCard from '../../components/guide/list/rightSection/GuideCard'
 
 const GuidePage = () => {
   const {
