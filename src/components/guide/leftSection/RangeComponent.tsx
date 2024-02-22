@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, LangeTitle, Wrapper } from '../GuidePage' // Make sure to provide the correct import path
+import { Container, LangeTitle, Wrapper } from '../../../pages/guide' // Make sure to provide the correct import path
 import { styled } from 'styled-components'
 import flag from 'assets/flag2.svg'
 
