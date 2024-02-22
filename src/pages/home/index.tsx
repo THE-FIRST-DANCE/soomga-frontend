@@ -19,13 +19,13 @@ const MainPage = () => {
       {/* 3. 한국 지도 */}
       <InnerContainer_div>
         {/* <Map width="70%" height="600px" zoom={7} /> */}
-        <GoogleMapLoad
+        {/* <GoogleMapLoad
           mapContainerStyle={{
             width: '70%',
             height: '600px',
           }}
           zoom={5}
-        />
+        /> */}
       </InnerContainer_div>
 
       {/* 4. sos페이지(갑자기 도움이 필요할 때) + 추천 지역(내 취향에 맞는 여행지를 찾아봐) */}
