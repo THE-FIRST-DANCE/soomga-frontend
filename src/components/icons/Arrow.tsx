@@ -25,5 +25,6 @@ const ArrowStyle = styled.svg<ArrowProps>`
   &:hover {
     fill: ${(props) => props.$hoverColor};
   }
-  transform: rotate(${(props) => props.$angle});
+  transform: rotate(${(props) => props.$angle}); // deg 붙여 넣기
+  transition: all 0.8s;
 `
