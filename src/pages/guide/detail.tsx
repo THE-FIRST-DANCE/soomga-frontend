@@ -13,27 +13,44 @@ import busan from '../../assets/busan.png'
 import ulsan from '../../assets/ulsan.png'
 import Time from 'components/icons/Time'
 import Arrow from 'components/icons/Arrow'
+import { motion } from 'framer-motion'
+import CarIcon from 'components/icons/CarIcon'
+
+const plans = [
+  {
+    seoul: [],
+    locations: [1, 2, 3],
+  },
+  {
+    seoul: [],
+    locations: [1, 2, 3, 4],
+  },
+]
 
 const GuideDetailPage = () => {
-  const [isPlanOpen, setIsPlanOpen] = useState<boolean>(false)
+  const [isPlanOpen, setIsPlanOpen] = useState<boolean[]>([])
 
-  const onClickDropdownBtn = () => {
-    setIsPlanOpen((prev) => !prev!)
-    console.log('isPlanOpen: ', isPlanOpen)
+  const onClickDropdownBtn = (index: number) => {
+    setIsPlanOpen((prev) => {
+      const newState = [...prev]
+      newState[index] = !newState[index]
+
+      return newState
+    })
   }
+
+  const initPlanStates = () => {
+    setIsPlanOpen(Array(3).fill(false))
+  }
+
+  useEffect(() => {
+    initPlanStates()
+  }, [plans.length])
 
   // 테스트
   const myDivRef = useRef<HTMLDivElement | null>(null)
   const serviceContent =
     '韓国在住約10年になります。代行のご依頼500件以上、ご不満だったという評価は受けたことがありません♡日本・韓国でネットショップ経営中です。購入代行、仕入れ代行、予約代行、サイン会・ヨントン応募、K-pop、ショッピング、カフェ、観光、どれも得意です！韓国ソウル・ソウル郊外の現地人向けカフェやグルメ店を訪れるのが趣味です。旅行者向けよりは現地で人気のホットプレイスを探して回っています。オンラインショップを運営しているので、商品購入代行など、お任せください！特技は最低価格を探すことです^^ ドライブが趣味ですので、送迎などもお任せください。'
-  useEffect(() => {
-    if (myDivRef.current) {
-      console.log('Div:', myDivRef.current)
-      const divHeight = myDivRef.current.clientHeight
-      // console.log('Div 높이:', divHeight)
-    }
-  }, [])
-  // 테스트
 
   useEffect(() => {
     const handleScroll = () => {
@@ -192,36 +209,82 @@ const GuideDetailPage = () => {
           <TravelPlanLayout>
             <Title>여행 플랜</Title>
             <PlanContainer>
-              <Plan onClick={onClickDropdownBtn}>
-                <PlanTitle>{`플랜1`}</PlanTitle>
-                <PlanInfo>{`서울에서 하는 조선시대 역사 체험`}</PlanInfo>
-                <PlanTime>
-                  <Time $width="1.1rem" $height="1.1rem" $color="black" />
-                  {` 총 ${6} 시간`}
-                </PlanTime>
-                <DropdownBtn>
-                  {isPlanOpen ? (
-                    <Arrow $width="3rem" $height="3rem" $color="black" $angle="90deg" />
-                  ) : (
-                    <Arrow $width="3rem" $height="3rem" $color="black" $angle="180deg" />
-                  )}
-                </DropdownBtn>
-              </Plan>
-              <Plan onClick={onClickDropdownBtn}>
-                <PlanTitle>{`플랜1`}</PlanTitle>
-                <PlanInfo>{`서울에서 하는 조선시대 역사 체험`}</PlanInfo>
-                <PlanTime>
-                  <Time $width="1.1rem" $height="1.1rem" $color="black" />
-                  {` 총 ${6} 시간`}
-                </PlanTime>
-                <DropdownBtn>
-                  {isPlanOpen ? (
-                    <Arrow $width="3rem" $height="3rem" $color="black" $angle="90deg" />
-                  ) : (
-                    <Arrow $width="3rem" $height="3rem" $color="black" $angle="180deg" />
-                  )}
-                </DropdownBtn>
-              </Plan>
+              {plans.map((plan, index) => {
+                return (
+                  <>
+                    <PlanWrapper>
+                      <Plan key={index} onClick={() => onClickDropdownBtn(index)}>
+                        <PlanTitle>{`플랜1`}</PlanTitle>
+                        <PlanInfo>{`서울에서 하는 조선시대 역사 체험`}</PlanInfo>
+                        <PlanTime>
+                          <Time $width="1.1rem" $height="1.1rem" $color="white" />
+                          {` 총 ${6} 시간`}
+                        </PlanTime>
+                        <DropdownBtn>
+                          {isPlanOpen[index] ? (
+                            <Arrow $width="3rem" $height="3rem" $color="white" $angle="90deg" />
+                          ) : (
+                            <Arrow $width="3rem" $height="3rem" $color="white" $angle="180deg" />
+                          )}
+                        </DropdownBtn>
+                      </Plan>
+                      {/* 플랜 내용 */}
+                      <PlanContent isPlanOpen={isPlanOpen[index]}>
+                        {plan.locations.map((location, index) => {
+                          return (
+                            <>
+                              <ContentFrame>
+                                <LocationImage>
+                                  <img src={ulsan} alt="Noimage" />
+                                </LocationImage>
+                                <LocationInfoContainer>
+                                  <InfoTime>
+                                    <Time $width="30px" $height="30px" $color="black" />
+                                    {1} 시간
+                                  </InfoTime>
+                                  <InfoName>
+                                    <Place>장소</Place>
+                                    {`83타워`}
+                                  </InfoName>
+                                </LocationInfoContainer>
+                                <Description>
+                                  efiluwahwflihawlefiluwaheiuflhawflihawliefhwialuawflihawliefhwialuhefiluwaheiuflhawflihawliefhwialuhefiluwaheiuflhawflihawliefhwialuhefiluwaheiuflhaweuilfhlawiehfuiawh
+                                </Description>
+                              </ContentFrame>
+
+                              {index !== plan.locations.length - 1 && (
+                                <TravelTime>
+                                  <CarIcon width="30px" height="30px" marginRight="10px" />
+                                  {`${30} 분  `}
+                                </TravelTime>
+                              )}
+                            </>
+                          )
+                        })}
+                        {/* <ContentFrame>
+                          <LocationImage>
+                            <img src={ulsan} alt="Noimage" />
+                          </LocationImage>
+                          <LocationInfoContainer>
+                            <InfoTime>
+                              <Time $width="30px" $height="30px" /> {1}시간
+                            </InfoTime>
+                            <InfoName>
+                              <Place>장소</Place>
+                              {`83타워`}
+                            </InfoName>
+                          </LocationInfoContainer>
+                          <Description>
+                            efiluwaheiuflhawflihawliefhwialuawflihawliefhwialuhefiluwaheiuflhawflihawliefhwialuhefiluwaheiuflhawflihawliefhwialuhefiluwaheiuflhaweuilfhlawiehfuiawh
+                          </Description>
+                        </ContentFrame> */}
+
+                        {/* --------------------------------------------------------- */}
+                      </PlanContent>
+                    </PlanWrapper>
+                  </>
+                )
+              })}
             </PlanContainer>
           </TravelPlanLayout>
           <Partition>
@@ -268,7 +331,9 @@ const Line = styled.div`
   background-color: #b2b2b2;
 `
 
-/* ------------------------------------------　左　------------------------------------------ */
+/* 
+   ------------------------------------------　左　------------------------------------------ 
+*/
 const LeftSection = styled.div`
   /* background-color: #5b5bea; */
   flex: 1;
@@ -501,7 +566,9 @@ const Tag = styled.div`
   white-space: nowrap;
   background-color: white;
 `
-/* ------------------------------------------　🟡 中 🟡 ------------------------------------------　*/
+/* 
+   ------------------------------------------　🟡 中 🟡 ------------------------------------------　
+*/
 const MiddleSection = styled.div`
   /* background-color: #75aef8; */
   flex: 3;
@@ -562,27 +629,38 @@ const ServiceContent = styled.div`
 
 // 2. 여행 플랜
 const TravelPlanLayout = styled(MiddleLayout)`
-  background-color: #f2618aff;
+  /* background-color: #f2618aff; */
+  height: auto;
 `
 
 const PlanContainer = styled(FlexCenterd)`
-  background-color: #6bf37f;
+  /* background-color: #6bf37f; */
+  gap: 6rem;
   width: 100%;
   flex-direction: column;
   box-sizing: border-box;
   border-radius: 0.5rem;
-  margin-bottom: 3rem;
+  /* margin-bottom: 3rem; */
 `
-
+const PlanWrapper = styled(PlanContainer)`
+  gap: 0;
+`
 const Plan = styled(FlexCenterd)`
-  background-color: aquamarine;
-  border: 3px solid black;
-  border-radius: 1rem;
+  background-color: var(--color-original);
   width: 90%;
+  /* border: 3px solid black; */
+  box-shadow: 4px 4px 4px 4px #a2a1a1;
+  /* box-shadow: 4px 4px 4px 4px var(--color-original); */
+  /* margin: 3rem 0%; */
+  /* margin-bottom: 5rem; */
+  border-radius: 1rem;
   padding: 1rem 3rem;
   box-sizing: border-box;
   justify-content: flex-start;
   cursor: pointer;
+  z-index: 2;
+  /* position: relative; */
+  color: white;
 `
 
 const PlanTitle = styled.div`
@@ -598,13 +676,126 @@ const PlanTime = styled.div`
   width: 100%;
   font-size: 1.5rem;
 `
-
 const DropdownBtn = styled(FlexCenterd)`
   width: 100%;
   justify-content: flex-end;
 `
 
-/*　------------------------------------------ 右 ------------------------------------------　*/
+const PlanContent = styled.div<{ isPlanOpen: boolean }>`
+  display: ${({ isPlanOpen }) => (isPlanOpen ? 'block' : 'none')};
+  /* visibility: ${({ isPlanOpen }) => (isPlanOpen ? 'block' : 'none')}; */
+  /* background-color: #408efb; */
+  width: 87%;
+  min-height: 10rem;
+  border: 3px solid black;
+  border-radius: 0 0 1rem 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  position: relative;
+  top: ${({ isPlanOpen }) => (isPlanOpen ? '0' : '-5rem')};
+  opacity: ${({ isPlanOpen }) => (isPlanOpen ? '1' : '0')};
+  transition: top 0.7s ease;
+`
+const ContentFrame = styled(FlexCenterd)`
+  /* background-color: #ffed4e; */
+  margin: 1rem 0;
+  min-width: 100%;
+  justify-content: space-around;
+  /* min-height: 10rem; */
+`
+
+const TravelTime = styled(ContentFrame)`
+  justify-content: flex-start;
+  padding-left: 11rem;
+  box-sizing: border-box;
+  margin: 2rem 0;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    /* left: 0px; */
+    top: 1.7rem;
+    left: 11.5rem;
+    /* left: 0.5rem; */
+    width: 1px;
+    height: 20px;
+    background-color: black;
+    border: 1px solid black;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    /* left: 0px; */
+    top: -1.4rem;
+    left: 11.5rem;
+    /* left: 0.5rem; */
+    width: 1px;
+    height: 20px;
+    background-color: black;
+    border: 1px solid black;
+  }
+`
+
+const LocationImage = styled(FlexCenterd)`
+  width: 17rem;
+  height: 10rem;
+  overflow: hidden;
+  border-radius: 0.8rem;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`
+
+const LocationInfoContainer = styled(FlexCenterd)`
+  flex-direction: column;
+  gap: 2rem;
+  background-color: #fff;
+`
+
+const InfoTime = styled(FlexCenterd)`
+  width: 100%;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  justify-content: flex-start;
+  /* background-color: #7af060; */
+`
+
+const InfoName = styled(FlexCenterd)`
+  width: 100%;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  flex-direction: column;
+  /* background-color: #fc7351; */
+`
+const Place = styled.div`
+  width: 100%;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+`
+
+const Description = styled.div`
+  background-color: #c3b9b9;
+  height: 10rem;
+  width: 23rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  overflow: auto;
+  overflow-wrap: break-word;
+  line-height: 1.5rem;
+  /* word-break: break-all; */
+  /* white-space: nowrap; */
+`
+
+/*
+　  ------------------------------------------ 右 ------------------------------------------　
+*/
 const RightSection = styled.div`
   flex: 0.4;
   min-height: 90vh;
