@@ -1,18 +1,23 @@
 import Arrow from 'components/icons/Arrow'
 import Time from 'components/icons/Time'
+import { Plans } from 'interfaces/plan'
 import styled from 'styled-components'
 
-const PlanItem = ({ ...props }: PlanItem) => {
+interface PlanListProp {
+  data: Plans
+}
+
+const PlanItem = ({ data }: PlanListProp) => {
   return (
     <Container>
       <PlanItems>
         <PlanInfo>
-          <PlanTitle>{props.name}</PlanTitle>
-          <PlanDesc>{props.description}</PlanDesc>
+          <PlanTitle>{data.title}</PlanTitle>
+          <PlanDesc>{data.region}</PlanDesc>
         </PlanInfo>
         <PlanDateBox>
           <Time $width="20px" $height="20px" $color="var(--color-primary)" />
-          <PlanDate>{props.full_time}</PlanDate>
+          <PlanDate>{data.daySchedules.length}일</PlanDate>
         </PlanDateBox>
         <Arrow $width="24px" $height="24px" $color="var(--bs-gray-dark)" />
       </PlanItems>
@@ -72,4 +77,5 @@ const PlanDate = styled.div`
   font-weight: 400;
   color: var(--bs-gray);
   margin-left: 0.5rem;
+  margin-top: 0.2rem;
 `
