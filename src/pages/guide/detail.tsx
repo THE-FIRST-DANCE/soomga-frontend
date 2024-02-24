@@ -16,6 +16,18 @@ import Arrow from 'components/icons/Arrow'
 import { motion } from 'framer-motion'
 import CarIcon from 'components/icons/CarIcon'
 
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
+import moment from 'moment'
+import CircleCheck from 'components/icons/CircleCheck'
+import Comunication from 'components/icons/Comunication'
+import Location from 'components/icons/Location'
+import Star from 'components/icons/Star'
+
+type ValuePiece = Date | null
+
+type Value = ValuePiece | [ValuePiece, ValuePiece]
+
 const plans = [
   {
     seoul: [],
@@ -24,6 +36,81 @@ const plans = [
   {
     seoul: [],
     locations: [1, 2, 3, 4],
+  },
+]
+
+const comments = [
+  {
+    id: 1,
+    user: 'Oba honoka',
+    country: 'japan',
+    star: 4,
+    comment: '風に戸惑う弱気な僕は通りすがるあの日の幻影本当は見た目以上涙もろい過去がある',
+  },
+  {
+    id: 2,
+    user: 'Yamatsu asuka',
+    country: 'japan',
+    star: 2,
+    comment: '止めど流る清か水よ消せど燃ゆる魔性の火よあんなに好きな女性に出逢う夏は二度とない',
+  },
+  {
+    id: 3,
+    user: 'Wada sayaka',
+    country: 'japan',
+    star: 5,
+    comment: '人は誰も愛求めて 闇に彷徨う運命 そして風まかせ oh, my destiny 涙枯れるまで',
+  },
+  {
+    id: 4,
+    user: 'Tsuki saeko',
+    country: 'japan',
+    star: 1,
+    comment:
+      '見つめ合うと素直にお喋り出来ない 津波のような侘しさに I know... 怯えてる めぐり逢えた瞬間から 魔法が解けない 鏡のような夢の中で 思い出はいつの日も雨',
+  },
+  {
+    id: 5,
+    user: 'Hasegawa ryo',
+    country: 'japan',
+    star: 4,
+    comment: '夢が終わり目覚める時深い闇に夜明けが来る本当は見た目以上打たれ強い僕がいる',
+  },
+  {
+    id: 6,
+    user: 'Simizu reina',
+    country: 'japan',
+    star: 5,
+    comment: '泣き出しそうな空眺めて 波に漂うカモメ きっと世は情け oh, sweet memory 旅立ちを胸に',
+  },
+  {
+    id: 7,
+    user: 'Katou yuu',
+    country: 'japan',
+    star: 4,
+    comment: '人は涙見せずに大人になれない ガラスのような恋だとは I know... 気付いてる',
+  },
+  {
+    id: 8,
+    user: 'Suzuki ichiro',
+    country: 'japan',
+    star: 4,
+    comment: '身も心も愛しい女性しか見えない張り裂けそうな胸の奥で悲しみに耐えるのは何故',
+  },
+  {
+    id: 9,
+    user: 'Abe kazuki',
+    country: 'japan',
+    star: 3,
+    comment: '見つめ合うと素直に お喋り出来ない 津波のような侘しさに I know... 怯えてる',
+  },
+  {
+    id: 10,
+    user: 'Akutagawa saburo',
+    country: 'japan',
+    star: 4,
+    comment:
+      'めぐり逢えた瞬間から死ぬまで好きと言って 鏡のような夢の中で 微笑をくれたのは誰 好きなのに泣いたのは何故 思い出はいつの日も... 雨',
   },
 ]
 
@@ -70,6 +157,27 @@ const GuideDetailPage = () => {
     console.log('현재 scrollY: ', scrollY)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  const [value, onChange] = useState<Value>(new Date())
+
+  // 특정 날짜
+  const targetDates = [new Date(2024, 1, 5), new Date(2024, 1, 10), new Date(2024, 1, 15), new Date(2024, 2, 2)]
+
+  // tileContent 함수 정의
+  const tileContent = ({ date, view }: { date: Date; view: string }) => {
+    if (view === 'month' && targetDates.some((targetDate) => date.getTime() === targetDate.getTime())) {
+      return <CustomDot />
+    }
+    return null
+  }
+
+  const [visibleComments, setvisibleComments] = useState(5)
+  const ADDCOMMENT = 5
+
+  const showMoreComments = () => {
+    setvisibleComments(visibleComments + ADDCOMMENT)
+  }
+
   return (
     <>
       <Layout>
@@ -244,7 +352,7 @@ const GuideDetailPage = () => {
                                   </InfoTime>
                                   <InfoName>
                                     <Place>장소</Place>
-                                    {`83타워`}
+                                    <PlaceName> {`83타워`}</PlaceName>
                                   </InfoName>
                                 </LocationInfoContainer>
                                 <Description>
@@ -261,23 +369,6 @@ const GuideDetailPage = () => {
                             </>
                           )
                         })}
-                        {/* <ContentFrame>
-                          <LocationImage>
-                            <img src={ulsan} alt="Noimage" />
-                          </LocationImage>
-                          <LocationInfoContainer>
-                            <InfoTime>
-                              <Time $width="30px" $height="30px" /> {1}시간
-                            </InfoTime>
-                            <InfoName>
-                              <Place>장소</Place>
-                              {`83타워`}
-                            </InfoName>
-                          </LocationInfoContainer>
-                          <Description>
-                            efiluwaheiuflhawflihawliefhwialuawflihawliefhwialuhefiluwaheiuflhawflihawliefhwialuhefiluwaheiuflhawflihawliefhwialuhefiluwaheiuflhaweuilfhlawiehfuiawh
-                          </Description>
-                        </ContentFrame> */}
 
                         {/* --------------------------------------------------------- */}
                       </PlanContent>
@@ -291,7 +382,107 @@ const GuideDetailPage = () => {
             <Line />
           </Partition>
           {/* 3. 현재 예약 일정 */}
+          <BookingCheckLayout>
+            <Title>현재 예약 일정</Title>
+            <BookingContainer>
+              <CalendarWrapper>
+                <Calendar
+                  className="react-calendar"
+                  onChange={onChange}
+                  value={value}
+                  calendarType="gregory"
+                  formatDay={(locale, date) => moment(date).format('DD')}
+                  formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')}
+                  tileContent={tileContent} // tileContent 적용
+                  next2Label={null}
+                  prev2Label={null}
+                  // locale="en-EN"
+                  // locale="ja-JP"
+                  showNeighboringMonth={false}
+                />
+              </CalendarWrapper>
+            </BookingContainer>
+          </BookingCheckLayout>
+          <Partition>
+            <Line />
+          </Partition>
           {/* 4. 리뷰 */}
+          <ReviewLayout>
+            <Title>리뷰</Title>
+            <ReviewScoreContainer>
+              {/* 🟠 왼쪽 */}
+              <ReviewScoreLeft>
+                <AverageScore>4.3</AverageScore>
+                <ScoreListContainer>
+                  <ListContainer>
+                    <Comunication width=" 50px" height=" 50px" />
+                    <CheckPoint>의사소통</CheckPoint>
+                    <CheckScore>4.3</CheckScore>
+                  </ListContainer>
+                  <ListContainer>
+                    <CircleCheck width=" 50px" height=" 50px" />
+                    <CheckPoint>정확도</CheckPoint>
+                    <CheckScore>4.3</CheckScore>
+                  </ListContainer>
+                  <ListContainer>
+                    <Location width=" 50px" height=" 50px" />
+                    <CheckPoint>위치</CheckPoint>
+                    <CheckScore>4.3</CheckScore>
+                  </ListContainer>
+                </ScoreListContainer>
+              </ReviewScoreLeft>
+              {/* 🟠 🟠오른쪽 */}
+              <ReviewScoreRight>
+                <ReviewTitleContainer>
+                  <ReviewTitle>전체평점</ReviewTitle>
+                  <TotalReviewCount>리뷰수 {10} 개</TotalReviewCount>
+                </ReviewTitleContainer>
+                <ScoreBarContainer>
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <ScoreBarWrapper key={index}>
+                      <Rank>{index + 1}</Rank>
+                      <BarWrapper>
+                        <Bar percent={40} />
+                      </BarWrapper>
+                      <Count>200</Count>
+                    </ScoreBarWrapper>
+                  )).reverse()}
+                </ScoreBarContainer>
+              </ReviewScoreRight>
+            </ReviewScoreContainer>
+            <CommentPartition>
+              <CommentLine />
+            </CommentPartition>
+
+            {/* コメント */}
+            {comments.slice(0, visibleComments).map((comment) => {
+              return (
+                <CommentLayout>
+                  {/* 이름 + 국정 + 별 + 일자 */}
+                  <CommentContainer>
+                    <CommentUserWrapper>
+                      <CommentUserName>{comment.user}</CommentUserName>
+                      <Country>{comment.country}</Country>
+                    </CommentUserWrapper>
+                    <CommentUserWrapper>
+                      <CommentUserName>
+                        {Array.from({ length: comment.star }, (_, index) => (
+                          <Star key={index} width="20px" height="20px" fill="var(--color-primary)" />
+                        ))}
+                      </CommentUserName>
+                      <Country>{new Date().toLocaleDateString()}</Country>
+                    </CommentUserWrapper>
+                  </CommentContainer>
+                  <Comment>{comment.comment}</Comment>
+                </CommentLayout>
+              )
+            })}
+            <ButtonWrapper>
+              {visibleComments !== comments.length && (
+                <ShowMoreButton onClick={showMoreComments}>더보기</ShowMoreButton>
+              )}
+            </ButtonWrapper>
+          </ReviewLayout>
         </MiddleSection>
         {/*　------------------------------------------ 右 ------------------------------------------　*/}
         <RightSection>
@@ -323,7 +514,7 @@ const FlexCenterd = styled.div`
 const Partition = styled(FlexCenterd)`
   width: 100%;
   height: 2px;
-  margin: 3rem 0;
+  margin: 7rem 0;
 `
 const Line = styled.div`
   width: 90%;
@@ -332,7 +523,9 @@ const Line = styled.div`
 `
 
 /* 
+
    ------------------------------------------　左　------------------------------------------ 
+
 */
 const LeftSection = styled.div`
   /* background-color: #5b5bea; */
@@ -567,8 +760,10 @@ const Tag = styled.div`
   background-color: white;
 `
 /* 
+
    ------------------------------------------　🟡 中 🟡 ------------------------------------------　
-*/
+
+   */
 const MiddleSection = styled.div`
   /* background-color: #75aef8; */
   flex: 3;
@@ -650,9 +845,6 @@ const Plan = styled(FlexCenterd)`
   width: 90%;
   /* border: 3px solid black; */
   box-shadow: 4px 4px 4px 4px #a2a1a1;
-  /* box-shadow: 4px 4px 4px 4px var(--color-original); */
-  /* margin: 3rem 0%; */
-  /* margin-bottom: 5rem; */
   border-radius: 1rem;
   padding: 1rem 3rem;
   box-sizing: border-box;
@@ -664,7 +856,8 @@ const Plan = styled(FlexCenterd)`
 `
 
 const PlanTitle = styled.div`
-  flex-basis: 50%;
+  flex-basis: 70%;
+  /* margin-right: 2rem; */
   width: 100%;
   font-size: 3rem;
 `
@@ -706,7 +899,7 @@ const ContentFrame = styled(FlexCenterd)`
 
 const TravelTime = styled(ContentFrame)`
   justify-content: flex-start;
-  padding-left: 11rem;
+  padding-left: 9rem;
   box-sizing: border-box;
   margin: 2rem 0;
   position: relative;
@@ -717,7 +910,7 @@ const TravelTime = styled(ContentFrame)`
     display: block;
     /* left: 0px; */
     top: 1.7rem;
-    left: 11.5rem;
+    left: 9.5rem;
     /* left: 0.5rem; */
     width: 1px;
     height: 20px;
@@ -730,7 +923,7 @@ const TravelTime = styled(ContentFrame)`
     display: block;
     /* left: 0px; */
     top: -1.4rem;
-    left: 11.5rem;
+    left: 9.5rem;
     /* left: 0.5rem; */
     width: 1px;
     height: 20px;
@@ -767,19 +960,23 @@ const InfoTime = styled(FlexCenterd)`
 
 const InfoName = styled(FlexCenterd)`
   width: 100%;
-  font-size: 1.5rem;
   margin-bottom: 1rem;
   flex-direction: column;
-  /* background-color: #fc7351; */
 `
 const Place = styled.div`
   width: 100%;
   font-size: 1rem;
   margin-bottom: 0.3rem;
 `
+const PlaceName = styled.div`
+  width: 100%;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  font-size: 1.5rem;
+`
 
 const Description = styled.div`
-  background-color: #c3b9b9;
+  background-color: #ece8e85a;
   height: 10rem;
   width: 23rem;
   padding: 1rem;
@@ -793,8 +990,279 @@ const Description = styled.div`
   /* white-space: nowrap; */
 `
 
+// 3. 현재 예약 일정
+const BookingCheckLayout = styled(MiddleLayout)`
+  /* background-color: #f2618aff; */
+  height: auto;
+`
+const BookingContainer = styled(FlexCenterd)`
+  /* background-color: #6ff178; */
+  padding: 1rem;
+  box-sizing: border-box;
+`
+const CalendarWrapper = styled(FlexCenterd)`
+  width: 100%;
+  height: 45rem;
+
+  .react-calendar {
+    width: 70%;
+    height: 100%;
+    font-size: 4rem;
+    box-shadow: 5px 5px 5px 10px #e5e5e5;
+    border-radius: 10px;
+    padding: 30px;
+    /* box-sizing: border-box; */
+
+    /* 년도  */
+    .react-calendar__navigation button {
+      color: #000000;
+      min-width: 93px;
+      /* background: none; */
+      font-size: 30px;
+      margin-top: 2.5rem;
+    }
+
+    /* 오늘 날짜 */
+    .react-calendar__tile--now {
+      /* background: var(--color-original); */
+      background: #e44921;
+      font-weight: bold;
+      font-size: 20px;
+      color: white !important;
+      border-radius: 50%;
+      box-shadow: 3px 3px 3px 3px #7b7979;
+    }
+
+    /* 일 날짜 색깔 */
+    .react-calendar__tile {
+      color: black;
+      font-size: 17px;
+    }
+
+    // 요일 아래 밑줄 제거
+    .react-calendar__month-view__weekdays abbr {
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .react-calendar__tile--hasActive:enabled:hover,
+    .react-calendar__tile--hasActive:enabled:focus {
+      background: #e44921;
+      /* border-radius: 1px; */
+    }
+
+    // 날짜 눌럿을 때
+    .react-calendar__tile--active {
+      background: #e44921;
+      border-radius: 50%;
+    }
+
+    /* 요일 라벨 */
+    .react-calendar__month-view__weekdays {
+      text-align: center;
+      font-size: 25px;
+      background-color: #fff;
+      border-bottom: 1px solid black;
+      padding: 0px;
+    }
+  }
+`
+
+const CustomDot = styled.div`
+  width: 15px;
+  height: 15px;
+  background-color: var(--color-original);
+  border-radius: 50%;
+  margin: 0 auto;
+  position: relative;
+  top: -20px;
+`
+
+const ReviewLayout = styled(MiddleLayout)`
+  /* background-color: #f2618aff; */
+`
+
+const ReviewScoreContainer = styled(FlexCenterd)`
+  /* background-color: #6ff178; */
+  /* padding: 1rem;
+  box-sizing: border-box; */
+`
+
+const ReviewScoreLeft = styled(FlexCenterd)`
+  /* background-color: #e94242; */
+  flex: 3;
+  min-height: 25rem;
+  flex-direction: column;
+`
+
+const AverageScore = styled.div`
+  /* background-color: #96fe5e; */
+  font-size: 8rem;
+  margin-bottom: 2rem;
+`
+const ScoreListContainer = styled(FlexCenterd)`
+  /* background-color: #f9fe5e; */
+  width: 100%;
+  /* height: 2rem; */
+`
+const ListContainer = styled(FlexCenterd)`
+  flex-direction: column;
+  gap: 1rem;
+  /* background-color: #fcaa45; */
+  width: 100%;
+  /* height: 2rem; */
+  position: relative;
+  &:not(:last-child)::before {
+    content: '';
+    display: block;
+    width: 2px;
+    height: 100px;
+    background-color: black;
+    position: absolute;
+    left: 100%;
+  }
+`
+
+const CheckPoint = styled(FlexCenterd)`
+  font-size: 1rem;
+`
+const CheckScore = styled(FlexCenterd)`
+  font-size: 1.5rem;
+`
+
+const ReviewScoreRight = styled.div`
+  /* background-color: blue; */
+  flex: 4;
+  padding: 1rem;
+  /* box-sizing: border-box; */
+  min-height: 5rem;
+`
+
+const ReviewTitleContainer = styled(FlexCenterd)`
+  /* justify-content: flex-start; */
+  /* padding: 1rem;
+  box-sizing: border-box; */
+`
+
+const ReviewTitle = styled(Title)`
+  width: 60%;
+  /* background-color: #fcaa45; */
+  margin-bottom: 0;
+`
+const TotalReviewCount = styled(Title)`
+  font-size: 1.5rem;
+  color: #767676;
+  margin-bottom: 0;
+`
+
+const ScoreBarContainer = styled(FlexCenterd)`
+  /* background-color: #f9fe5e; */
+  width: 100%;
+  min-height: 20rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  flex-direction: column;
+`
+
+const ScoreBarWrapper = styled(FlexCenterd)`
+  /* background-color: #c2c0ff; */
+  width: 100%;
+  /* min-height: 20rem; */
+  padding: 1rem;
+  box-sizing: border-box;
+  /* flex-direction: column; */
+  gap: 1rem;
+`
+
+const Rank = styled(FlexCenterd)`
+  font-size: 2rem;
+
+  /* background-color: #fbb2b2; */
+  flex: 1;
+`
+const BarWrapper = styled.div`
+  flex: 10;
+  width: 100%;
+  border-radius: 10px;
+  background-color: #efefef;
+  overflow: hidden;
+`
+const Bar = styled.div<{ percent: number }>`
+  min-height: 1rem;
+  width: ${({ percent }) => `${percent}%`};
+  background-color: var(--color-original);
+`
+const Count = styled(FlexCenterd)`
+  flex: 1;
+  /* background-color: #0044ff; */
+`
+
+const CommentPartition = styled(FlexCenterd)`
+  width: 100%;
+  height: 2px;
+  margin: 2rem 0;
+`
+const CommentLine = styled.div`
+  width: 80%;
+  height: 2px;
+  background-color: #b2b2b2;
+`
+
+const CommentLayout = styled.div`
+  width: 100%;
+  /* background-color: #f9fe5e; */
+  padding: 1rem;
+  box-sizing: border-box;
+  /* gap: 1rem; */
+  display: flex;
+  flex-direction: column;
+`
+const CommentContainer = styled.div`
+  width: 100%;
+  /* background-color: #5efeab; */
+  padding: 1rem;
+  box-sizing: border-box;
+  /* gap: 1rem; */
+  display: flex;
+  flex-direction: column;
+`
+
+const CommentUserWrapper = styled(FlexCenterd)`
+  font-size: 1rem;
+  justify-content: flex-start;
+`
+const CommentUserName = styled.div`
+  font-size: 1rem;
+  margin-right: 1rem;
+`
+const Country = styled.div`
+  font-size: 0.7rem;
+`
+const Comment = styled.div`
+  margin-top: -30px;
+  padding: 1rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  line-height: 1.5rem;
+`
+const ButtonWrapper = styled(FlexCenterd)``
+const ShowMoreButton = styled.button`
+  width: 4rem;
+  height: 4rem;
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--color-original);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+
+  box-shadow: 3px 3px 3px 3px gray;
+`
+
 /*
+
 　  ------------------------------------------ 右 ------------------------------------------　
+
 */
 const RightSection = styled.div`
   flex: 0.4;
@@ -810,6 +1278,7 @@ const MenuBanner = styled.div`
   min-width: 70%;
   border: 0.1rem solid var(--color-original);
   border-radius: 0.5rem;
+  margin-right: 2rem;
 `
 const MenuTitle = styled(FlexCenterd)`
   width: 100%;
