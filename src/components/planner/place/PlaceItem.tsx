@@ -45,7 +45,7 @@ const PlaceItem = ({ data }: { data: PlaceData }) => {
           {
             item: data,
             order: currentPlan.length + 1,
-            time: '1시간 0분',
+            stayTime: '1시간 0분',
             checked: true,
           },
         ]

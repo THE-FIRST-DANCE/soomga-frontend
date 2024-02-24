@@ -46,7 +46,7 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
       <Info>
         <Name>{data.item.name}</Name>
         <Category>{category?.label}</Category>
-        <Time>{data.time}</Time>
+        <Time>{data.stayTime}</Time>
         {data.nextTime && (
           <TimeBox
             onClick={() => {

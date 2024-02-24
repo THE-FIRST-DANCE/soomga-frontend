@@ -47,7 +47,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
       if (plan.item.placeId === item.item.placeId) {
         return {
           ...plan,
-          time: `${hour}시간 ${minute}분`,
+          stayTime: `${hour}시간 ${minute}분`,
         }
       }
       return plan
@@ -94,7 +94,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
               <ItemName>{name}</ItemName>
               <ItemAddress>{address}</ItemAddress>
             </ItemInfo>
-            <SetTime onClick={() => setTimeMod(!timeMod)}>{item.time}</SetTime>
+            <SetTime onClick={() => setTimeMod(!timeMod)}>{item.stayTime}</SetTime>
             <div
               style={{
                 cursor: 'pointer',
