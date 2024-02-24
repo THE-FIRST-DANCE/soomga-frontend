@@ -6,9 +6,13 @@ import logo from 'assets/logo.svg'
 interface PlanLeftTabProps {
   onNext: () => void
   onPrev: () => void
+  onEdit?: () => void
+  prevText: string
+  nextText: string
+  editText?: string
 }
 
-const PlanLeftTab = ({ onNext, onPrev }: PlanLeftTabProps) => {
+const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText }: PlanLeftTabProps) => {
   const planInfo = useRecoilValue(PlanInfo)
   const [currentPeriod, setCurrentPeriod] = useRecoilState(CurrentPeriod)
 
@@ -41,14 +45,23 @@ const PlanLeftTab = ({ onNext, onPrev }: PlanLeftTabProps) => {
             onPrev()
           }}
         >
-          이전
+          {prevText}
         </PrevPage>
+        {onEdit && (
+          <EditPage
+            onClick={() => {
+              onEdit()
+            }}
+          >
+            {editText}
+          </EditPage>
+        )}
         <NextPage
           onClick={() => {
             onNext()
           }}
         >
-          다음
+          {nextText}
         </NextPage>
       </TabBox>
     </LeftTab>
@@ -154,5 +167,21 @@ const NextPage = styled.div`
 
   &:hover {
     background-color: var(--bs-gray-200);
+  }
+`
+
+const EditPage = styled.div`
+  width: 80%;
+  padding: 1rem 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 2px solid var(--bs-gray-200);
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--bs-gray-500);
   }
 `
