@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { PlanListRecoil } from 'recoil/atoms/PlanList'
+import { PlanListRecoil } from 'state/store/PlanList'
 
 const useCalculateTotalTime = (list: PlanListRecoil[]) => {
   return useMemo(() => {

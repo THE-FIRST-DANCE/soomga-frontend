@@ -4,7 +4,7 @@ import { atom } from 'recoil'
 export interface PlanListRecoil {
   item: PlaceData
   order: number
-  time: string
+  stayTime: string
   checked: boolean
 }
 
@@ -29,6 +29,14 @@ export const PeriodPlanRecoil = atom<{ [period: number]: PlanListRecoil[] }>({
 
 export const PlanListConfirm = atom<PlanListConfirm>({
   key: 'PlanListConfirm',
+  default: {
+    planList: {},
+    transport: '',
+  },
+})
+
+export const PlanEditList = atom<PlanListConfirm>({
+  key: 'PlanEditList',
   default: {
     planList: {},
     transport: '',

@@ -1,4 +1,4 @@
-import { PlanInfo } from 'recoil/atoms/PlanInfo'
+import { PlanInfo } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import { useState } from 'react'
 import Input from 'components/shared/Input'

@@ -5,11 +5,11 @@ import styled from 'styled-components'
 import { PlaceData } from 'interfaces/plan'
 import { categories } from './PlaceSelect'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { PeriodPlanRecoil } from 'recoil/atoms/PlanList'
+import { PeriodPlanRecoil } from 'state/store/PlanList'
 import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import PlaceDetail from './PlaceDetail'
-import { CurrentPeriod } from 'recoil/atoms/PlanInfo'
+import { CurrentPeriod } from 'state/store/PlanInfo'
 
 const PlaceItem = ({ data }: { data: PlaceData }) => {
   const address = useSubstring(data.address, 10)

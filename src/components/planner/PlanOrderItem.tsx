@@ -3,8 +3,8 @@ import { motion } from 'framer-motion'
 import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { CurrentPeriod } from 'recoil/atoms/PlanInfo'
-import { PeriodPlanRecoil, PlanListRecoil } from 'recoil/atoms/PlanList'
+import { CurrentPeriod } from 'state/store/PlanInfo'
+import { PeriodPlanRecoil, PlanListRecoil } from 'state/store/PlanList'
 import styled from 'styled-components'
 
 interface PlanOrderItemProps {

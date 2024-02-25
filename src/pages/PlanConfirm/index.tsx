@@ -1,6 +1,7 @@
-import { getPlaceRoute } from 'api/PlanAPI'
+import { getPlaceRoute, savePlan } from 'api/PlanAPI'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import PlanConfirmItem from 'components/planner/PlanConfirmItem'
+import PlanEdit from 'components/planner/PlanEdit'
 import PlanLeftTab from 'components/planner/PlanLeftTab'
 import FullLoading from 'components/shared/FullLoading'
 import { motion } from 'framer-motion'
@@ -9,20 +10,21 @@ import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { CurrentPeriod, PlanInfo } from 'recoil/atoms/PlanInfo'
-import { PlanListConfirm } from 'recoil/atoms/PlanList'
+import { CurrentPeriod, PlanInfo } from 'state/store/PlanInfo'
+import { PlanListConfirm } from 'state/store/PlanList'
 import styled from 'styled-components'
 
 const PlanConfirm = () => {
   const [planConfirmList, setPlanConfirmList] = useState<PlanConfirmItemResponse>({})
-  const currentPeriod = useRecoilValue(CurrentPeriod)
+  const [editMode, setEditMode] = useState<boolean>(false)
 
+  const currentPeriod = useRecoilValue(CurrentPeriod)
   const planInfo = useRecoilValue(PlanInfo)
   const planListConfirm = useRecoilValue(PlanListConfirm)
 
-  const planList = planConfirmList[currentPeriod] || []
-
   const navigate = useNavigate()
+
+  const planList = planConfirmList[currentPeriod] || []
 
   const { isFetching } = useQuery(
     'getPlaceRoute',
@@ -39,12 +41,31 @@ const PlanConfirm = () => {
     },
   )
 
-  const onNext = () => {
-    console.log('다음')
+  const onNext = async () => {
+    const data = {
+      planId: 1,
+      title: planInfo.title,
+      period: planInfo.period,
+      region: planInfo.province,
+      list: planConfirmList,
+      transport: planListConfirm.transport,
+    }
+
+    await savePlan(data)
+
+    navigate('/planner')
   }
 
   const onPrev = () => {
     navigate('/planner/create')
+  }
+
+  const onEdit = () => {
+    setEditMode(true)
+  }
+
+  const handleEdit = () => {
+    setEditMode(false)
   }
 
   const svgToDataUrl = (svg: string) => {
@@ -79,18 +100,36 @@ const PlanConfirm = () => {
         <FullLoading isLoading={isFetching} />
       ) : (
         <LeftSection initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 1 }}>
-          <PlanLeftTab onNext={onNext} onPrev={onPrev} />
-          <LeftItem>
-            <Header>
-              <Title>{planInfo.title}</Title>
-              <Region>{planInfo.province}</Region>
-            </Header>
-
-            <PlanListDiv>
-              {planList.length > 0 &&
-                planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)}
-            </PlanListDiv>
-          </LeftItem>
+          {editMode ? (
+            <PlanEdit
+              setPlanConfirmList={setPlanConfirmList}
+              data={planConfirmList}
+              handleEdit={handleEdit}
+              info={planInfo}
+              transport={planListConfirm.transport}
+            />
+          ) : (
+            <>
+              <PlanLeftTab
+                onNext={onNext}
+                onPrev={onPrev}
+                onEdit={onEdit}
+                prevText="이전"
+                nextText="저장"
+                editText="편집"
+              />
+              <LeftItem>
+                <Header>
+                  <Title>{planInfo.title}</Title>
+                  <Region>{planInfo.province}</Region>
+                </Header>
+                <PlanListDiv>
+                  {planList.length > 0 &&
+                    planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)}
+                </PlanListDiv>
+              </LeftItem>
+            </>
+          )}
         </LeftSection>
       )}
       <RightSection>
@@ -100,7 +139,7 @@ const PlanConfirm = () => {
             lat: planInfo.lat,
             lng: planInfo.lng,
           }}
-          customMarker={markers}
+          customMarker={editMode ? [] : markers}
         />
       </RightSection>
     </Container>

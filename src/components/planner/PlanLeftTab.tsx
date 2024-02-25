@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { CurrentPeriod, PlanInfo } from 'recoil/atoms/PlanInfo'
+import { CurrentPeriod, PlanInfo } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import logo from 'assets/logo.svg'
 

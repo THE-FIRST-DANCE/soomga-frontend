@@ -2,7 +2,7 @@ import Modal from 'components/shared/Modal'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { PeriodPlanRecoil, PlanListConfirm } from 'recoil/atoms/PlanList'
+import { PeriodPlanRecoil, PlanListConfirm } from 'state/store/PlanList'
 import styled, { CSSProp } from 'styled-components'
 
 interface SelectTransportationProps {
