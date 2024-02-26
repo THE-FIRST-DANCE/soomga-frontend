@@ -60,7 +60,7 @@ const PlanCreatePage = () => {
   return (
     <Container>
       <LeftSection>
-        <PlanLeftTab onNext={onNext} onPrev={onPrev} prevText="이전" nextText="다음" />
+        <PlanLeftTab period={plan.period} onNext={onNext} onPrev={onPrev} prevText="이전" nextText="다음" />
         <Places plan={plan} />
         <PlanOrder />
       </LeftSection>
