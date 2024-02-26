@@ -1,19 +1,19 @@
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { CurrentPeriod, PlanInfo } from 'state/store/PlanInfo'
+import { useRecoilState } from 'recoil'
+import { CurrentPeriod } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import logo from 'assets/logo.svg'
 
 interface PlanLeftTabProps {
   onNext: () => void
-  onPrev: () => void
+  onPrev?: () => void
   onEdit?: () => void
-  prevText: string
+  prevText?: string
   nextText: string
   editText?: string
+  period: number
 }
 
-const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText }: PlanLeftTabProps) => {
-  const planInfo = useRecoilValue(PlanInfo)
+const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText, period }: PlanLeftTabProps) => {
   const [currentPeriod, setCurrentPeriod] = useRecoilState(CurrentPeriod)
 
   return (
@@ -25,7 +25,7 @@ const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText }: P
 
       {/* 날짜별 플랜 */}
       <PeriodBox>
-        {Array.from({ length: planInfo.period }, (_, i) => (
+        {Array.from({ length: period }, (_, i) => (
           <Period
             onClick={() => {
               setCurrentPeriod(i + 1)
@@ -40,13 +40,15 @@ const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText }: P
 
       {/* 이전, 다음 */}
       <TabBox>
-        <PrevPage
-          onClick={() => {
-            onPrev()
-          }}
-        >
-          {prevText}
-        </PrevPage>
+        {onPrev && (
+          <PrevPage
+            onClick={() => {
+              onPrev()
+            }}
+          >
+            {prevText}
+          </PrevPage>
+        )}
         {onEdit && (
           <EditPage
             onClick={() => {
@@ -71,7 +73,8 @@ const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText }: P
 export default PlanLeftTab
 
 const LeftTab = styled.div`
-  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
   height: 100%;
   box-sizing: border-box;
   gap: 3rem;
