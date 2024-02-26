@@ -5,21 +5,25 @@ import styled from 'styled-components'
 import { PlaceData } from 'interfaces/plan'
 import { categories } from './PlaceSelect'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { PeriodPlanRecoil } from 'state/store/PlanList'
+import { PeriodPlanRecoil, PlanPlaceBox } from 'state/store/PlanList'
 import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import PlaceDetail from './PlaceDetail'
 import { CurrentPeriod } from 'state/store/PlanInfo'
 
-const PlaceItem = ({ data }: { data: PlaceData }) => {
+const PlaceItem = ({ data, editMode }: { data: PlaceData; editMode?: boolean }) => {
   const address = useSubstring(data.address, 10)
   const currentPeriod = useRecoilValue(CurrentPeriod)
   const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil)
   const [detailModal, setDetailModal] = useState<boolean>(false)
 
+  const [placeBox, setPlaceBox] = useRecoilState(PlanPlaceBox)
+
   const category = categories.find((category) => category.value === data.category)
   const currentPlan = planPeriod[currentPeriod] || []
-  const checked = currentPlan.some((item) => item.item.placeId === data.placeId)
+  const checked = editMode
+    ? placeBox.some((item) => item.placeId === data.placeId)
+    : currentPlan.some((item) => item.item.placeId === data.placeId)
 
   const handleAddList = () => {
     setPlanPeriod((prev) => {
@@ -57,6 +61,16 @@ const PlaceItem = ({ data }: { data: PlaceData }) => {
     })
   }
 
+  const handleAddPlaceBox = () => {
+    setPlaceBox((prev) => {
+      if (checked) {
+        return prev.filter((item) => item.placeId !== data.placeId)
+      } else {
+        return [...prev, data]
+      }
+    })
+  }
+
   return (
     <Container>
       <Image>
@@ -87,7 +101,7 @@ const PlaceItem = ({ data }: { data: PlaceData }) => {
         </Rating>
       </Info>
 
-      <CheckContainer checked={checked} onClick={handleAddList}>
+      <CheckContainer checked={checked} onClick={editMode ? handleAddPlaceBox : handleAddList}>
         {checked ? (
           <Check style={{ width: '1rem', height: '1rem', fill: 'var(--bs-white)' }} />
         ) : (
