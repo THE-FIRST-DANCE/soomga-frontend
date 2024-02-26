@@ -11,6 +11,25 @@ interface ICreatePlanModal {
   onRequestClose: () => void
 }
 
+const setDate = [
+  {
+    value: 1,
+    label: '1일',
+  },
+  {
+    value: 2,
+    label: '2일',
+  },
+  {
+    value: 3,
+    label: '3일',
+  },
+  {
+    value: '직접입력',
+    label: '직접입력',
+  },
+]
+
 const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
   const { province, setProvince, openProvince, setOpenProvince, onChange, createPlan, setLat, setLng } = useCreatePlan()
 
@@ -92,15 +111,45 @@ const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
           </ModalBox>
 
           {/* 시간 설정 */}
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center' }}>
-            <ModalBox>
-              <ModalInfo>시작 시간</ModalInfo>
-              <ModalInput name="startTime" required type="time" onChange={onChange} />
-            </ModalBox>
-            <ModalBox>
-              <ModalInfo>종료 시간</ModalInfo>
-              <ModalInput name="endTime" required type="time" onChange={onChange} />
-            </ModalBox>
+          <div
+            style={{
+              display: 'flex',
+              gap: '1rem',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {setDate.map((date, index) => (
+              <SetDate key={index}>
+                <input type="radio" name="period" value={date.value} onChange={onChange} />
+                {date.value === '직접입력' ? (
+                  <input
+                    style={{
+                      width: '100px',
+                      height: '40px',
+                      padding: '0.5rem',
+                      border: '1px solid var(--bs-gray-dark)',
+                      borderRadius: '0.5rem',
+                      boxSizing: 'border-box',
+                    }}
+                    type="number"
+                    name="date"
+                    placeholder="직접 입력"
+                    onChange={onChange}
+                  />
+                ) : (
+                  <label
+                    style={{
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                    }}
+                    htmlFor="date"
+                  >
+                    {date.label}
+                  </label>
+                )}
+              </SetDate>
+            ))}
           </div>
 
           {/* 완료 버튼 */}
@@ -219,4 +268,12 @@ const DropdownItem = styled.li`
   &:hover {
     background-color: var(--bs-gray-light);
   }
+`
+
+const SetDate = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
 `

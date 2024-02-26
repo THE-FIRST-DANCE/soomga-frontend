@@ -1,16 +1,22 @@
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import Places from 'components/planner/place/PlaceTab'
+import PlanLeftTab from 'components/planner/PlanLeftTab'
 import PlanOrder from 'components/planner/PlanOrder'
-import { useEffect } from 'react'
+import SelectTransportation from 'components/planner/SelectTransportation'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { planInfo } from 'recoil/atoms/PlanInfo'
-import { PlanListRecoil } from 'recoil/atoms/PlanList'
+import { useRecoilValue } from 'recoil'
+import { CurrentPeriod, PlanInfo } from 'recoil/atoms/PlanInfo'
+import { PeriodPlanRecoil } from 'recoil/atoms/PlanList'
 import styled from 'styled-components'
 
 const PlanCreatePage = () => {
-  const [plan] = useRecoilState(planInfo)
-  const planList = useRecoilValue(PlanListRecoil)
+  const plan = useRecoilValue(PlanInfo)
+  const planPeriod = useRecoilValue(PeriodPlanRecoil)
+  const currentPeriod = useRecoilValue(CurrentPeriod)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const planList = planPeriod[currentPeriod] || []
 
   const marker = planList.map((item) => {
     return {
@@ -37,6 +43,14 @@ const PlanCreatePage = () => {
     }
   }, [])
 
+  const onNext = () => {
+    setIsOpen(true)
+  }
+
+  const onPrev = () => {
+    navigate('/planner')
+  }
+
   useEffect(() => {
     if (!plan.title) {
       navigate('/planner')
@@ -46,8 +60,9 @@ const PlanCreatePage = () => {
   return (
     <Container>
       <LeftSection>
+        <PlanLeftTab onNext={onNext} onPrev={onPrev} />
         <Places plan={plan} />
-        <PlanOrder plan={plan} />
+        <PlanOrder />
       </LeftSection>
       <RightSection>
         <GoogleMapLoad
@@ -59,6 +74,7 @@ const PlanCreatePage = () => {
           marker={marker}
         />
       </RightSection>
+      <SelectTransportation isOpen={isOpen} onRequestClose={() => setIsOpen(false)} />
     </Container>
   )
 }

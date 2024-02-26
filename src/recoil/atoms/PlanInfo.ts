@@ -3,20 +3,23 @@ import { atom } from 'recoil'
 export interface PlanInfo {
   title: string
   province: string
-  startTime: string
-  endTime: string
+  period: number
   lat: number
   lng: number
 }
 
-export const planInfo = atom<PlanInfo>({
+export const PlanInfo = atom<PlanInfo>({
   key: 'planInfo',
   default: {
     title: '',
     province: '',
-    startTime: '',
-    endTime: '',
+    period: 1,
     lat: 0,
     lng: 0,
   },
+})
+
+export const CurrentPeriod = atom<number>({
+  key: 'currentPeriod',
+  default: 1,
 })

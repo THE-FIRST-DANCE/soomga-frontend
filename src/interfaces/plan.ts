@@ -1,16 +1,3 @@
-interface PlanList {
-  id: number
-  member_id: number
-}
-
-interface PlanItem {
-  id: number
-  name: string
-  description: string
-  place_id: number
-  full_time: string
-}
-
 export interface GooglePlaceResponse {
   next_page_token: string
   results: GooglePlace[]
@@ -39,6 +26,7 @@ export interface GooglePlacePhoto {
 }
 
 export interface PlaceData {
+  id: number
   name: string
   placeId: string
   rating: number
@@ -59,4 +47,20 @@ interface openingHours {
   openTime: string
   closeTime: string
   id: number
+}
+
+export interface PlanConfirmItemResponse {
+  [period: number]: PlanConfirmItemData[]
+}
+
+export interface PlanConfirmItemData {
+  id: number
+  time: string
+  nextTime: string
+  item: PlaceData
+  nextLat: number
+  nextLng: number
+  nextPlaceId: number
+  nextPlaceGoogleId: string
+  nextPlaceName: string
 }

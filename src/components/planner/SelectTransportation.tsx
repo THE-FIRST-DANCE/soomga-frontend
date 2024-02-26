@@ -2,7 +2,7 @@ import Modal from 'components/shared/Modal'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { PlanListConfirm, PlanListRecoil } from 'recoil/atoms/PlanList'
+import { PeriodPlanRecoil, PlanListConfirm } from 'recoil/atoms/PlanList'
 import styled, { CSSProp } from 'styled-components'
 
 interface SelectTransportationProps {
@@ -11,13 +11,14 @@ interface SelectTransportationProps {
 }
 
 const SelectTransportation = ({ isOpen, onRequestClose }: SelectTransportationProps) => {
-  const [transportation, setTransportation] = useState<string>('public')
+  const [transportation, setTransportation] = useState<string>('transit')
+  const periodPlan = useRecoilValue(PeriodPlanRecoil)
   const setPlanList = useSetRecoilState(PlanListConfirm)
-  const planList = useRecoilValue(PlanListRecoil)
+
   const navigate = useNavigate()
 
   const handleSelect = () => {
-    setPlanList({ planList, transportation })
+    setPlanList({ planList: periodPlan, transport: transportation })
     onRequestClose()
     navigate('/planner/confirm')
   }
@@ -35,18 +36,18 @@ const SelectTransportation = ({ isOpen, onRequestClose }: SelectTransportationPr
     >
       <Container>
         <Title>이동수단 선택</Title>
-        <Explan>{transportation === 'public' ? '대중교통을 이용합니다.' : '승용차를 이용합니다.'}</Explan>
+        <Explan>{transportation === 'transit' ? '대중교통을 이용합니다.' : '승용차를 이용합니다.'}</Explan>
         <Select>
           <SelectTransportationItem
-            className={transportation === 'public' ? 'active' : ''}
-            onClick={() => setTransportation('public')}
+            className={transportation === 'transit' ? 'active' : ''}
+            onClick={() => setTransportation('transit')}
           >
             <SubwayIcon style={{ width: '2rem', height: '2rem' }} />
             <div>대중교통</div>
           </SelectTransportationItem>
           <SelectTransportationItem
-            className={transportation === 'car' ? 'active' : ''}
-            onClick={() => setTransportation('car')}
+            className={transportation === 'driving' ? 'active' : ''}
+            onClick={() => setTransportation('driving')}
           >
             <CarIcon style={{ width: '2rem', height: '2rem' }} />
             <div>승용차</div>
@@ -129,7 +130,7 @@ interface IconProps {
   style: CSSProp
 }
 
-const SubwayIcon = ({ ...props }: IconProps) => {
+export const SubwayIcon = ({ ...props }: IconProps) => {
   return (
     <IconStyle {...props} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g>
@@ -140,7 +141,7 @@ const SubwayIcon = ({ ...props }: IconProps) => {
   )
 }
 
-const CarIcon = ({ ...props }: IconProps) => {
+export const CarIcon = ({ ...props }: IconProps) => {
   return (
     <IconStyle {...props} fill="none" viewBox="0 0 184 134" xmlns="http://www.w3.org/2000/svg">
       <path

@@ -26,4 +26,5 @@ const TimeStyle = styled.svg<TimeProps>`
   width: ${(props) => props.$width};
   height: ${(props) => props.$height};
   fill: ${(props) => props.$color};
+  margin-right: 3px;
 `

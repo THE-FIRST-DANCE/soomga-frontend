@@ -7,8 +7,6 @@ import { useQuery } from 'react-query'
 import { getPlaceApi } from 'api/PlanAPI'
 import { PlaceData } from 'interfaces/plan'
 import Spinner from 'components/shared/Spinner'
-import Button from 'components/shared/Button'
-import SelectTransportation from '../SelectTransportation'
 
 export const categories = [
   { label: '추천', value: 'all' },
@@ -22,7 +20,6 @@ const PlaceSelect = ({ region }: { region: string }) => {
   const [search, setSearch] = useState<string>('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [places, setPlaces] = useState<PlaceData[]>([])
-  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target
@@ -41,10 +38,6 @@ const PlaceSelect = ({ region }: { region: string }) => {
   const filteredPlaces = places.filter((item) => {
     return item.name.includes(search)
   })
-
-  const nextButton = () => {
-    setIsOpen(true)
-  }
 
   return (
     <>
@@ -83,46 +76,21 @@ const PlaceSelect = ({ region }: { region: string }) => {
       </Category>
 
       {/* 아이템 */}
-      {isLoading ? (
-        <Spinner type="ClipLoader" loading={isLoading} />
-      ) : places.length > 0 ? (
-        filteredPlaces.map((item) => <PlaceItem key={item.placeId} data={item} />)
-      ) : (
-        <div
-          style={{
-            marginTop: '1rem',
-          }}
-        >
-          장소가 없습니다
-        </div>
-      )}
-
-      {/* 푸터 */}
-      <Footer>
-        <Button
-          label="취소"
-          $width="10vw"
-          $height="3rem"
-          $color="var(--bs-gray-200)"
-          $fontColor="var(--bs-black)"
-          $hasBorder
-          $borderColor="var(--bs-black)"
-          $borderRadius="0.5rem"
-        />
-        <Button
-          label="확인"
-          $width="10vw"
-          $height="3rem"
-          $color="var(--color-primary)"
-          $fontColor="var(--bs-black)"
-          $hasBorder
-          $borderColor="var(--bs-black)"
-          $borderRadius="0.5rem"
-          onClick={nextButton}
-        />
-      </Footer>
-
-      <SelectTransportation isOpen={isOpen} onRequestClose={() => setIsOpen(false)} />
+      <ItemList>
+        {isLoading ? (
+          <Spinner type="ClipLoader" loading={isLoading} />
+        ) : places.length > 0 ? (
+          filteredPlaces.map((item) => <PlaceItem key={item.id} data={item} />)
+        ) : (
+          <div
+            style={{
+              marginTop: '1rem',
+            }}
+          >
+            장소가 없습니다
+          </div>
+        )}
+      </ItemList>
     </>
   )
 }
@@ -132,15 +100,17 @@ export default PlaceSelect
 const Category = styled.div`
   display: flex;
   gap: 1rem;
-  padding: 1rem;
+  padding: 1rem 0;
   box-sizing: border-box;
-  width: 100%;
   position: relative;
 `
 
 const CategoryItem = styled.div`
-  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0.3rem 0.5rem;
+  border-radius: 5px;
   border: 1px solid var(--bs-black);
   cursor: pointer;
 
@@ -158,16 +128,12 @@ const Search = styled.div`
   margin-top: 0.5rem;
 `
 
-const Footer = styled.div`
-  width: 100%;
-  box-sizing: border-box;
-  padding: 1rem;
-  position: absolute;
+const ItemList = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3rem;
-  bottom: 0;
-  left: 0;
-  background-color: #fff;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-y: auto;
 `
