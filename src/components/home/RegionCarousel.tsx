@@ -79,8 +79,8 @@ const RegionCarousel = () => {
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           // navigation={true} // 좌우 버튼
           // pagination={{ clickable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log('slide change')}
+          // onSwiper={(swiper) => console.log(swiper)}
+          // onSlideChange={() => console.log('slide change')}
           centeredSlides={true} // 현재 슬라이드를 가운데 정렬
           slidesPerGroup={1} // 한 번에 보여지는 슬라이드 수
         >
