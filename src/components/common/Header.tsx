@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import logo from '../../assets/logo.svg'
 
 import LanguageIcon from 'components/icons/LanguageIcon'
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import useClickOutsideToggle from 'hooks/useClickOutsideToggle'
 import { motion } from 'framer-motion'
+import { getCookie, getRemoveCookie } from 'utils/cookie'
 
 interface IconWrapperProps {
   flex: number
@@ -136,20 +137,44 @@ const Header = () => {
               }}
             >
               {/* 3.2.2.1  우측 : 유저 버튼  */}
-              <UseTab_btn
-                onClick={() => {
-                  navigate('/user/signup')
-                }}
-              >
-                회원가입
-              </UseTab_btn>
-              <UseTab_btn
-                onClick={() => {
-                  navigate('/user/login')
-                }}
-              >
-                로그인
-              </UseTab_btn>
+
+              {!getCookie('accessToken') ? (
+                <>
+                  <UseTab_btn
+                    onClick={() => {
+                      navigate('/user/login')
+                    }}
+                  >
+                    로그인
+                  </UseTab_btn>
+                  <UseTab_btn
+                    onClick={() => {
+                      navigate('/user/signup')
+                    }}
+                  >
+                    회원가입
+                  </UseTab_btn>
+                </>
+              ) : (
+                <>
+                  <UseTab_btn
+                    onClick={() => {
+                      navigate('/mypage/info')
+                    }}
+                  >
+                    마이페이지
+                  </UseTab_btn>
+                  <UseTab_btn
+                    onClick={() => {
+                      getRemoveCookie('accessToken')
+                      window.location.reload()
+                      navigate('/')
+                    }}
+                  >
+                    로그아웃
+                  </UseTab_btn>
+                </>
+              )}
             </LoginDropdown_div>
           ) : null}
         </HeaderIconContainer_div>
@@ -260,19 +285,19 @@ const LanguageDropdown_ul = styled.ul`
 // 3.2.2 우측 :토글 [ 회원가입 | 로그인 ]
 const LoginDropdown_div = styled(motion.div)`
   width: 200px;
-  height: 150px;
+  height: auto;
   position: absolute;
   top: 100px;
   right: 5px;
   border: 1px solid lightgray;
   border-radius: 20px;
   box-shadow: 1px 1px 16px 2px lightgray;
-  background-color: white;
+  background-color: #ffffff;
 `
 
 // 3.2.2.1 우측 : 유저 버튼
 const UseTab_btn = styled(HeaderMiddleBtn)`
-  height: 50%;
+  min-height: 75px;
   width: 100%;
   border-radius: 20px;
   color: #403f3f;
