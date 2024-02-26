@@ -1,8 +1,12 @@
+import { useMutation } from '@tanstack/react-query'
+import { getPlaceRoute } from 'api/PlanAPI'
+import FullLoading from 'components/shared/FullLoading'
 import Modal from 'components/shared/Modal'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { PeriodPlanRecoil, PlanListConfirm } from 'state/store/PlanList'
+import { PlanInfo } from 'state/store/PlanInfo'
+import { PeriodPlanRecoil, PlanConfirmList } from 'state/store/PlanList'
 import styled, { CSSProp } from 'styled-components'
 
 interface SelectTransportationProps {
@@ -12,55 +16,77 @@ interface SelectTransportationProps {
 
 const SelectTransportation = ({ isOpen, onRequestClose }: SelectTransportationProps) => {
   const [transportation, setTransportation] = useState<string>('transit')
+  const [loading, setLoading] = useState<boolean>(false)
+
   const periodPlan = useRecoilValue(PeriodPlanRecoil)
-  const setPlanList = useSetRecoilState(PlanListConfirm)
+  const setPlanConfirmList = useSetRecoilState(PlanConfirmList)
+  const planInfo = useRecoilValue(PlanInfo)
 
   const navigate = useNavigate()
 
-  const handleSelect = () => {
-    setPlanList({ planList: periodPlan, transport: transportation })
-    onRequestClose()
-    navigate('/planner/confirm')
+  const { mutate } = useMutation({
+    mutationFn: getPlaceRoute,
+    onSuccess: (data) => {
+      setPlanConfirmList({
+        periodPlan: data,
+        transport: transportation,
+        info: planInfo,
+      })
+      setLoading(false)
+      navigate('/planner/confirm')
+    },
+  })
+
+  const submitHandler = async () => {
+    if (planInfo.period == Object.keys(periodPlan).length) {
+      setLoading(true)
+      mutate({ planList: periodPlan, transport: transportation })
+    } else {
+      alert('일정을 모두 입력해주세요.')
+    }
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={() => onRequestClose()}
-      ariaHideApp={false}
-      style={{
-        content: {
-          maxWidth: '400px',
-        },
-      }}
-    >
-      <Container>
-        <Title>이동수단 선택</Title>
-        <Explan>{transportation === 'transit' ? '대중교통을 이용합니다.' : '승용차를 이용합니다.'}</Explan>
-        <Select>
-          <SelectTransportationItem
-            className={transportation === 'transit' ? 'active' : ''}
-            onClick={() => setTransportation('transit')}
-          >
-            <SubwayIcon style={{ width: '2rem', height: '2rem' }} />
-            <div>대중교통</div>
-          </SelectTransportationItem>
-          <SelectTransportationItem
-            className={transportation === 'driving' ? 'active' : ''}
-            onClick={() => setTransportation('driving')}
-          >
-            <CarIcon style={{ width: '2rem', height: '2rem' }} />
-            <div>승용차</div>
-          </SelectTransportationItem>
-        </Select>
-        <Footer>
-          <FooterText onClick={() => onRequestClose()} style={{ color: 'var(--bs-gray-400)' }}>
-            닫기
-          </FooterText>
-          <FooterText onClick={() => handleSelect()}>일정생성</FooterText>
-        </Footer>
-      </Container>
-    </Modal>
+    <>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => onRequestClose()}
+        ariaHideApp={false}
+        style={{
+          content: {
+            maxWidth: '400px',
+          },
+        }}
+      >
+        <Container>
+          <Title>이동수단 선택</Title>
+          <Explan>{transportation === 'transit' ? '대중교통을 이용합니다.' : '승용차를 이용합니다.'}</Explan>
+          <Select>
+            <SelectTransportationItem
+              className={transportation === 'transit' ? 'active' : ''}
+              onClick={() => setTransportation('transit')}
+            >
+              <SubwayIcon style={{ width: '2rem', height: '2rem' }} />
+              <div>대중교통</div>
+            </SelectTransportationItem>
+            <SelectTransportationItem
+              className={transportation === 'driving' ? 'active' : ''}
+              onClick={() => setTransportation('driving')}
+            >
+              <CarIcon style={{ width: '2rem', height: '2rem' }} />
+              <div>승용차</div>
+            </SelectTransportationItem>
+          </Select>
+          <Footer>
+            <FooterText onClick={() => onRequestClose()} style={{ color: 'var(--bs-gray-400)' }}>
+              닫기
+            </FooterText>
+            <FooterText onClick={() => submitHandler()}>일정생성</FooterText>
+          </Footer>
+        </Container>
+      </Modal>
+      {loading && <FullLoading isLoading={loading} />}
+    </>
   )
 }
 
