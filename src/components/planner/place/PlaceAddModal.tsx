@@ -3,7 +3,7 @@ import Cancel from 'components/icons/Cancel'
 import Modal from 'components/shared/Modal'
 import { GooglePlace, PlaceData } from 'interfaces/plan'
 import { useState } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import styled from 'styled-components'
 
 interface IPlaceAddModal {
@@ -20,17 +20,15 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
     setCategory(e.target.value)
   }
 
-  const addPlaceMutate = useMutation((data: PlaceData) => addPlaceApi(data), {
+  const { mutate } = useMutation({
+    mutationFn: addPlaceApi,
     onSuccess: () => {
       onRequestClose()
-    },
-    onError: (error) => {
-      console.log(error)
     },
   })
 
   const handleAddPlace = () => {
-    const data = {
+    const data: PlaceData = {
       name: place.name,
       placeId: place.place_id,
       rating: place.rating ? place.rating : 0.0,
@@ -42,7 +40,7 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
       region,
     }
 
-    addPlaceMutate.mutate(data)
+    mutate(data)
   }
 
   return (

@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useState } from 'react'
 import Input from 'components/shared/Input'
 import SearchIcon from 'components/icons/Search'
-import { useQueryClient } from 'react-query'
 import { getSearchPlaceGoogle } from 'api/PlanAPI'
 import GoogleMapLoad from '../GoogleMap'
 import { GooglePlace } from 'interfaces/plan'
@@ -14,12 +13,10 @@ const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
   const [searchResult, setSearchResult] = useState<GooglePlace[]>([])
   const [center, setCenter] = useState({ lat: plan.lat, lng: plan.lng })
 
-  const queryClient = useQueryClient()
-
   const handleSearch = async () => {
     const location = plan.lat + ',' + plan.lng
 
-    const response = await queryClient.fetchQuery(['searchPlace', search], () => getSearchPlaceGoogle(search, location))
+    const response = await getSearchPlaceGoogle(search, location)
 
     setSearchResult(response.results)
   }
