@@ -1,3 +1,5 @@
+import { PlanListRecoil } from 'state/store/PlanList'
+
 export interface GooglePlaceResponse {
   next_page_token: string
   results: GooglePlace[]
@@ -79,5 +81,5 @@ export interface dayPlan {
   id: number
   day: number
   planId: number
-  [period: number]: PlanConfirmItemData[]
+  schedules: PlanListRecoil[]
 }

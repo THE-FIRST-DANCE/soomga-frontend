@@ -1,13 +1,13 @@
-import { PlanConfirmItemData } from 'interfaces/plan'
 import styled from 'styled-components'
 import { categories } from './place/PlaceSelect'
 import { CarIcon } from './SelectTransportation'
 import Arrow from 'components/icons/Arrow'
 import { getTransCoord } from 'api/PlanAPI'
+import { PlanListRecoil } from 'state/store/PlanList'
 
 interface PlanConfirmItemProps {
   index: number
-  data: PlanConfirmItemData
+  data: PlanListRecoil
 }
 
 const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {

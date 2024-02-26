@@ -4,11 +4,11 @@ import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { CurrentPeriod } from 'state/store/PlanInfo'
-import { PeriodPlanRecoil, PlanListRecoil } from 'state/store/PlanList'
+import { PeriodPlanRecoil, PlanListItem } from 'state/store/PlanList'
 import styled from 'styled-components'
 
 interface PlanOrderItemProps {
-  item: PlanListRecoil
+  item: PlanListItem
   fold?: boolean
 }
 
