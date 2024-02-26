@@ -20,6 +20,8 @@ import {
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 
+import { getLogin } from 'api/LoginSignUp'
+
 interface LoginForm {
   email: string
   password: string
@@ -34,6 +36,7 @@ interface SignuppForm {
 const LoginSignupPage = () => {
   const [password, setPassword] = useState<string>('')
   const [checkPassword, setCheckPassword] = useState<string>('')
+  const [errorMsg, setErrorMsg] = useState<string>('')
 
   // 로그인 유효성 검사 스키마 :
   const loginForm = useForm<LoginForm>({
@@ -48,8 +51,17 @@ const LoginSignupPage = () => {
   })
 
   // FIXME:Post 요청할 때 보내기
-  const onSubmitForLogin = (data: LoginForm) => {
+  const onSubmitForLogin = async (data: LoginForm) => {
     console.log(data)
+    try {
+      const result = await getLogin(data.email, data.password)
+      console.log(result.message)
+      window.location.replace('/')
+    } catch (error: any) {
+      console.error('Error during login:', error.response.data.message)
+      setErrorMsg(error.response.data.message)
+    }
+    // console.log(getLogin(data.email, data.password).then((data) => console.log(data)))
   }
   const onSubmitForSignup = (data: SignuppForm) => {
     console.log(data)
