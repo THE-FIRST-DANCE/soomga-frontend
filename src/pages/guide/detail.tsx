@@ -13,7 +13,6 @@ import busan from '../../assets/busan.png'
 import ulsan from '../../assets/ulsan.png'
 import Time from 'components/icons/Time'
 import Arrow from 'components/icons/Arrow'
-import { motion } from 'framer-motion'
 import CarIcon from 'components/icons/CarIcon'
 
 import Calendar from 'react-calendar'
