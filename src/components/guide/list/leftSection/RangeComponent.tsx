@@ -1,7 +1,8 @@
 import React from 'react'
-import { Container, LangeTitle, Wrapper } from '../GuidePage' // Make sure to provide the correct import path
+// import { Container, LangeTitle, Wrapper } from '../../../pages/guide/index' // Make sure to provide the correct import path
 import { styled } from 'styled-components'
 import flag from 'assets/flag2.svg'
+import { Container, LangeTitle, Wrapper } from 'pages/guide'
 
 interface RangeComponentProps {
   title: string

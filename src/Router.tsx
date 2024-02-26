@@ -1,9 +1,10 @@
-import GuidePage from 'components/guide/GuidePage'
+import GuidePage from 'pages/guide'
 
 import PlanConfirm from 'pages/PlanConfirm'
 
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
+import GuideDetailPage from 'pages/guide/detail'
 import MainPage from 'pages/home'
 // import LoginPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
@@ -20,7 +21,7 @@ const Router = () => {
 
         {/* 3. 가이드 */}
         <Route path="/guides" element={<GuidePage />} />
-        <Route path="/guides/detail/:id" element={<h1>가이드 리스트 </h1>} />
+        <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
         {/* 4. 여행일정 */}
         <Route path="/itinerary" element={<h1>여행 일정 </h1>} />

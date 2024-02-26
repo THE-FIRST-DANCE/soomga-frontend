@@ -2,11 +2,14 @@ import React from 'react'
 import { styled } from 'styled-components'
 import userImage from 'assets/userImage.svg'
 import logo from 'assets/logo.svg'
+import { useNavigate } from 'react-router-dom'
 const GuideCard = () => {
   //  테스트 데이터
+  const navigate = useNavigate()
 
   const userTestDatas = [
     {
+      id: 1,
       temperature: 35,
       image: '',
       sex: 'male',
@@ -20,6 +23,7 @@ const GuideCard = () => {
     },
 
     {
+      id: 2,
       temperature: 28,
       image: logo,
       sex: 'female',
@@ -32,6 +36,7 @@ const GuideCard = () => {
       tags: ['해운대', '부산', '태그3', '태그4', '태그5'],
     },
     {
+      id: 3,
       temperature: 36,
       image: logo,
       sex: 'female',
@@ -44,6 +49,7 @@ const GuideCard = () => {
       tags: ['팔공산', '대구', '태그3', '태그4', '태그5'],
     },
     {
+      id: 4,
       temperature: 30,
       image: logo,
       sex: 'male',
@@ -56,6 +62,7 @@ const GuideCard = () => {
       tags: ['인천공항', '인천', '태그3', '태그4', '태그5'],
     },
     {
+      id: 5,
       temperature: 31,
       image: logo,
       sex: 'male',
@@ -74,7 +81,7 @@ const GuideCard = () => {
       <RightSectionTitle>{`SoomGa의 가이드님, ${userTestDatas.length} 명`}</RightSectionTitle>
       {userTestDatas.map((data) => {
         return (
-          <CardLayout>
+          <CardLayout onClick={() => navigate(`/guides/detail/${data.id}`)}>
             <CardContainer>
               {/* FIXME: 온도 */}
               <Temperature>{`${data.temperature}°C`}</Temperature>
@@ -147,6 +154,7 @@ const CardLayout = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 1rem;
+  cursor: pointer;
 `
 /* Flex | justify-content | align-items*/
 const FlexCenter = styled.div`

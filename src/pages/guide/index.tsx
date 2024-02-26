@@ -1,13 +1,13 @@
 import MagnifieirIcon from 'components/home/MagnifieirIcon'
 import { styled } from 'styled-components'
 import { useState } from 'react'
-import useGuideStateMethods from './leftSection/GuidePageUtils'
-import RangeComponent from './leftSection/RangeComponent'
-import CheckboxComponent from './leftSection/CheckboxComponent' // 이름 변경
+import useGuideStateMethods from '../../components/guide/list/leftSection/GuidePageUtils'
+import RangeComponent from '../../components/guide/list/leftSection/RangeComponent'
+import CheckboxComponent from '../../components/guide/list/leftSection/CheckboxComponent' // 이름 변경
 
 import Star from 'components/icons/Star'
-import RatingFakeCheckbox from './leftSection/RatingFakeCheckbox'
-import GuideCard from './rightSection/GuideCard'
+import RatingFakeCheckbox from '../../components/guide/list/leftSection/RatingFakeCheckbox'
+import GuideCard from '../../components/guide/list/rightSection/GuideCard'
 
 const GuidePage = () => {
   const {
@@ -44,8 +44,7 @@ const GuidePage = () => {
   const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]) // 선택된 자격증
 
   // 평점
-
-  const [selectedRating, setSelectedRating] = useState<string[]>([]) // 선택된 자격증
+  // const [selectedRating, setSelectedRating] = useState<string[]>([]) // 선택된 자격증
 
   return (
     <>
@@ -232,11 +231,12 @@ const GuidePage = () => {
 
                 {/* 자격증 데이터 */}
                 {isCredentialsClick && (
-                  <RegionDropWrapper isRegionClick={isCredentialsClick}>
+                  <CredentialDropWrapper isRegionClick={isCredentialsClick}>
                     {/* 일본어 */}
                     <LanguageTitle>日本語🇯🇵</LanguageTitle>
+                    {/* <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
+                    <div style={{ width: '100%', height: '1rem' }}></div> */}
                     {CredentialsDatas.japanesse.map((language) => {
                       const isSelected = selectedCredentials.includes(language)
 
@@ -256,14 +256,13 @@ const GuidePage = () => {
                         </RegionIcon>
                       )
                     })}
+                    {/* <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
+                    <div style={{ width: '100%', height: '1rem' }}></div> */}
                     {/* 영어 */}
                     <LanguageTitle>English 🇬🇧 </LanguageTitle>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
+                    {/* <div style={{ width: '100%', height: '1rem' }}></div>
+                    <div style={{ width: '100%', height: '1rem' }}></div> */}
 
                     {CredentialsDatas.english.map((language) => {
                       const isSelected = selectedCredentials.includes(language)
@@ -284,7 +283,7 @@ const GuidePage = () => {
                         </RegionIcon>
                       )
                     })}
-                  </RegionDropWrapper>
+                  </CredentialDropWrapper>
                 )}
               </Container>
             </CredentialsContainer>
@@ -513,12 +512,12 @@ const RegionDropWrapper = styled(Wrapper)<{ isRegionClick: boolean }>`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* 자동으로 크기 조절하며 최소 100px 너비를 유지 */
   gap: 10px; /* 그리드 아이템 사이의 간격 */
-
   justify-content: space-around;
   width: 100%;
   background-color: transparent;
   opacity: ${({ isRegionClick }) => (isRegionClick ? '1' : '0')};
   transition: opacity 1s;
+  grid-auto-flow: row;
 `
 
 /* 🟠  5. 언어 선택 : 한국어 | 영어 | 일본어 🟠 */
@@ -531,6 +530,8 @@ const LanguageTitle = styled.div`
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 5px;
+  /* background-color: red; */
+  grid-column: span 4;
 `
 
 /* 🟠 6. 자격증 선택 :  영어 | 일본어 🟠  */
@@ -538,6 +539,8 @@ const CredentialsContainer = styled(Container)`
   width: 100%;
   margin-top: 150px;
 `
+
+const CredentialDropWrapper = styled(RegionDropWrapper)``
 
 /* 🟠  7. 평점 선택 🟠   */
 const StarWrapper = styled(Wrapper)`
