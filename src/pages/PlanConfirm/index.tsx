@@ -1,63 +1,41 @@
-import { getPlaceRoute, savePlan } from 'api/PlanAPI'
+import { savePlan } from 'api/PlanAPI'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import PlanConfirmItem from 'components/planner/PlanConfirmItem'
 import PlanEdit from 'components/planner/PlanEdit'
 import PlanLeftTab from 'components/planner/PlanLeftTab'
-import FullLoading from 'components/shared/FullLoading'
 import { motion } from 'framer-motion'
-import { PlanConfirmItemResponse } from 'interfaces/plan'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { CurrentPeriod, PlanInfo } from 'state/store/PlanInfo'
-import { PlanListConfirm } from 'state/store/PlanList'
+import { CurrentPeriod } from 'state/store/PlanInfo'
+import { PlanConfirmList } from 'state/store/PlanList'
 import styled from 'styled-components'
 
 const PlanConfirm = () => {
-  const [planConfirmList, setPlanConfirmList] = useState<PlanConfirmItemResponse>({})
   const [editMode, setEditMode] = useState<boolean>(false)
 
+  const planConfirmList = useRecoilValue(PlanConfirmList)
   const currentPeriod = useRecoilValue(CurrentPeriod)
-  const planInfo = useRecoilValue(PlanInfo)
-  const planListConfirm = useRecoilValue(PlanListConfirm)
 
   const navigate = useNavigate()
 
-  const planList = planConfirmList[currentPeriod] || []
-
-  const { isFetching } = useQuery(
-    'getPlaceRoute',
-    () =>
-      getPlaceRoute({
-        list: planListConfirm.planList,
-        transport: planListConfirm.transport,
-      }),
-    {
-      refetchOnWindowFocus: false,
-      onSuccess(data) {
-        setPlanConfirmList(data)
-      },
-    },
-  )
+  const planList = planConfirmList.periodPlan[currentPeriod] || []
 
   const onNext = async () => {
     const data = {
       planId: 1,
-      title: planInfo.title,
-      period: planInfo.period,
-      region: planInfo.province,
-      list: planConfirmList,
-      transport: planListConfirm.transport,
+      title: planConfirmList.info.title,
+      period: planConfirmList.info.period,
+      region: planConfirmList.info.province,
+      list: planConfirmList.periodPlan,
+      transport: planConfirmList.transport,
     }
+
+    console.log(data)
 
     await savePlan(data)
 
     navigate('/planner')
-  }
-
-  const onPrev = () => {
-    navigate('/planner/create')
   }
 
   const onEdit = () => {
@@ -96,48 +74,43 @@ const PlanConfirm = () => {
 
   return (
     <Container>
-      {isFetching ? (
-        <FullLoading isLoading={isFetching} />
-      ) : (
-        <LeftSection initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 1 }}>
-          {editMode ? (
-            <PlanEdit
-              setPlanConfirmList={setPlanConfirmList}
-              data={planConfirmList}
-              handleEdit={handleEdit}
-              info={planInfo}
-              transport={planListConfirm.transport}
+      <LeftSection initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 1 }}>
+        {editMode ? (
+          <PlanEdit
+            data={planConfirmList.periodPlan}
+            handleEdit={handleEdit}
+            info={planConfirmList.info}
+            transport={planConfirmList.transport}
+          />
+        ) : (
+          <>
+            <PlanLeftTab
+              onNext={onNext}
+              onEdit={onEdit}
+              nextText="저장"
+              editText="편집"
+              period={planConfirmList.info.period}
             />
-          ) : (
-            <>
-              <PlanLeftTab
-                onNext={onNext}
-                onPrev={onPrev}
-                onEdit={onEdit}
-                prevText="이전"
-                nextText="저장"
-                editText="편집"
-              />
-              <LeftItem>
-                <Header>
-                  <Title>{planInfo.title}</Title>
-                  <Region>{planInfo.province}</Region>
-                </Header>
-                <PlanListDiv>
-                  {planList.length > 0 &&
-                    planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)}
-                </PlanListDiv>
-              </LeftItem>
-            </>
-          )}
-        </LeftSection>
-      )}
+            <LeftItem>
+              <Header>
+                <Title>{planConfirmList.info.title}</Title>
+                <Region>{planConfirmList.info.province}</Region>
+              </Header>
+              <PlanListDiv>
+                {planList.length > 0 &&
+                  planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)}
+              </PlanListDiv>
+            </LeftItem>
+          </>
+        )}
+      </LeftSection>
+
       <RightSection>
         <GoogleMapLoad
           mapContainerStyle={{ width: '100%', height: '100%' }}
           center={{
-            lat: planInfo.lat,
-            lng: planInfo.lng,
+            lat: planConfirmList.info.lat,
+            lng: planConfirmList.info.lng,
           }}
           customMarker={editMode ? [] : markers}
         />
@@ -154,7 +127,7 @@ const Container = styled.div`
 
 const LeftSection = styled(motion.div)`
   display: flex;
-  flex: 1;
+  flex: 1.5;
   height: 100vh;
 `
 
