@@ -1,6 +1,10 @@
 import Arrow from 'components/icons/Arrow'
 import Time from 'components/icons/Time'
+import { provinces } from 'data/region'
 import { Plans } from 'interfaces/plan'
+import { useNavigate } from 'react-router-dom'
+import { useSetRecoilState } from 'recoil'
+import { PlanConfirmList, PlanListRecoil } from 'state/store/PlanList'
 import styled from 'styled-components'
 
 interface PlanListProp {
@@ -8,9 +12,40 @@ interface PlanListProp {
 }
 
 const PlanItem = ({ data }: PlanListProp) => {
+  const setPlanConfirmList = useSetRecoilState(PlanConfirmList)
+
+  const lat = provinces.find((item) => item.name === data.region)?.lat
+  const lng = provinces.find((item) => item.name === data.region)?.lng
+
+  const navigate = useNavigate()
+
+  const onClick = () => {
+    const periodPlan: { [key: number]: PlanListRecoil[] } = {}
+
+    data.daySchedules.forEach((item) => {
+      periodPlan[item.day] = item.schedules
+    })
+
+    console.log(periodPlan)
+
+    setPlanConfirmList({
+      periodPlan,
+      transport: data.transport,
+      info: {
+        title: data.title,
+        province: data.region,
+        lat: lat || 0,
+        lng: lng || 0,
+        period: data.period,
+      },
+    })
+
+    navigate('/planner/confirm')
+  }
+
   return (
     <Container>
-      <PlanItems>
+      <PlanItems onClick={onClick} style={{ cursor: 'pointer' }}>
         <PlanInfo>
           <PlanTitle>{data.title}</PlanTitle>
           <PlanDesc>{data.region}</PlanDesc>
