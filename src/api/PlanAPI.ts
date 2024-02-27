@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { GooglePlaceResponse, PlaceData } from 'interfaces/plan'
-import { PeriodPlanRecoil } from 'recoil/atoms/PlanList'
+import { PlanListConfirm } from 'state/store/PlanList'
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/',
@@ -35,18 +35,40 @@ export const getPlaceApi = async (category: string, region: string) => {
   return response.data
 }
 
-interface PlanListResponse {
-  list: PeriodPlanRecoil
-  transport: string
-}
-
-export const getPlaceRoute = async ({ list, transport }: PlanListResponse) => {
+export const getPlaceRoute = async ({ planList, transport }: PlanListConfirm) => {
   const data = {
-    list,
+    list: planList,
     transport,
   }
 
   const response = await api.post('plans/distance', data)
+
+  return response.data
+}
+
+export const getPlaceRouteEdit = async ({ planList, transport }: PlanListConfirm) => {
+  const data = {
+    list: planList,
+    transport,
+  }
+
+  const response = await api.post('plans/route/edit', data)
+
+  return response.data
+}
+
+export const savePlan = async (data: any) => {
+  const response = await api.post('plans/save', data)
+
+  return response.data
+}
+
+export const getPlanList = async (authorId: number) => {
+  const response = await api.get('plans', {
+    params: {
+      authorId,
+    },
+  })
 
   return response.data
 }

@@ -1,3 +1,5 @@
+import { PlanListRecoil } from 'state/store/PlanList'
+
 export interface GooglePlaceResponse {
   next_page_token: string
   results: GooglePlace[]
@@ -26,7 +28,7 @@ export interface GooglePlacePhoto {
 }
 
 export interface PlaceData {
-  id: number
+  id?: number
   name: string
   placeId: string
   rating: number
@@ -55,7 +57,7 @@ export interface PlanConfirmItemResponse {
 
 export interface PlanConfirmItemData {
   id: number
-  time: string
+  stayTime: string
   nextTime: string
   item: PlaceData
   nextLat: number
@@ -63,4 +65,21 @@ export interface PlanConfirmItemData {
   nextPlaceId: number
   nextPlaceGoogleId: string
   nextPlaceName: string
+}
+
+export interface Plans {
+  id: number
+  title: string
+  authorId: number
+  region: string
+  transport: string
+  period: number
+  daySchedules: dayPlan[]
+}
+
+export interface dayPlan {
+  id: number
+  day: number
+  planId: number
+  schedules: PlanListRecoil[]
 }

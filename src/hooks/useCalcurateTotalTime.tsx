@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
-import { PlanListRecoil } from 'recoil/atoms/PlanList'
+import { PlanListItem } from 'state/store/PlanList'
 
-const useCalculateTotalTime = (list: PlanListRecoil[]) => {
+const useCalculateTotalTime = (list: PlanListItem[]) => {
   return useMemo(() => {
     const totalMinutes = list.reduce((acc, item) => {
-      const [hours, minutes] = item.time
+      const [hours, minutes] = item.stayTime
         .split('시간')
         .map((part) => part.trim())
         .map((part, index) => {

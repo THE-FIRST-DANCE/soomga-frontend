@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { CurrentPeriod } from 'recoil/atoms/PlanInfo'
+import { CurrentPeriod } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import PlanOrderItem from './PlanOrderItem'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { PeriodPlanRecoil, PlanTime } from 'recoil/atoms/PlanList'
+import { PeriodPlanRecoil, PlanTime } from 'state/store/PlanList'
 import Arrow from 'components/icons/Arrow'
 import useCalculateTotalTime from 'hooks/useCalcurateTotalTime'
 

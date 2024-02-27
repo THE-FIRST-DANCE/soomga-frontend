@@ -1,15 +1,19 @@
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { CurrentPeriod, PlanInfo } from 'recoil/atoms/PlanInfo'
+import { useRecoilState } from 'recoil'
+import { CurrentPeriod } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import logo from 'assets/logo.svg'
 
 interface PlanLeftTabProps {
   onNext: () => void
-  onPrev: () => void
+  onPrev?: () => void
+  onEdit?: () => void
+  prevText?: string
+  nextText: string
+  editText?: string
+  period: number
 }
 
-const PlanLeftTab = ({ onNext, onPrev }: PlanLeftTabProps) => {
-  const planInfo = useRecoilValue(PlanInfo)
+const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText, period }: PlanLeftTabProps) => {
   const [currentPeriod, setCurrentPeriod] = useRecoilState(CurrentPeriod)
 
   return (
@@ -21,7 +25,7 @@ const PlanLeftTab = ({ onNext, onPrev }: PlanLeftTabProps) => {
 
       {/* 날짜별 플랜 */}
       <PeriodBox>
-        {Array.from({ length: planInfo.period }, (_, i) => (
+        {Array.from({ length: period }, (_, i) => (
           <Period
             onClick={() => {
               setCurrentPeriod(i + 1)
@@ -36,19 +40,30 @@ const PlanLeftTab = ({ onNext, onPrev }: PlanLeftTabProps) => {
 
       {/* 이전, 다음 */}
       <TabBox>
-        <PrevPage
-          onClick={() => {
-            onPrev()
-          }}
-        >
-          이전
-        </PrevPage>
+        {onPrev && (
+          <PrevPage
+            onClick={() => {
+              onPrev()
+            }}
+          >
+            {prevText}
+          </PrevPage>
+        )}
+        {onEdit && (
+          <EditPage
+            onClick={() => {
+              onEdit()
+            }}
+          >
+            {editText}
+          </EditPage>
+        )}
         <NextPage
           onClick={() => {
             onNext()
           }}
         >
-          다음
+          {nextText}
         </NextPage>
       </TabBox>
     </LeftTab>
@@ -58,7 +73,8 @@ const PlanLeftTab = ({ onNext, onPrev }: PlanLeftTabProps) => {
 export default PlanLeftTab
 
 const LeftTab = styled.div`
-  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
   height: 100%;
   box-sizing: border-box;
   gap: 3rem;
@@ -154,5 +170,21 @@ const NextPage = styled.div`
 
   &:hover {
     background-color: var(--bs-gray-200);
+  }
+`
+
+const EditPage = styled.div`
+  width: 80%;
+  padding: 1rem 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 2px solid var(--bs-gray-200);
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--bs-gray-500);
   }
 `

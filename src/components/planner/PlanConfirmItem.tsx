@@ -1,13 +1,13 @@
-import { PlanConfirmItemData } from 'interfaces/plan'
 import styled from 'styled-components'
 import { categories } from './place/PlaceSelect'
 import { CarIcon } from './SelectTransportation'
 import Arrow from 'components/icons/Arrow'
 import { getTransCoord } from 'api/PlanAPI'
+import { PlanListRecoil } from 'state/store/PlanList'
 
 interface PlanConfirmItemProps {
   index: number
-  data: PlanConfirmItemData
+  data: PlanListRecoil
 }
 
 const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
@@ -46,7 +46,7 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
       <Info>
         <Name>{data.item.name}</Name>
         <Category>{category?.label}</Category>
-        <Time>{data.time}</Time>
+        <Time>{data.stayTime}</Time>
         {data.nextTime && (
           <TimeBox
             onClick={() => {
