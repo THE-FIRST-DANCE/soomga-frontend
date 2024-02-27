@@ -14,12 +14,13 @@ interface IPlaceAddModal {
 }
 
 const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal) => {
-  const [category, setCategory] = useState('tourist_attraction')
+  const [category, setCategory] = useState('tourist_attraction') // 카테고리
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value)
   }
 
+  // 장소 추가 query
   const { mutate } = useMutation({
     mutationFn: addPlaceApi,
     onSuccess: () => {
@@ -27,6 +28,7 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
     },
   })
 
+  // 장소 추가
   const handleAddPlace = () => {
     const data: PlaceData = {
       name: place.name,

@@ -13,8 +13,8 @@ interface PlanOrderItemProps {
 }
 
 const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
-  const [periodPlan, setPlanList] = useRecoilState(PeriodPlanRecoil)
-  const currentPeriod = useRecoilValue(CurrentPeriod)
+  const [periodPlan, setPlanList] = useRecoilState(PeriodPlanRecoil) // 날짜별 여행 order 리스트
+  const currentPeriod = useRecoilValue(CurrentPeriod) // 현재 일차
 
   const [timeMod, setTimeMod] = useState<boolean>(false)
   const [hour, setHour] = useState<number>(1)
@@ -22,11 +22,12 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
 
   if (!item) return null
 
-  const address = useSubstring(item.item.address, 15)
-  const name = useSubstring(item.item.name, 5)
+  const address = useSubstring(item.item.address, 15) // 주소 15글자로 자르기
+  const name = useSubstring(item.item.name, 5) // 이름 5글자로 자르기
 
-  const currentPlan = periodPlan[currentPeriod] || []
+  const currentPlan = periodPlan[currentPeriod] || [] // 현재 일차의 여행 리스트
 
+  // 아이템 삭제 로직
   const deleteItem = () => {
     const newPlan = currentPlan.filter((plan) => plan.item.placeId !== item.item.placeId)
     const newPlanOrder = newPlan.map((plan, index) => {
@@ -41,6 +42,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
     })
   }
 
+  // 머무는 시간 수정
   const changeTime = () => {
     setTimeMod(false)
     const newPlan = currentPlan.map((plan) => {

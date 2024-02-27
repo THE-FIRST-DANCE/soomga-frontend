@@ -12,19 +12,22 @@ import PlaceDetail from './PlaceDetail'
 import { CurrentPeriod } from 'state/store/PlanInfo'
 
 const PlaceItem = ({ data, editMode }: { data: PlaceData; editMode?: boolean }) => {
-  const address = useSubstring(data.address, 10)
-  const currentPeriod = useRecoilValue(CurrentPeriod)
-  const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil)
-  const [detailModal, setDetailModal] = useState<boolean>(false)
+  const address = useSubstring(data.address, 10) // 주소 10글자로 자르기
+  const currentPeriod = useRecoilValue(CurrentPeriod) // 현재 일차
+  const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil) // 날짜별 여행 order 리스트
+  const [detailModal, setDetailModal] = useState<boolean>(false) // 장소 상세 모달
 
-  const [placeBox, setPlaceBox] = useRecoilState(PlanPlaceBox)
+  const [placeBox, setPlaceBox] = useRecoilState(PlanPlaceBox) // 여행장소 추가할 때 장소 저장 리스트
 
-  const category = categories.find((category) => category.value === data.category)
-  const currentPlan = planPeriod[currentPeriod] || []
+  const category = categories.find((category) => category.value === data.category) // 카테고리 정보
+  const currentPlan = planPeriod[currentPeriod] || [] // 현재 일차의 여행 리스트
+
+  // 체크 여부 (장소 추가 모드일 때는 placeBox, 여행 일정 수정 모드일 때는 currentPlan)
   const checked = editMode
     ? placeBox.some((item) => item.placeId === data.placeId)
     : currentPlan.some((item) => item.item.placeId === data.placeId)
 
+  // 여행 일정에 장소 추가/삭제
   const handleAddList = () => {
     setPlanPeriod((prev) => {
       const currentPlan = [...(prev[currentPeriod] || [])]
@@ -61,6 +64,7 @@ const PlaceItem = ({ data, editMode }: { data: PlaceData; editMode?: boolean }) 
     })
   }
 
+  // 여행장소 추가할 때 장소 저장 리스트
   const handleAddPlaceBox = () => {
     setPlaceBox((prev) => {
       if (checked) {

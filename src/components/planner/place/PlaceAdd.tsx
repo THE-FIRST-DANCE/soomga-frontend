@@ -9,10 +9,11 @@ import { GooglePlace } from 'interfaces/plan'
 import PlaceAddItem from './PlaceAddItem'
 
 const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
-  const [search, setSearch] = useState<string>('')
-  const [searchResult, setSearchResult] = useState<GooglePlace[]>([])
-  const [center, setCenter] = useState({ lat: plan.lat, lng: plan.lng })
+  const [search, setSearch] = useState<string>('') // 검색어
+  const [searchResult, setSearchResult] = useState<GooglePlace[]>([]) // 검색 결과
+  const [center, setCenter] = useState({ lat: plan.lat, lng: plan.lng }) // 지도 중심 좌표
 
+  // 장소 검색
   const handleSearch = async () => {
     const location = plan.lat + ',' + plan.lng
 
@@ -21,6 +22,7 @@ const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
     setSearchResult(response.results)
   }
 
+  // 검색 결과 마커
   const markers =
     searchResult && searchResult.map((item) => ({ lat: item.geometry.location.lat, lng: item.geometry.location.lng }))
 
