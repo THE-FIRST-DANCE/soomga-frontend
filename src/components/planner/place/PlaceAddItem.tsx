@@ -11,14 +11,17 @@ interface PlaceAddItemProps {
 }
 
 const PlaceAddItem = ({ item, changeCenter, region }: PlaceAddItemProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false) // 모달 오픈 여부
 
+  // 장소 사진 가져오기
+  // 후에 이 결과를 백에 저장
   const getUrl = (photoReference: string) => {
     return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${import.meta.env.VITE_GOOGLE_CLIENT_ID}`
   }
 
   const image = item.photos ? getUrl(item.photos[0].photo_reference) : item.icon
 
+  // 장소 클릭 시 지도 중심 마커로 이동
   const onClick = () => {
     changeCenter(item.geometry.location.lat, item.geometry.location.lng)
   }

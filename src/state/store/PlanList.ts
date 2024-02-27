@@ -1,22 +1,8 @@
-import { PlaceData } from 'interfaces/plan'
+import { PlaceData, PlanConfirmPeriodList } from 'interfaces/plan'
 import { atom } from 'recoil'
 import { PlanInfo } from './PlanInfo'
 
-export interface PlanListRecoil {
-  item: PlaceData
-  nextLat: number
-  nextLng: number
-  nextPlaceId: number
-  nextPlaceName: string
-  nextPlaceGoogleId: string
-  nextTime: string
-  stayTime: string
-}
-
-export interface PeriodPlanRecoil {
-  [period: number]: PlanListRecoil[]
-}
-
+// Order 리스트에 들어갈 아이템
 export interface PlanListItem {
   item: PlaceData
   order: number
@@ -24,40 +10,26 @@ export interface PlanListItem {
   checked: boolean
 }
 
+// 날짜별 Order 리스트
 export interface PeriodList {
   [period: number]: PlanListItem[]
 }
 
-export interface PlanListConfirm {
-  planList: PeriodList
-  transport: string
-}
-
-export interface PlanConfirmList {
-  periodPlan: PeriodPlanRecoil
+// 여행 일정 확인
+export interface PlanConfirm {
+  periodPlan: PlanConfirmPeriodList
   transport: string
   info: PlanInfo
 }
 
-export const PlanPeriodList = atom<PlanListItem[]>({
-  key: 'PlanPeriodList',
-  default: [],
-})
-
+// 날짜별 여행 order 리스트
 export const PeriodPlanRecoil = atom<{ [period: number]: PlanListItem[] }>({
   key: 'PeriodPlan',
   default: {},
 })
 
-export const PlanListConfirm = atom<PlanListConfirm>({
-  key: 'PlanListConfirm',
-  default: {
-    planList: {},
-    transport: '',
-  },
-})
-
-export const PlanConfirmList = atom<PlanConfirmList>({
+// 여행 일정 확인
+export const PlanConfirmList = atom<PlanConfirm>({
   key: 'PlanConfirmList',
   default: {
     periodPlan: {},
@@ -72,19 +44,12 @@ export const PlanConfirmList = atom<PlanConfirmList>({
   },
 })
 
-export const PlanEditList = atom<PlanListConfirm>({
-  key: 'PlanEditList',
-  default: {
-    planList: {},
-    transport: '',
-  },
-})
-
 export const PlanTime = atom<string>({
   key: 'PlanTime',
   default: '12시간 00분',
 })
 
+// 여행장소 추가할 때 장소 저장 리스트
 export const PlanPlaceBox = atom<PlaceData[]>({
   key: 'PlanPlaceBox',
   default: [],

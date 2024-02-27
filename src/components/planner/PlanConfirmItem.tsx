@@ -3,16 +3,17 @@ import { categories } from './place/PlaceSelect'
 import { CarIcon } from './SelectTransportation'
 import Arrow from 'components/icons/Arrow'
 import { getTransCoord } from 'api/PlanAPI'
-import { PlanListRecoil } from 'state/store/PlanList'
+import { PlanConfirmListItem } from 'interfaces/plan'
 
 interface PlanConfirmItemProps {
   index: number
-  data: PlanListRecoil
+  data: PlanConfirmListItem
 }
 
 const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
   const category = categories.find((category) => category.value === data.item.category)
 
+  // 카카오 지도 연결
   const onClick = async () => {
     const { x: originX, y: originY } = await getTransCoord(data.item.longitude, data.item.latitude)
     const { x: destX, y: destY } = await getTransCoord(data.nextLng, data.nextLat)

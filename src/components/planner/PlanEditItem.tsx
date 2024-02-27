@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 import { categories } from './place/PlaceSelect'
-import { PlanListRecoil } from 'state/store/PlanList'
 import Cancel from 'components/icons/Cancel'
+import { PlanConfirmListItem } from 'interfaces/plan'
 
 interface PlanEditItemProps {
-  data: PlanListRecoil
+  data: PlanConfirmListItem
   index: number
   onDelete: (index: number) => void
 }

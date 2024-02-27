@@ -7,32 +7,35 @@ import { useEffect, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { getPlaceRouteEdit } from 'api/PlanAPI'
 import FullLoading from 'components/shared/FullLoading'
-import { PeriodPlanRecoil, PlanConfirmList, PlanListRecoil, PlanPlaceBox } from 'state/store/PlanList'
+import { PlanConfirmList, PlanPlaceBox } from 'state/store/PlanList'
 import PlaceSelect from './place/PlaceSelect'
 import PlaceEditAddItem from './place/PlaceEditAddItem'
+import { PlanConfirmListItem, PlanConfirmPeriodList } from 'interfaces/plan'
 
 interface PlanEditProps {
-  data: PeriodPlanRecoil
+  data: PlanConfirmPeriodList
   info: PlanInfo
   handleEdit: () => void
   transport: string
 }
 
 const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
-  const currentPeriod = useRecoilValue(CurrentPeriod)
-  const setPlanConfirmList = useSetRecoilState(PlanConfirmList)
-  const planPlaceBox = useRecoilValue(PlanPlaceBox)
+  const currentPeriod = useRecoilValue(CurrentPeriod) // 현재 일차
+  const setPlanConfirmList = useSetRecoilState(PlanConfirmList) // 여행 컨펌 리코일 상태
+  const planPlaceBox = useRecoilValue(PlanPlaceBox) // 여행장소 추가할 때 장소 저장 리스트
 
-  const [planList, setPlanList] = useState(data[currentPeriod] || [])
-  const [allPeriodsData, setAllPeriodsData] = useState<PeriodPlanRecoil>(data)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [placeAddMode, setPlaceAddMode] = useState<boolean>(false)
+  const [planList, setPlanList] = useState(data[currentPeriod] || []) // 현재 일차의 여행 리스트
+  const [allPeriodsData, setAllPeriodsData] = useState<PlanConfirmPeriodList>(data) // 모든 일차의 여행 리스트
+  const [isLoading, setIsLoading] = useState<boolean>(false) // 로딩 상태
+  const [placeAddMode, setPlaceAddMode] = useState<boolean>(false) // 여행지 추가 모드
 
+  // 현재 일차의 여행 리스트 업데이트
   useEffect(() => {
     setPlanList(data[currentPeriod] || [])
   }, [data, currentPeriod])
 
-  const updatePlanList = (updatedPlanList: PlanListRecoil[]) => {
+  // 여행 리스트 업데이트
+  const updatePlanList = (updatedPlanList: PlanConfirmListItem[]) => {
     setPlanList(updatedPlanList)
     setAllPeriodsData({
       ...allPeriodsData,
@@ -40,6 +43,7 @@ const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
     })
   }
 
+  // 드래그 앤 드랍 이벤트
   const onDragEnd = (result: any) => {
     const { source, destination } = result
 
@@ -73,6 +77,7 @@ const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
     }
   }
 
+  // 여행 리스트에서 아이템 삭제
   const itemRemove = (index: number) => {
     index = index - 1
     const items = Array.from(planList)
@@ -81,10 +86,11 @@ const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
     updatePlanList(items)
   }
 
+  // 수정 완료
   const onNext = async () => {
     setIsLoading(true)
 
-    let updatedData: { [key: string]: PlanListRecoil[] } = {}
+    let updatedData: { [key: string]: PlanConfirmListItem[] } = {}
 
     for (const period in allPeriodsData) {
       const periodData = allPeriodsData[period].map((item) => ({
@@ -101,8 +107,6 @@ const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
 
       updatedData[period] = response[period]
     }
-
-    console.log(updatedData)
 
     setIsLoading(false)
 
