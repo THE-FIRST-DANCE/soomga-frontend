@@ -1,11 +1,7 @@
+import { IconStyle } from 'interfaces/icon'
 import styled from 'styled-components'
 
-interface Googlestyle {
-  width?: string
-  height?: string
-}
-
-const GoogleIcon = ({ ...props }: Googlestyle) => {
+const GoogleIcon = ({ ...props }: IconStyle) => {
   return (
     <GoogleStyle {...props}>
       <svg
@@ -88,7 +84,7 @@ const GoogleIcon = ({ ...props }: Googlestyle) => {
 
 export default GoogleIcon
 
-const GoogleStyle = styled.svg<Googlestyle>`
+const GoogleStyle = styled.svg<IconStyle>`
   width: ${({ width = '48px' }) => width};
   height: ${({ height = '48px' }) => height};
   cursor: pointer;

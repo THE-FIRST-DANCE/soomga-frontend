@@ -1,11 +1,7 @@
+import { IconStyle } from 'interfaces/icon'
 import styled from 'styled-components'
 
-interface LineStyle {
-  width?: string
-  height?: string
-}
-
-const LineIcon = ({ ...props }: LineStyle) => {
+const LineIcon = ({ ...props }: IconStyle) => {
   return (
     <LineStyle {...props}>
       <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -41,7 +37,7 @@ const LineIcon = ({ ...props }: LineStyle) => {
 
 export default LineIcon
 
-const LineStyle = styled.svg<LineStyle>`
+const LineStyle = styled.svg<IconStyle>`
   width: ${(props) => props.width || '45px'};
   height: ${(props) => props.height || '45px'};
 
