@@ -11,7 +11,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
-
+import RedirectPage from 'pages/redirect'
 const Router = () => {
   // 토큰 관리
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
@@ -20,6 +20,7 @@ const Router = () => {
     <>
       <Routes>
         {/* 1. 메인  */}
+
         <Route path="/" element={<MainPage />} />
 
         {/* 2. 로그인 && 회원가입  */}
@@ -59,7 +60,7 @@ const Router = () => {
             <Route path="/mypage/destination" element={<h1> 여행지 </h1>} />
           </>
         )}
-
+        <Route path="redirect" element={<RedirectPage />} />
         {/* 예외 발생 시 -> 로그인 시 OR 비로그인시 */}
         {recoilToken ? (
           <Route path="*" element={<Navigate replace to="/" />} />
