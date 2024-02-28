@@ -3,7 +3,10 @@ import Router from './Router'
 import { reset } from 'styled-reset' // CSS 초기화
 import { createGlobalStyle } from 'styled-components' // CSS 초기화
 import Layout from 'components/Layout'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
+import 'react-toastify/dist/ReactToastify.css' // 추가
 /* CSS 초기화 */
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -49,6 +52,7 @@ function App() {
   return (
     <Layout>
       <GlobalStyle />
+      <ToastContainer />
       <Router />
     </Layout>
   )
