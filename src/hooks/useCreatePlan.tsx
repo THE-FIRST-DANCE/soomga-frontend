@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
-import { PlanInfo } from 'recoil/atoms/PlanInfo'
+import { PlanInfo } from 'state/store/PlanInfo'
 
 const useCreatePlan = () => {
   const [province, setProvince] = useState<string>('시/도')

@@ -1,8 +1,10 @@
+// 장소 검색 결과
 export interface GooglePlaceResponse {
   next_page_token: string
   results: GooglePlace[]
 }
 
+// 장소 검색 결과 아이템
 export interface GooglePlace {
   geometry: {
     location: {
@@ -18,6 +20,7 @@ export interface GooglePlace {
   icon: string
 }
 
+// 장소 사진 정보
 export interface GooglePlacePhoto {
   height: number
   html_attributions: string[]
@@ -25,8 +28,9 @@ export interface GooglePlacePhoto {
   width: number
 }
 
+// 장소 데이터 타입 (서버)
 export interface PlaceData {
-  id: number
+  id?: number
   name: string
   placeId: string
   rating: number
@@ -42,6 +46,7 @@ export interface PlaceData {
   openingHours?: openingHours[]
 }
 
+// 장소 데이터 시간 정보 (서버)
 interface openingHours {
   dayOfWeek: number
   openTime: string
@@ -49,18 +54,38 @@ interface openingHours {
   id: number
 }
 
-export interface PlanConfirmItemResponse {
-  [period: number]: PlanConfirmItemData[]
+// 플랜 데이터 (서버)
+export interface Plans {
+  id: number
+  title: string
+  authorId: number
+  region: string
+  transport: string
+  period: number
+  daySchedules: dayPlan[]
 }
 
-export interface PlanConfirmItemData {
+// 플랜 데이터 날짜별 스케쥴 (서버)
+export interface dayPlan {
   id: number
-  time: string
-  nextTime: string
+  day: number
+  planId: number
+  schedules: PlanConfirmListItem[]
+}
+
+// 플랜 컨펌 데이터
+export interface PlanConfirmPeriodList {
+  [period: number]: PlanConfirmListItem[]
+}
+
+// 플랜 컨펌 리스트 아이템
+export interface PlanConfirmListItem {
   item: PlaceData
   nextLat: number
   nextLng: number
   nextPlaceId: number
-  nextPlaceGoogleId: string
   nextPlaceName: string
+  nextPlaceGoogleId: string
+  nextTime: string
+  stayTime: string
 }

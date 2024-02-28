@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import PlaceItem from './PlaceItem'
 import Input from 'components/shared/Input'
 import SearchIcon from 'components/icons/Search'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getPlaceApi } from 'api/PlanAPI'
 import { PlaceData } from 'interfaces/plan'
 import Spinner from 'components/shared/Spinner'
@@ -16,7 +16,7 @@ export const categories = [
   { label: '숙소', value: 'lodging' },
 ]
 
-const PlaceSelect = ({ region }: { region: string }) => {
+const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean }) => {
   const [search, setSearch] = useState<string>('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [places, setPlaces] = useState<PlaceData[]>([])
@@ -29,11 +29,20 @@ const PlaceSelect = ({ region }: { region: string }) => {
     }
   }
 
-  const { isLoading } = useQuery(['places', selectedCategory], () => getPlaceApi(selectedCategory, region), {
-    onSuccess(data) {
-      setPlaces(data)
-    },
+  const getPlace = () => {
+    return getPlaceApi(selectedCategory, region)
+  }
+
+  const { isLoading, data } = useQuery({
+    queryKey: ['places'],
+    queryFn: getPlace,
   })
+
+  useEffect(() => {
+    if (data) {
+      setPlaces(data)
+    }
+  }, [data])
 
   const filteredPlaces = places.filter((item) => {
     return item.name.includes(search)
@@ -80,7 +89,7 @@ const PlaceSelect = ({ region }: { region: string }) => {
         {isLoading ? (
           <Spinner type="ClipLoader" loading={isLoading} />
         ) : places.length > 0 ? (
-          filteredPlaces.map((item) => <PlaceItem key={item.id} data={item} />)
+          filteredPlaces.map((item) => <PlaceItem key={item.id} data={item} editMode={editMode} />)
         ) : (
           <div
             style={{

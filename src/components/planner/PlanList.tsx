@@ -1,12 +1,18 @@
 import styled from 'styled-components'
 import PlanItem from './PlanItem'
+import { Plans } from 'interfaces/plan'
 
-const PlanList = () => {
+interface PlanListProps {
+  data: Plans[]
+}
+
+const PlanList = ({ data }: PlanListProps) => {
   return (
     <Container>
       <PlanItems>
-        <PlanItem name="제주도" description="제주도 여행" full_time="총 6시간" id={1} place_id={1} />
-        <PlanItem name="제주도" description="제주도 여행" full_time="총 6시간" id={1} place_id={1} />
+        {data.map((plan) => (
+          <PlanItem key={plan.id} data={plan} />
+        ))}
       </PlanItems>
     </Container>
   )

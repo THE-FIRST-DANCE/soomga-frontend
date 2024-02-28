@@ -5,22 +5,29 @@ import styled from 'styled-components'
 import { PlaceData } from 'interfaces/plan'
 import { categories } from './PlaceSelect'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { PeriodPlanRecoil } from 'recoil/atoms/PlanList'
+import { PeriodPlanRecoil, PlanPlaceBox } from 'state/store/PlanList'
 import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import PlaceDetail from './PlaceDetail'
-import { CurrentPeriod } from 'recoil/atoms/PlanInfo'
+import { CurrentPeriod } from 'state/store/PlanInfo'
 
-const PlaceItem = ({ data }: { data: PlaceData }) => {
-  const address = useSubstring(data.address, 10)
-  const currentPeriod = useRecoilValue(CurrentPeriod)
-  const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil)
-  const [detailModal, setDetailModal] = useState<boolean>(false)
+const PlaceItem = ({ data, editMode }: { data: PlaceData; editMode?: boolean }) => {
+  const address = useSubstring(data.address, 10) // 주소 10글자로 자르기
+  const currentPeriod = useRecoilValue(CurrentPeriod) // 현재 일차
+  const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil) // 날짜별 여행 order 리스트
+  const [detailModal, setDetailModal] = useState<boolean>(false) // 장소 상세 모달
 
-  const category = categories.find((category) => category.value === data.category)
-  const currentPlan = planPeriod[currentPeriod] || []
-  const checked = currentPlan.some((item) => item.item.placeId === data.placeId)
+  const [placeBox, setPlaceBox] = useRecoilState(PlanPlaceBox) // 여행장소 추가할 때 장소 저장 리스트
 
+  const category = categories.find((category) => category.value === data.category) // 카테고리 정보
+  const currentPlan = planPeriod[currentPeriod] || [] // 현재 일차의 여행 리스트
+
+  // 체크 여부 (장소 추가 모드일 때는 placeBox, 여행 일정 수정 모드일 때는 currentPlan)
+  const checked = editMode
+    ? placeBox.some((item) => item.placeId === data.placeId)
+    : currentPlan.some((item) => item.item.placeId === data.placeId)
+
+  // 여행 일정에 장소 추가/삭제
   const handleAddList = () => {
     setPlanPeriod((prev) => {
       const currentPlan = [...(prev[currentPeriod] || [])]
@@ -45,7 +52,7 @@ const PlaceItem = ({ data }: { data: PlaceData }) => {
           {
             item: data,
             order: currentPlan.length + 1,
-            time: '1시간 0분',
+            stayTime: '1시간 0분',
             checked: true,
           },
         ]
@@ -53,6 +60,17 @@ const PlaceItem = ({ data }: { data: PlaceData }) => {
           ...prev,
           [currentPeriod]: newPlan,
         }
+      }
+    })
+  }
+
+  // 여행장소 추가할 때 장소 저장 리스트
+  const handleAddPlaceBox = () => {
+    setPlaceBox((prev) => {
+      if (checked) {
+        return prev.filter((item) => item.placeId !== data.placeId)
+      } else {
+        return [...prev, data]
       }
     })
   }
@@ -87,7 +105,7 @@ const PlaceItem = ({ data }: { data: PlaceData }) => {
         </Rating>
       </Info>
 
-      <CheckContainer checked={checked} onClick={handleAddList}>
+      <CheckContainer checked={checked} onClick={editMode ? handleAddPlaceBox : handleAddList}>
         {checked ? (
           <Check style={{ width: '1rem', height: '1rem', fill: 'var(--bs-white)' }} />
         ) : (

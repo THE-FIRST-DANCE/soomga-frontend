@@ -1,18 +1,57 @@
 import Arrow from 'components/icons/Arrow'
 import Time from 'components/icons/Time'
+import { provinces } from 'data/region'
+import { PlanConfirmListItem, Plans } from 'interfaces/plan'
+import { useNavigate } from 'react-router-dom'
+import { useSetRecoilState } from 'recoil'
+import { PlanConfirmList } from 'state/store/PlanList'
 import styled from 'styled-components'
 
-const PlanItem = ({ ...props }: PlanItem) => {
+interface PlanListProp {
+  data: Plans
+}
+
+const PlanItem = ({ data }: PlanListProp) => {
+  const setPlanConfirmList = useSetRecoilState(PlanConfirmList)
+
+  const lat = provinces.find((item) => item.name === data.region)?.lat
+  const lng = provinces.find((item) => item.name === data.region)?.lng
+
+  const navigate = useNavigate()
+
+  // 여행 일정 컨펌 리스트로 이동 (리코일 상태 업데이트)
+  const onClick = () => {
+    const periodPlan: { [key: number]: PlanConfirmListItem[] } = {}
+
+    data.daySchedules.forEach((item) => {
+      periodPlan[item.day] = item.schedules
+    })
+
+    setPlanConfirmList({
+      periodPlan,
+      transport: data.transport,
+      info: {
+        title: data.title,
+        province: data.region,
+        lat: lat || 0,
+        lng: lng || 0,
+        period: data.period,
+      },
+    })
+
+    navigate('/planner/confirm')
+  }
+
   return (
     <Container>
-      <PlanItems>
+      <PlanItems onClick={onClick} style={{ cursor: 'pointer' }}>
         <PlanInfo>
-          <PlanTitle>{props.name}</PlanTitle>
-          <PlanDesc>{props.description}</PlanDesc>
+          <PlanTitle>{data.title}</PlanTitle>
+          <PlanDesc>{data.region}</PlanDesc>
         </PlanInfo>
         <PlanDateBox>
           <Time $width="20px" $height="20px" $color="var(--color-primary)" />
-          <PlanDate>{props.full_time}</PlanDate>
+          <PlanDate>{data.daySchedules.length}일</PlanDate>
         </PlanDateBox>
         <Arrow $width="24px" $height="24px" $color="var(--bs-gray-dark)" />
       </PlanItems>
@@ -72,4 +111,5 @@ const PlanDate = styled.div`
   font-weight: 400;
   color: var(--bs-gray);
   margin-left: 0.5rem;
+  margin-top: 0.2rem;
 `

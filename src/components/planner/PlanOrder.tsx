@@ -1,20 +1,20 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { CurrentPeriod } from 'recoil/atoms/PlanInfo'
+import { CurrentPeriod } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import PlanOrderItem from './PlanOrderItem'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { PeriodPlanRecoil, PlanTime } from 'recoil/atoms/PlanList'
+import { PeriodPlanRecoil, PlanTime } from 'state/store/PlanList'
 import Arrow from 'components/icons/Arrow'
 import useCalculateTotalTime from 'hooks/useCalcurateTotalTime'
 
 const PlanOrder = () => {
-  const [fold, setFold] = useState<boolean>(false)
-  const [timeMod, setTimeMod] = useState<boolean>(false)
+  const [fold, setFold] = useState<boolean>(false) // 접기/펼치기
+  const [timeMod, setTimeMod] = useState<boolean>(false) // 시간 수정 모드
 
-  const currentPeriod = useRecoilValue(CurrentPeriod)
-  const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil)
-  const [planTime, setPlanTime] = useRecoilState(PlanTime)
+  const currentPeriod = useRecoilValue(CurrentPeriod) // 현재 일차
+  const [planPeriod, setPlanPeriod] = useRecoilState(PeriodPlanRecoil) // 날짜별 여행 order 리스트
+  const [planTime, setPlanTime] = useRecoilState(PlanTime) // 여행 시간
 
   const hour = Number(planTime.split('시간')[0])
   const minute = Number(planTime.split('시간')[1].split('분')[0])
@@ -22,8 +22,9 @@ const PlanOrder = () => {
   const [hourState, setHourState] = useState<number>(hour)
   const [minuteState, setMinuteState] = useState<number>(minute)
 
-  const planList = planPeriod[currentPeriod] || []
+  const planList = planPeriod[currentPeriod] || [] // 현재 일차의 여행 리스트
 
+  // 장소 초기화
   const resetPlan = () => {
     setPlanPeriod((prev) => {
       const newPlan = { ...prev }

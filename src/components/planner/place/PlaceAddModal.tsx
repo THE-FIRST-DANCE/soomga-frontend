@@ -3,7 +3,7 @@ import Cancel from 'components/icons/Cancel'
 import Modal from 'components/shared/Modal'
 import { GooglePlace, PlaceData } from 'interfaces/plan'
 import { useState } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import styled from 'styled-components'
 
 interface IPlaceAddModal {
@@ -14,23 +14,23 @@ interface IPlaceAddModal {
 }
 
 const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal) => {
-  const [category, setCategory] = useState('tourist_attraction')
+  const [category, setCategory] = useState('tourist_attraction') // 카테고리
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value)
   }
 
-  const addPlaceMutate = useMutation((data: PlaceData) => addPlaceApi(data), {
+  // 장소 추가 query
+  const { mutate } = useMutation({
+    mutationFn: addPlaceApi,
     onSuccess: () => {
       onRequestClose()
     },
-    onError: (error) => {
-      console.log(error)
-    },
   })
 
+  // 장소 추가
   const handleAddPlace = () => {
-    const data = {
+    const data: PlaceData = {
       name: place.name,
       placeId: place.place_id,
       rating: place.rating ? place.rating : 0.0,
@@ -42,7 +42,7 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
       region,
     }
 
-    addPlaceMutate.mutate(data)
+    mutate(data)
   }
 
   return (

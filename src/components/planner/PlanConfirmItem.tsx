@@ -1,18 +1,19 @@
-import { PlanConfirmItemData } from 'interfaces/plan'
 import styled from 'styled-components'
 import { categories } from './place/PlaceSelect'
 import { CarIcon } from './SelectTransportation'
 import Arrow from 'components/icons/Arrow'
 import { getTransCoord } from 'api/PlanAPI'
+import { PlanConfirmListItem } from 'interfaces/plan'
 
 interface PlanConfirmItemProps {
   index: number
-  data: PlanConfirmItemData
+  data: PlanConfirmListItem
 }
 
 const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
   const category = categories.find((category) => category.value === data.item.category)
 
+  // 카카오 지도 연결
   const onClick = async () => {
     const { x: originX, y: originY } = await getTransCoord(data.item.longitude, data.item.latitude)
     const { x: destX, y: destY } = await getTransCoord(data.nextLng, data.nextLat)
@@ -46,7 +47,7 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
       <Info>
         <Name>{data.item.name}</Name>
         <Category>{category?.label}</Category>
-        <Time>{data.time}</Time>
+        <Time>{data.stayTime}</Time>
         {data.nextTime && (
           <TimeBox
             onClick={() => {

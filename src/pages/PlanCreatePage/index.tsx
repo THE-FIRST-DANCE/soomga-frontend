@@ -6,8 +6,8 @@ import SelectTransportation from 'components/planner/SelectTransportation'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { CurrentPeriod, PlanInfo } from 'recoil/atoms/PlanInfo'
-import { PeriodPlanRecoil } from 'recoil/atoms/PlanList'
+import { CurrentPeriod, PlanInfo } from 'state/store/PlanInfo'
+import { PeriodPlanRecoil } from 'state/store/PlanList'
 import styled from 'styled-components'
 
 const PlanCreatePage = () => {
@@ -60,7 +60,7 @@ const PlanCreatePage = () => {
   return (
     <Container>
       <LeftSection>
-        <PlanLeftTab onNext={onNext} onPrev={onPrev} />
+        <PlanLeftTab period={plan.period} onNext={onNext} onPrev={onPrev} prevText="이전" nextText="다음" />
         <Places plan={plan} />
         <PlanOrder />
       </LeftSection>

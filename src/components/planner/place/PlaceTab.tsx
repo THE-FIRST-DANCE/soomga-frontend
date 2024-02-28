@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PlanInfo } from 'recoil/atoms/PlanInfo'
+import { PlanInfo } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
