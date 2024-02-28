@@ -96,7 +96,7 @@ const URecommendedRegions = () => {
               <img src={logo} alt="logo" />
             </RightLogoWrapper>
             {/* 2.1.2 타이틀 */}
-            <span>내 취향에 맞는 여행지를 찾아봐!{tets}</span>
+            <span>내 취향에 맞는 여행지를 찾아봐!</span>
           </RightTitleContainer>
 
           {/* 2.2 추천 지역들 */}
@@ -169,7 +169,7 @@ const LeftTitleContainer = styled.div`
   align-items: center;
 `
 
-// 1.1.1 로고
+// 1.1.1 로고 이미지
 const LeftLogoWrapper = styled.div`
   width: 60px;
   height: 60px;

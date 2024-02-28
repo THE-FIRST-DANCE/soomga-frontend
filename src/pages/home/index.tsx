@@ -19,6 +19,7 @@ const MainPage = () => {
       {/* 3. 한국 지도 */}
       <InnerContainer_div>
         {/* <Map width="70%" height="600px" zoom={7} /> */}
+        {/* FIXME: 사용할 떄마다 요금이 청구되니 잠시 꺼두자 */}
         {/* <GoogleMapLoad
           mapContainerStyle={{
             width: '70%',

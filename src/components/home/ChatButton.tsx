@@ -12,7 +12,7 @@ const ChatButton = () => {
 }
 
 export default ChatButton
-
+/* ----------------------------- 💅 StyledComponent -----------------------------*/
 const ChatBtnWrapper = styled.div`
   position: fixed;
   bottom: 20px;
