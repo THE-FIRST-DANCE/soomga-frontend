@@ -26,6 +26,7 @@ import { useNavigate } from 'react-router-dom'
 import { getCookie } from 'utils/cookie'
 import { useRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
+import { onGoogleLogin, onLineLogin } from 'utils/oauth.connector'
 
 interface LoginForm {
   email: string
@@ -67,7 +68,7 @@ const LoginSignupPage = () => {
       const loginResult = await getLogin(data.email, data.password)
       console.log(loginResult.message)
       const result = await getCookie('accessToken')
-      await setRecoilToken(!!result)
+      setRecoilToken({ ...recoilToken, token: !!result })
       console.log('리코일 내부 토큰: ', recoilToken)
       navigate('/')
       toast.success('로그인 되었습니다!')
@@ -133,28 +134,23 @@ const LoginSignupPage = () => {
           {/* 3.1 OAuth 래퍼 : LetterOr + GoogleIcon + LineIcon */}
           <OAuthWrapper>
             <LetterOr>Or</LetterOr>
-
             <GoogleIcon
               width="35"
               height="35"
               onClick={() => {
-                const popup = window.open(
-                  'http://localhost:3000/auth/google',
-                  'Popup',
-                  'toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=650, height=900, top=30',
-                )
-                console.log(popup)
-                // 이벤트 리스너 추가
-                if (!!popup) {
-                  popup.addEventListener('load', () => {
-                    // 새로 열린 창이 로딩되면 이곳에서 수행할 작업을 추가
-                    window.location.reload()
-                  })
-                }
+                onGoogleLogin('/')
+                setRecoilToken({ ...recoilToken, token: true })
               }}
             />
 
-            <LineIcon width="35" height="35" />
+            <LineIcon
+              width="35"
+              height="35"
+              onClick={() => {
+                onLineLogin('/')
+                setRecoilToken({ ...recoilToken, token: true })
+              }}
+            />
           </OAuthWrapper>
         </OAuthContainer>
       </Inner>
