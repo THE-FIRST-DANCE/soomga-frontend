@@ -20,7 +20,12 @@ import {
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 
-import { getLogin } from 'api/LoginSignUp'
+import { getLogin, getSignup } from 'api/LoginSignUp'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+import { getCookie } from 'utils/cookie'
+import { useRecoilState } from 'recoil'
+import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
 
 interface LoginForm {
   email: string
@@ -38,6 +43,8 @@ const LoginSignupPage = () => {
   const [checkPassword, setCheckPassword] = useState<string>('')
   const [errorMsg, setErrorMsg] = useState<string>('')
 
+  const navigate = useNavigate()
+
   // 로그인 유효성 검사 스키마 :
   const loginForm = useForm<LoginForm>({
     mode: 'onChange',
@@ -50,24 +57,44 @@ const LoginSignupPage = () => {
     resolver: zodResolver(validationSignupSchema),
   })
 
+  /* 리코일 코드  */
+  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+
   // FIXME:Post 요청할 때 보내기
   const onSubmitForLogin = async (data: LoginForm) => {
     console.log(data)
     try {
-      const result = await getLogin(data.email, data.password)
-      console.log(result.message)
-      window.location.replace('/')
+      const loginResult = await getLogin(data.email, data.password)
+      console.log(loginResult.message)
+      const result = await getCookie('accessToken')
+      await setRecoilToken(!!result)
+      console.log('리코일 내부 토큰: ', recoilToken)
+      navigate('/')
+      toast.success('로그인 되었습니다!')
     } catch (error: any) {
       console.error('Error during login:', error.response.data.message)
       setErrorMsg(error.response.data.message)
+      toast.error('확인되지 않은 계정이에요!')
     }
     // console.log(getLogin(data.email, data.password).then((data) => console.log(data)))
   }
-  const onSubmitForSignup = (data: SignuppForm) => {
+
+  const onSubmitForSignup = async (data: SignuppForm) => {
     console.log(data)
+
+    try {
+      const result = await getSignup(data.email, data.nickName, data.password, data.password)
+      console.log(result)
+      window.location.replace('/')
+      toast.success('회원가입에 성공했습니다!')
+    } catch (error: any) {
+      console.error('Error during login:', error)
+      // setErrorMsg(error.response.data.message)
+    }
   }
 
   let { id } = useParams()
+
   return id === 'login' ? (
     /* 로그인 페이지 */
     <UserForm>
@@ -92,6 +119,7 @@ const LoginSignupPage = () => {
                   placeholder="Password를 입력하세요..."
                 />
                 <p>{loginForm.formState.errors.password?.message as React.ReactNode}</p>
+                {errorMsg && <p>{errorMsg}</p>}
               </Inputwrap>
             </InputWrapper>
 
@@ -105,7 +133,27 @@ const LoginSignupPage = () => {
           {/* 3.1 OAuth 래퍼 : LetterOr + GoogleIcon + LineIcon */}
           <OAuthWrapper>
             <LetterOr>Or</LetterOr>
-            <GoogleIcon width="35" height="35" />
+
+            <GoogleIcon
+              width="35"
+              height="35"
+              onClick={() => {
+                const popup = window.open(
+                  'http://localhost:3000/auth/google',
+                  'Popup',
+                  'toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=650, height=900, top=30',
+                )
+                console.log(popup)
+                // 이벤트 리스너 추가
+                if (!!popup) {
+                  popup.addEventListener('load', () => {
+                    // 새로 열린 창이 로딩되면 이곳에서 수행할 작업을 추가
+                    window.location.reload()
+                  })
+                }
+              }}
+            />
+
             <LineIcon width="35" height="35" />
           </OAuthWrapper>
         </OAuthContainer>

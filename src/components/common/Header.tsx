@@ -9,6 +9,9 @@ import { useState } from 'react'
 import useClickOutsideToggle from 'hooks/useClickOutsideToggle'
 import { motion } from 'framer-motion'
 import { getCookie, getRemoveCookie } from 'utils/cookie'
+import { toast } from 'react-toastify'
+import { useRecoilState } from 'recoil'
+import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
 
 interface IconWrapperProps {
   flex: number
@@ -19,6 +22,8 @@ const Header = () => {
   const navigate = useNavigate()
 
   const [nowLang, setnowLang] = useState<string>('KO') // 현재 언어 상태 : 기본 한국어
+
+  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
 
   // 언어 변경 : 커스텀훅_useClickOutsideToggle
   const {
@@ -167,7 +172,9 @@ const Header = () => {
                   <UseTab_btn
                     onClick={() => {
                       getRemoveCookie('accessToken')
-                      window.location.reload()
+                      // window.location.reload()
+                      setRecoilToken((prev) => !prev)
+                      toast.success('로그아웃 되었습니다')
                       navigate('/')
                     }}
                   >
