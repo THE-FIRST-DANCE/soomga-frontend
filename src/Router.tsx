@@ -8,23 +8,14 @@ import GuideDetailPage from 'pages/guide/detail'
 import MainPage from 'pages/home'
 import LoginSignupPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { getCookie } from 'utils/cookie'
-import { useEffect, useState } from 'react'
+
+import { useRecoilState } from 'recoil'
+import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
 
 const Router = () => {
   // 토큰 관리
-  const [hasAccessToken, setHasAccessToken] = useState(false)
+  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
 
-  // 변경되는 토큰 상태 관리
-  useEffect(() => {
-    const checkAccessToken = async () => {
-      const result = await getCookie('accessToken')
-      setHasAccessToken(!!result)
-      console.log('checkAccessToken 내부: ', hasAccessToken)
-    }
-
-    checkAccessToken()
-  }, [hasAccessToken])
   return (
     <>
       <Routes>
@@ -46,7 +37,7 @@ const Router = () => {
         <Route path="/recommendations/region/:region_Id" element={<h1> 지역 여행장소 추천 </h1>} />
         <Route path="/recommendations/region/:region_Id/:detail_Id" element={<h1> 여행 장소 상세 </h1>} />
 
-        {hasAccessToken && (
+        {recoilToken && (
           <>
             {/* 6. 여행 플래너 생성 */}
             <Route path="/planner" element={<PlanPage />} />
@@ -70,7 +61,7 @@ const Router = () => {
         )}
 
         {/* 예외 발생 시 -> 로그인 시 OR 비로그인시 */}
-        {hasAccessToken ? (
+        {recoilToken ? (
           <Route path="*" element={<Navigate replace to="/" />} />
         ) : (
           <Route path="*" element={<Navigate replace to="/user/login" />} />
