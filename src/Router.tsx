@@ -12,6 +12,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
 import RedirectPage from 'pages/redirect'
+import ItineraryPage from 'pages/itinerary'
 const Router = () => {
   // 토큰 관리
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
@@ -31,7 +32,7 @@ const Router = () => {
         <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
         {/* 4. 여행일정 */}
-        <Route path="/itinerary" element={<h1>여행 일정 </h1>} />
+        <Route path="/itinerary" element={<ItineraryPage />} />
 
         {/* 5. 여행장소 추천 */}
         <Route path="/recommendations" element={<h1> 여행장소 추천 </h1>} />
