@@ -80,9 +80,7 @@ export const LoginPageLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   height: 1320px;
-  /* height: 100vh; */
   margin-top: 0px;
   /* background-color: #8e8ef2; */
 `

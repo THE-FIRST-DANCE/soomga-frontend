@@ -22,6 +22,7 @@ import CircleCheck from 'components/icons/CircleCheck'
 import Comunication from 'components/icons/Comunication'
 import Location from 'components/icons/Location'
 import Star from 'components/icons/Star'
+import CalendarComponent from 'components/itineraryCalendar/Calendar'
 
 type ValuePiece = Date | null
 
@@ -380,28 +381,10 @@ const GuideDetailPage = () => {
           <Partition>
             <Line />
           </Partition>
+
           {/* 3. 현재 예약 일정 */}
-          <BookingCheckLayout>
-            <Title>현재 예약 일정</Title>
-            <BookingContainer>
-              <CalendarWrapper>
-                <Calendar
-                  className="react-calendar"
-                  onChange={onChange}
-                  value={value}
-                  calendarType="gregory"
-                  formatDay={(locale, date) => moment(date).format('DD')}
-                  formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')}
-                  tileContent={tileContent} // tileContent 적용
-                  next2Label={null}
-                  prev2Label={null}
-                  // locale="en-EN"
-                  // locale="ja-JP"
-                  showNeighboringMonth={false}
-                />
-              </CalendarWrapper>
-            </BookingContainer>
-          </BookingCheckLayout>
+          <CalendarComponent />
+
           <Partition>
             <Line />
           </Partition>
@@ -787,7 +770,7 @@ const MiddleLayout = styled.div`
 // 1. 서비스
 const ServiceLayout = styled(MiddleLayout)``
 
-const Title = styled.div`
+export const Title = styled.div`
   width: 100%;
   font-size: 3rem;
   margin-bottom: 3rem;
