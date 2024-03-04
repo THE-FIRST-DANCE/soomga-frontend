@@ -6,23 +6,6 @@ import { useRecoilState } from 'recoil'
 import { MonthAtom } from 'recoil/MonthAtom'
 import { styled } from 'styled-components'
 
-const datas = [
-  {
-    id: 1,
-    date: '2024 1월 6일',
-    name: '야마츠 아스카',
-  },
-  {
-    id: 2,
-    date: '2024 1월 6일',
-    name: '야마츠 아스카',
-  },
-  {
-    id: 2,
-    date: '2024 1월 6일',
-    name: '야마츠 아스카',
-  },
-]
 export const targetDates: { id: number; name: string; date: Date }[] = [
   { id: 1, name: '와다 사야카', date: new Date(2024, 3 - 1, 2) },
   { id: 2, name: '오바 호노카', date: new Date(2024, 3 - 1, 5) },
@@ -32,7 +15,6 @@ export const targetDates: { id: number; name: string; date: Date }[] = [
 
 const ItineraryPage = () => {
   const [month, setMonth] = useRecoilState(MonthAtom)
-  // console.log('month: ', typeof month.month)
 
   const [filteredDates, setFilteredDates] = useState<{ id: number; name: string; date: Date }[]>([])
 
