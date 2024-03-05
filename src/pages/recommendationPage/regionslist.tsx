@@ -62,7 +62,7 @@ const FlexCenter = styled.div`
 `
 
 const Layout = styled.div`
-  background-color: mediumaquamarine;
+  /* background-color: mediumaquamarine; */
   margin: 0 auto;
   width: 90%;
   margin-top: 11rem;
@@ -77,7 +77,7 @@ const Title = styled.div`
   margin-bottom: 5rem;
 `
 const GuideContainer = styled.div`
-  background-color: #8741f1;
+  /* background-color: #8741f1; */
   width: 100%;
   min-height: 60rem;
   margin-bottom: 5rem;
