@@ -13,6 +13,8 @@ import { useRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
 import RedirectPage from 'pages/redirect'
 import ItineraryPage from 'pages/itinerary'
+import RecommendatedPostPage from 'pages/recommendationPage'
+import RegionsList from 'pages/recommendationPage/regionslist'
 const Router = () => {
   // 토큰 관리
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
@@ -35,9 +37,9 @@ const Router = () => {
         <Route path="/itinerary" element={<ItineraryPage />} />
 
         {/* 5. 여행장소 추천 */}
-        <Route path="/recommendations" element={<h1> 여행장소 추천 </h1>} />
-        <Route path="/recommendations/region/:region_Id" element={<h1> 지역 여행장소 추천 </h1>} />
-        <Route path="/recommendations/region/:region_Id/:detail_Id" element={<h1> 여행 장소 상세 </h1>} />
+        <Route path="/recommendations" element={<RecommendatedPostPage />} />
+        <Route path="/recommendations/:region_Id" element={<RegionsList />} />
+        <Route path="/recommendations/:region_Id/:detail_Id" element={<h1> 여행 장소 상세 </h1>} />
 
         {recoilToken && (
           <>
