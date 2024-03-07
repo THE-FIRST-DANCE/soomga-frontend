@@ -141,8 +141,8 @@ const GuideCard = () => {
 export default GuideCard
 
 const RightSectionTitle = styled.div`
-  font-size: 50px;
-  margin-bottom: 3rem;
+  font-size: 2rem;
+  /* margin-bottom: 1rem; */
 `
 
 const CardLayout = styled.div`
