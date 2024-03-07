@@ -1,10 +1,16 @@
 import { styled } from 'styled-components'
 
 import guideImg from 'assets/guideImg.png'
-import busan from 'assets/busan.png'
-import geoje from 'assets/geoje.png'
-import ulsan from 'assets/ulsan.png'
-import seoul from 'assets/seoul.png'
+
+import seoul from 'assets/regions/seoul.jpeg'
+import gyeonggi from 'assets/regions/gyeonggi.jpeg'
+import jeonbuk from 'assets/regions/jeonbuk.jpeg'
+import jeonnam from 'assets/regions/jeonnam.jpeg'
+import chungbuk from 'assets/regions/chungbuk.jpeg'
+import chungnam from 'assets/regions/chungnam.jpeg'
+import gyeongbuk from 'assets/regions/gyeongbuk.jpeg'
+import gyeongnam from 'assets/regions/gyeongnam.jpeg'
+import jeju from 'assets/regions/jeju.jpeg'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay, EffectCoverflow } from 'swiper/modules'
@@ -18,6 +24,7 @@ import 'swiper/css/effect-fade'
 import 'swiper/css/effect-coverflow'
 import { useNavigate } from 'react-router-dom'
 import RecommedCard from 'components/recommendations/RecommedCard'
+import { useEffect } from 'react'
 
 export let regionsArr = [
   {
@@ -30,65 +37,65 @@ export let regionsArr = [
   },
   {
     id: 2,
-    regionName: '부산',
-    information: '살아있네 살아있어 부산아이가!',
-    img: busan,
+    regionName: '경기',
+    information: '대한민국의 심장',
+    img: gyeonggi,
     like: 4,
     guideImg: guideImg,
   },
   {
     id: 3,
-    regionName: '울산',
-    information: '울산의 자랑 울산의 얼굴 이재일입니다!',
-    img: ulsan,
+    regionName: '전북',
+    information: '전북 이랑께',
+    img: jeonbuk,
     like: 5,
     guideImg: guideImg,
   },
   {
     id: 4,
-    regionName: '서울',
-    information: '대한민국의 수도 아리수, 대한민국의 수도 아리수',
-    img: seoul,
+    regionName: '전남',
+    information: '전라도의 영광 전남',
+    img: jeonnam,
     like: 2,
     guideImg: guideImg,
   },
   {
     id: 5,
-    regionName: '부산',
-    information: '살아있네 살아있어 부산아이가!',
-    img: busan,
+    regionName: '충북',
+    information: '살아있구먼 충북!',
+    img: chungbuk,
     like: 4,
     guideImg: guideImg,
   },
   {
     id: 6,
-    regionName: '울산',
+    regionName: '충남',
     information: '울산의 자랑 울산의 얼굴 이재일입니다!',
-    img: ulsan,
+    img: chungnam,
     like: 5,
     guideImg: guideImg,
   },
   {
     id: 7,
-    regionName: '서울',
-    information: '대한민국의 수도 아리수, 대한민국의 수도 아리수',
-    img: seoul,
+    regionName: '경북',
+    information: '경북 좋아',
+    img: gyeongbuk,
     like: 2,
     guideImg: guideImg,
   },
   {
     id: 8,
-    regionName: '부산',
-    information: '살아있네 살아있어 부산아이가!',
-    img: busan,
+    regionName: '경남',
+    information: '살아있네 살아있어 경남아이가!',
+    img: gyeongnam,
     like: 4,
     guideImg: guideImg,
   },
   {
     id: 9,
-    regionName: '울산',
-    information: '울산의 자랑 울산의 얼굴 이재일입니다!',
-    img: ulsan,
+    regionName: '제주',
+    information: '제주의 자랑 제주의 얼굴 이재일입니다!',
+    img: jeju,
     like: 5,
     guideImg: guideImg,
   },
