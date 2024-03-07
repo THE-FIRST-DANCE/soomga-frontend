@@ -363,9 +363,10 @@ export default GuidePage
 /* ----------------------------- 💅 StyledComponent -----------------------------*/
 
 const GuidePageLayout = styled.div`
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: flex;
+  margin: 0 auto;
 `
 
 // top에 여백用
@@ -373,7 +374,7 @@ const Blank = styled.div`
   width: 100%;
   height: 10rem;
 `
-/* 🟡 왼쪽 */
+/* 🟡🟡🟡🟡🟡 왼쪽 🟡🟡🟡🟡🟡 */
 const LeftSection = styled.div`
   width: 27%;
   height: 100%;
@@ -465,7 +466,7 @@ const RegionsContainer = styled(Container)`
 
 const SelectContainer = styled.div`
   width: 100%;
-  background-color: #3bd2ea;
+  /* background-color: #3bd2ea; */
   border: 3px solid var(--bs-gray);
   border-radius: 0.5rem;
   padding: 10px;

@@ -24,7 +24,6 @@ import 'swiper/css/effect-fade'
 import 'swiper/css/effect-coverflow'
 import { useNavigate } from 'react-router-dom'
 import RecommedCard from 'components/recommendations/RecommedCard'
-import { useEffect } from 'react'
 
 export let regionsArr = [
   {
@@ -178,52 +177,59 @@ const Layout = styled.div`
   margin: 0 auto;
   width: 90%;
   min-height: 1000px;
-  margin-top: 11rem;
+  margin-top: 10rem;
 `
 
 const Title = styled.div`
-  font-size: 5rem;
-  margin-bottom: 2rem;
-  margin-left: 13rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  /* margin-left: 2rem; */
+  text-align: center;
 `
 
 /* 캐러셀 */
 const CarouselLayout = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 200px;
+  /* margin-bottom: 15rem; */
   /* background-color: #b725f6; */
+  width: 60rem;
+  margin: auto;
 `
 
 // 1. Swiper 레이어아웃
 const SwiperLayout = styled.div`
-  /* width: 80%; */
-  width: 93%;
-  height: 600px;
+  width: 90%;
+  /* width: 85%; */
+  margin-bottom: 2rem;
+  height: 15rem;
   display: flex;
   justify-content: center;
   align-items: center;
   /* background-color: #faabd8; */
 `
 
+/* 🟡 지역  🟡*/
 const RegionsTitle = styled(Title)`
-  font-size: 3.8rem;
+  font-size: 2rem;
   text-align: center;
-  margin-left: 0rem;
+  /* margin-left: 0rem; */
 `
 const RegionsContainer = styled(FlexCenter)`
+  margin: auto;
+  width: 55rem;
   flex-wrap: wrap;
-  /* background-color: #b725f6; */
+  /* background-color: #25f675; */
   min-height: 20rem;
   /* padding: 0.5rem; */
   /* box-sizing: border-box; */
-  gap: 2rem;
+  gap: 3.5rem;
   margin-bottom: 5rem;
 `
 const Region = styled(FlexCenter)<{ region: string }>`
   font-size: 2rem;
-  width: 30%;
-  height: 20rem;
+  width: 14rem;
+  height: 14rem;
   color: white;
   cursor: pointer;
   border-radius: 15px;

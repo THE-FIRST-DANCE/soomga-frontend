@@ -212,10 +212,10 @@ const GuideDetailPage = () => {
             {/* SNS */}
             <SnsWrapper>
               <IconWrapper>
-                <XIcon width="1rem" height="1rem" />
+                <XIcon width="0.7rem" height="0.7rem" />
               </IconWrapper>
               <IconWrapper>
-                <InstagramIcon width="1.1rem" height="1.1rem" />
+                <InstagramIcon width="0.7rem" height="0.7rem" />
               </IconWrapper>
             </SnsWrapper>
             {/* 인증 */}
@@ -253,7 +253,7 @@ const GuideDetailPage = () => {
             {/* 채팅 버튼 */}
             <ChatBtnWrapper>
               <ChatButton>
-                <ChatIcon width={'50px'} heigth={'50px'} fill={'white'} />
+                <ChatIcon width={'1.5rem'} heigth={'1.5rem'} fill={'white'} />
                 채팅하기
               </ChatButton>
             </ChatBtnWrapper>
@@ -313,6 +313,7 @@ const GuideDetailPage = () => {
           <Partition>
             <Line />
           </Partition>
+
           {/* 2. 여행 플랜  */}
           <TravelPlanLayout>
             <Title>여행 플랜</Title>
@@ -347,7 +348,7 @@ const GuideDetailPage = () => {
                                 </LocationImage>
                                 <LocationInfoContainer>
                                   <InfoTime>
-                                    <Time $width="30px" $height="30px" $color="black" />
+                                    <Time $width="1rem" $height="1rem" $color="black" />
                                     {1} 시간
                                   </InfoTime>
                                   <InfoName>
@@ -383,7 +384,10 @@ const GuideDetailPage = () => {
           </Partition>
 
           {/* 3. 현재 예약 일정 */}
-          <CalendarComponent />
+
+          <Wrapper>
+            <CalendarComponent />
+          </Wrapper>
 
           <Partition>
             <Line />
@@ -397,17 +401,17 @@ const GuideDetailPage = () => {
                 <AverageScore>4.3</AverageScore>
                 <ScoreListContainer>
                   <ListContainer>
-                    <Comunication width=" 50px" height=" 50px" />
+                    <Comunication width=" 2rem" height=" 2rem" />
                     <CheckPoint>의사소통</CheckPoint>
                     <CheckScore>4.3</CheckScore>
                   </ListContainer>
                   <ListContainer>
-                    <CircleCheck width=" 50px" height=" 50px" />
+                    <CircleCheck width=" 2rem" height=" 2rem" />
                     <CheckPoint>정확도</CheckPoint>
                     <CheckScore>4.3</CheckScore>
                   </ListContainer>
                   <ListContainer>
-                    <Location width=" 50px" height=" 50px" />
+                    <Location width=" 2rem" height=" 2rem" />
                     <CheckPoint>위치</CheckPoint>
                     <CheckScore>4.3</CheckScore>
                   </ListContainer>
@@ -484,7 +488,8 @@ const GuideDetailPage = () => {
 export default GuideDetailPage
 
 const Layout = styled.div`
-  width: 100%;
+  width: 90%;
+  margin: auto;
   min-height: 100vh;
   display: flex;
 `
@@ -496,7 +501,7 @@ const FlexCenterd = styled.div`
 const Partition = styled(FlexCenterd)`
   width: 100%;
   height: 2px;
-  margin: 7rem 0;
+  margin: 2rem 0;
 `
 const Line = styled.div`
   width: 90%;
@@ -505,15 +510,13 @@ const Line = styled.div`
 `
 
 /* 
-
    ------------------------------------------　左　------------------------------------------ 
-
 */
 const LeftSection = styled.div`
   /* background-color: #5b5bea; */
-  flex: 1;
+  /* flex: 1; */
+  width: 20%;
   min-height: 90vh;
-  /* position: relative; */
 `
 
 const GuideInfoCard = styled.div`
@@ -522,7 +525,7 @@ const GuideInfoCard = styled.div`
   position: sticky;
   top: 15%;
   margin: auto;
-  width: 70%;
+  width: 11rem;
   border: 0.2rem solid var(--color-original);
   border-radius: 0.5rem;
   padding: 1rem;
@@ -550,8 +553,8 @@ const UserImageLayout = styled.div`
   /* background-color: #f2fb68; */
   /* border: 3px solid black; */
   border-radius: 15%;
-  width: 100%;
-  height: 100%;
+  width: 7rem;
+  height: 7rem;
   /* width: 9rem;
   height: 9rem; */
   overflow: hidden;
@@ -581,21 +584,22 @@ const GenderMarker = styled.div`
   }
 `
 
-const TemperatureContainer = styled.div`
+const TemperatureContainer = styled(FlexCenterd)`
   min-width: 1.3rem;
   /* background-color: blue; */
+  flex-direction: column;
   font-size: 0.9rem;
 `
 const TemperatureWrapper = styled(FlexCenterd)`
   /* width: 1.5rem; */
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 6.3rem;
   /* background-color: #fff048; */
   font-size: 0.7rem;
   transform: rotate(180deg);
 `
 const TemperatureBar = styled.div`
-  width: 60%;
+  width: 0.6rem;
   height: 90%;
   border-radius: 20px;
   border: 2px solid black;
@@ -615,7 +619,7 @@ const NameAgeWapper = styled(FlexCenterd)`
 `
 
 const UserName = styled.div`
-  font-size: 1.5rem;
+  font-size: 1rem;
 `
 const UserAge = styled.div`
   font-size: 1rem;
@@ -628,29 +632,35 @@ const SnsWrapper = styled(FlexCenterd)`
 const IconWrapper = styled(FlexCenterd)`
   padding: 0.3rem;
   border: 2px solid var(--color-original);
-  border-radius: 15px;
+  border-radius: 0.5rem;
   cursor: pointer;
 `
+/* 🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡 */
 const AutentificationWrapper = styled(FlexCenterd)`
-  gap: 0.5rem;
+  gap: 0.1rem;
   margin-top: 1rem;
+  /* background-color: mediumaquamarine; */
 `
 const Method = styled.div`
   font-size: 0.6rem;
-  display: inline-block;
+  min-width: 1.6rem;
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const Autentification = styled(FlexCenterd)`
   position: relative;
-  padding: 0 5px;
-  gap: 5px;
-  margin: 0 0.5rem;
+  /* padding: 0 1px; */
+  /* gap: 3px; */
+  margin: 0 0.3rem;
 
   &:not(:first-child)::before {
     content: '';
     display: block;
     position: absolute;
-    left: -15px;
+    left: -10px;
     width: 2px;
     height: 20px;
     background-color: black;
@@ -687,7 +697,7 @@ const ChatBtnWrapper = styled(FlexCenterd)`
 `
 const ChatButton = styled(FlexCenterd)`
   width: 100%;
-  font-size: 1.5rem;
+  font-size: 1rem;
   padding: 0.5rem;
   box-sizing: border-box;
   border-radius: 6px;
@@ -709,9 +719,10 @@ const FollowReport = styled(FlexCenterd)`
   /* flex-basis: 6rem; */
   flex-basis: 50%;
   border: 2px solid #b2b2b2;
-  padding: 0.5rem;
+  padding: 0.2rem;
   border-radius: 6px;
   gap: 10px;
+  font-size: 0.8rem;
   cursor: pointer;
 `
 const Follow = styled(FollowReport)``
@@ -725,8 +736,8 @@ const SeparatorLine = styled.div`
 `
 const TagWrapper = styled(FlexCenterd)`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  /* align-items: center; */
   flex-wrap: wrap;
   gap: 0.2rem;
 `
@@ -748,7 +759,8 @@ const Tag = styled.div`
    */
 const MiddleSection = styled.div`
   /* background-color: #75aef8; */
-  flex: 3;
+  /* flex: 3; */
+  width: 70%;
   min-height: 90vh;
 `
 const BlankTop10Rem = styled.div`
@@ -768,24 +780,29 @@ const MiddleLayout = styled.div`
 `
 
 // 1. 서비스
-const ServiceLayout = styled(MiddleLayout)``
+const ServiceLayout = styled(MiddleLayout)`
+  margin: auto;
+  width: 100%;
+`
 
 export const Title = styled.div`
   width: 100%;
-  font-size: 3rem;
-  margin-bottom: 3rem;
+  /* background-color: red; */
+  min-height: 1.5rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 `
 const ImageContainer = styled(FlexCenterd)`
   /* background-color: #ff70c4; */
   width: 100%;
   height: 100%;
   font-size: 3rem;
-  justify-content: space-around;
-  margin-bottom: 3rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 `
 const ServiceImageWrapper = styled(FlexCenterd)`
-  width: 18rem;
-  height: 18rem;
+  width: 13rem;
+  height: 13rem;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 3px 3px 3px 3px gray;
@@ -799,52 +816,58 @@ const ServiceImageWrapper = styled(FlexCenterd)`
 
 const ServiceContent = styled.div`
   width: 100%;
-  font-size: 2rem;
-  line-height: 4rem;
-  margin-bottom: 3rem;
+  font-size: 1rem;
+  line-height: 2rem;
 `
 
 // 2. 여행 플랜
 const TravelPlanLayout = styled(MiddleLayout)`
-  /* background-color: #f2618aff; */
-  height: auto;
+  background-color: #f2618aff;
+  /* width: 90%; */
+  margin: auto;
+  gap: 1rem;
 `
 
 const PlanContainer = styled(FlexCenterd)`
-  /* background-color: #6bf37f; */
-  gap: 6rem;
+  background-color: #6bf37f;
+  gap: 4rem;
   width: 100%;
   flex-direction: column;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   border-radius: 0.5rem;
-  /* margin-bottom: 3rem; */
 `
 const PlanWrapper = styled(PlanContainer)`
-  gap: 0;
+  /* gap: 3rem; */
 `
 const Plan = styled(FlexCenterd)`
   background-color: var(--color-original);
   width: 90%;
+  height: 3rem;
   /* border: 3px solid black; */
-  box-shadow: 4px 4px 4px 4px #a2a1a1;
+  box-shadow: 4px 4px 4px #a2a1a1;
   border-radius: 1rem;
-  padding: 1rem 3rem;
+  padding: 1rem 2rem;
   box-sizing: border-box;
   justify-content: flex-start;
   cursor: pointer;
   z-index: 2;
   /* position: relative; */
   color: white;
+  /* gap: 1rem; */
+  margin
 `
-
 const PlanTitle = styled.div`
-  flex-basis: 70%;
+  /* flex-basis: 50%; */
   /* margin-right: 2rem; */
-  width: 100%;
-  font-size: 3rem;
+  /* background-color: mediumaquamarine; */
+  width: 40%;
+
+  font-size: 1.5rem;
 `
 const PlanInfo = styled.div`
-  width: 100%;
+  width: 120%;
+  /* background-color: #f5c951; */
+  margin-right: 3rem;
   font-size: 1rem;
 `
 const PlanTime = styled.div`
@@ -859,7 +882,7 @@ const DropdownBtn = styled(FlexCenterd)`
 const PlanContent = styled.div<{ isPlanOpen: boolean }>`
   display: ${({ isPlanOpen }) => (isPlanOpen ? 'block' : 'none')};
   /* visibility: ${({ isPlanOpen }) => (isPlanOpen ? 'block' : 'none')}; */
-  /* background-color: #408efb; */
+  background-color: #408efb;
   width: 87%;
   min-height: 10rem;
   border: 3px solid black;
@@ -867,13 +890,14 @@ const PlanContent = styled.div<{ isPlanOpen: boolean }>`
   padding: 1rem;
   box-sizing: border-box;
   position: relative;
-  top: ${({ isPlanOpen }) => (isPlanOpen ? '0' : '-5rem')};
+  /* top: ${({ isPlanOpen }) => (isPlanOpen ? '0' : '-6rem')}; */
+  top: -4rem;
   opacity: ${({ isPlanOpen }) => (isPlanOpen ? '1' : '0')};
   transition: top 0.7s ease;
 `
 const ContentFrame = styled(FlexCenterd)`
   /* background-color: #ffed4e; */
-  margin: 1rem 0;
+  /* margin: 1rem 0; */
   min-width: 100%;
   justify-content: space-around;
   /* min-height: 10rem; */
@@ -883,8 +907,9 @@ const TravelTime = styled(ContentFrame)`
   justify-content: flex-start;
   padding-left: 9rem;
   box-sizing: border-box;
-  margin: 2rem 0;
+  margin: 1rem 0;
   position: relative;
+  /* background-color: blue; */
 
   &::after {
     content: '';
@@ -915,7 +940,7 @@ const TravelTime = styled(ContentFrame)`
 `
 
 const LocationImage = styled(FlexCenterd)`
-  width: 17rem;
+  width: 15rem;
   height: 10rem;
   overflow: hidden;
   border-radius: 0.8rem;
@@ -928,13 +953,13 @@ const LocationImage = styled(FlexCenterd)`
 
 const LocationInfoContainer = styled(FlexCenterd)`
   flex-direction: column;
-  gap: 2rem;
-  background-color: #fff;
+  gap: 1rem;
+  /* background-color: blue; */
 `
 
 const InfoTime = styled(FlexCenterd)`
   width: 100%;
-  font-size: 1.5rem;
+  font-size: 1rem;
   margin-bottom: 1rem;
   justify-content: flex-start;
   /* background-color: #7af060; */
@@ -954,100 +979,22 @@ const PlaceName = styled.div`
   width: 100%;
   font-size: 1rem;
   margin-bottom: 0.3rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 `
 
 const Description = styled.div`
-  background-color: #ece8e85a;
+  background-color: #90909026;
   height: 10rem;
-  width: 23rem;
+  width: 17rem;
   padding: 1rem;
   box-sizing: border-box;
-  font-size: 1rem;
+  font-size: 0.7rem;
   border-radius: 0.5rem;
   overflow: auto;
   overflow-wrap: break-word;
-  line-height: 1.5rem;
+  line-height: 1.3rem;
   /* word-break: break-all; */
   /* white-space: nowrap; */
-`
-
-// 3. 현재 예약 일정
-const BookingCheckLayout = styled(MiddleLayout)`
-  /* background-color: #f2618aff; */
-  height: auto;
-`
-const BookingContainer = styled(FlexCenterd)`
-  /* background-color: #6ff178; */
-  padding: 1rem;
-  box-sizing: border-box;
-`
-const CalendarWrapper = styled(FlexCenterd)`
-  width: 100%;
-  height: 45rem;
-
-  .react-calendar {
-    width: 70%;
-    height: 100%;
-    font-size: 4rem;
-    box-shadow: 5px 5px 5px 10px #e5e5e5;
-    border-radius: 10px;
-    padding: 30px;
-    /* box-sizing: border-box; */
-
-    /* 년도  */
-    .react-calendar__navigation button {
-      color: #000000;
-      min-width: 93px;
-      /* background: none; */
-      font-size: 30px;
-      margin-top: 2.5rem;
-    }
-
-    /* 오늘 날짜 */
-    .react-calendar__tile--now {
-      /* background: var(--color-original); */
-      background: #e44921;
-      font-weight: bold;
-      font-size: 20px;
-      color: white !important;
-      border-radius: 50%;
-      box-shadow: 3px 3px 3px 3px #7b7979;
-    }
-
-    /* 일 날짜 색깔 */
-    .react-calendar__tile {
-      color: black;
-      font-size: 17px;
-    }
-
-    // 요일 아래 밑줄 제거
-    .react-calendar__month-view__weekdays abbr {
-      text-decoration: none;
-      font-weight: 800;
-    }
-
-    .react-calendar__tile--hasActive:enabled:hover,
-    .react-calendar__tile--hasActive:enabled:focus {
-      background: #e44921;
-      /* border-radius: 1px; */
-    }
-
-    // 날짜 눌럿을 때
-    .react-calendar__tile--active {
-      background: #e44921;
-      border-radius: 50%;
-    }
-
-    /* 요일 라벨 */
-    .react-calendar__month-view__weekdays {
-      text-align: center;
-      font-size: 25px;
-      background-color: #fff;
-      border-bottom: 1px solid black;
-      padding: 0px;
-    }
-  }
 `
 
 const CustomDot = styled.div`
@@ -1058,6 +1005,11 @@ const CustomDot = styled.div`
   margin: 0 auto;
   position: relative;
   top: -20px;
+`
+
+const Wrapper = styled(FlexCenterd)`
+  width: 100%;
+  /* height: 45rem; */
 `
 
 const ReviewLayout = styled(MiddleLayout)`
@@ -1073,13 +1025,13 @@ const ReviewScoreContainer = styled(FlexCenterd)`
 const ReviewScoreLeft = styled(FlexCenterd)`
   /* background-color: #e94242; */
   flex: 3;
-  min-height: 25rem;
+  /* min-height: 25rem; */
   flex-direction: column;
 `
 
 const AverageScore = styled.div`
   /* background-color: #96fe5e; */
-  font-size: 8rem;
+  font-size: 3rem;
   margin-bottom: 2rem;
 `
 const ScoreListContainer = styled(FlexCenterd)`
@@ -1109,7 +1061,7 @@ const CheckPoint = styled(FlexCenterd)`
   font-size: 1rem;
 `
 const CheckScore = styled(FlexCenterd)`
-  font-size: 1.5rem;
+  font-size: 1rem;
 `
 
 const ReviewScoreRight = styled.div`
@@ -1127,12 +1079,13 @@ const ReviewTitleContainer = styled(FlexCenterd)`
 `
 
 const ReviewTitle = styled(Title)`
-  width: 60%;
+  width: 30%;
+  font-size: 1.2rem;
   /* background-color: #fcaa45; */
   margin-bottom: 0;
 `
 const TotalReviewCount = styled(Title)`
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: #767676;
   margin-bottom: 0;
 `
@@ -1140,8 +1093,8 @@ const TotalReviewCount = styled(Title)`
 const ScoreBarContainer = styled(FlexCenterd)`
   /* background-color: #f9fe5e; */
   width: 100%;
-  min-height: 20rem;
-  padding: 1rem;
+  /* min-height: 20rem; */
+  /* padding: 1rem; */
   box-sizing: border-box;
   flex-direction: column;
 `
@@ -1150,15 +1103,14 @@ const ScoreBarWrapper = styled(FlexCenterd)`
   /* background-color: #c2c0ff; */
   width: 100%;
   /* min-height: 20rem; */
-  padding: 1rem;
+  padding: 0.3rem;
   box-sizing: border-box;
   /* flex-direction: column; */
   gap: 1rem;
 `
 
 const Rank = styled(FlexCenterd)`
-  font-size: 2rem;
-
+  font-size: 1em;
   /* background-color: #fbb2b2; */
   flex: 1;
 `
@@ -1170,7 +1122,7 @@ const BarWrapper = styled.div`
   overflow: hidden;
 `
 const Bar = styled.div<{ percent: number }>`
-  min-height: 1rem;
+  min-height: 0.5rem;
   width: ${({ percent }) => `${percent}%`};
   background-color: var(--color-original);
 `
@@ -1247,33 +1199,37 @@ const ShowMoreButton = styled.button`
 
 */
 const RightSection = styled.div`
-  flex: 0.4;
-  min-height: 90vh;
+  /* flex: 0.2; */
+  width: 10%;
+  /* min-height: 80vh; */
   /* background-color: #ff70c4; */
 `
 
 const MenuBanner = styled.div`
-  /* background-color: #77f875; */
+  background-color: #77f875;
+  width: 6rem;
   position: sticky;
-  top: 15%;
+  top: 40%;
   margin: auto;
-  min-width: 70%;
+  /* min-width: 2rem; */
   border: 0.1rem solid var(--color-original);
   border-radius: 0.5rem;
-  margin-right: 2rem;
+  /* margin-right: 2rem; */
 `
 const MenuTitle = styled(FlexCenterd)`
   width: 100%;
   height: 3rem;
   color: white;
+  font-size: 0.8rem;
   background-color: var(--color-original);
 `
 const MoveTopTab = styled(MenuTitle)`
   cursor: pointer;
 `
 const MenuItem = styled(FlexCenterd)`
-  padding: 2rem 0;
+  padding: 1rem 0;
   width: 100%;
+  font-size: 0.8rem;
   flex-wrap: wrap;
   position: relative;
   cursor: pointer;

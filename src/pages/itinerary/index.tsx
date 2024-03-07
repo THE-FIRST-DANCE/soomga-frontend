@@ -1,6 +1,7 @@
 import CalendarComponent from 'components/itineraryCalendar/Calendar'
 import ScheduleList from 'components/itineraryCalendar/ScheduleList'
 import moment from 'moment'
+import { Title } from 'pages/guide/detail'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { MonthAtom } from 'recoil/MonthAtom'
@@ -15,6 +16,7 @@ export const targetDates: { id: number; name: string; date: Date }[] = [
 
 const ItineraryPage = () => {
   const [month, setMonth] = useRecoilState(MonthAtom)
+  console.log(' 달력 리코일 출력month: ', month)
 
   const [filteredDates, setFilteredDates] = useState<{ id: number; name: string; date: Date }[]>([])
 
@@ -29,10 +31,13 @@ const ItineraryPage = () => {
   return (
     <>
       <Blank />
+      {/* 좌측 : 달력 */}
       <Layout>
         <LeftSection>
           <CalendarComponent />
         </LeftSection>
+
+        {/* 우측  : 예약내용*/}
         <RightSection>
           <ScheduleList>
             {targetDates.map((data) => {
@@ -69,7 +74,7 @@ const Layout = styled.div`
 `
 const Blank = styled.div`
   width: 100%;
-  height: 10rem;
+  height: 8rem;
 `
 const FlexCenter = styled.div`
   display: flex;
@@ -78,17 +83,17 @@ const FlexCenter = styled.div`
 `
 
 const LeftSection = styled(FlexCenter)`
-  /* background-color: #5b5bea; */
+  background-color: #5b5bea;
   flex: 1;
-
-  /* min-height: 30vh; */
+  min-height: 100vh;
 `
 
 const RightSection = styled(FlexCenter)`
-  /* background-color: #ff70c4; */
+  background-color: #ff70c4;
+  flex-direction: column;
+  /* align-items: flex-start; */
+  justify-content: center;
   flex: 1;
-  /* justify-content: flex-start; */
-  /* min-height: 30vh; */
 `
 
 const ScheduleLayout = styled.div`
@@ -101,34 +106,35 @@ const ScheduleLayout = styled.div`
 // const
 const DateInfo = styled.div`
   width: 100%;
-  height: 3rem;
-  font-size: 2.5rem;
-  font-weight: bold;
+  /* height: 1.3rem; */
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
   /* background-color: mediumaquamarine; */
 `
 
 const UserWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
-  height: 3.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 1rem;
+  /* height: 3.5rem; */
   /* background-color: red; */
 `
 const Pointer = styled.div`
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.3rem;
+  height: 0.3rem;
   background-color: var(--color-original);
-  border: 5px solid black;
+  border: 2px solid black;
   border-radius: 50%;
   margin-right: 1rem;
   /* margin-top: 0.4rem; */
 `
 const GuestInfo = styled.div`
-  font-size: 1.5rem;
+  font-size: 1rem;
 `
 const Noschedule = styled(FlexCenter)`
   width: 100%;
   height: 100%;
   display: flex;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
 `

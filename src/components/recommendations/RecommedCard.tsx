@@ -61,14 +61,14 @@ const PostContainer = styled(FlexCenter)`
 `
 
 const Post = styled(FlexCenter)<{ regionImg: string }>`
-  background-color: royalblue;
+  /* background-color: royalblue; */
   border-radius: 15px;
   /* width: 100%; */
-  width: 40rem;
-  max-width: 100%;
-  min-height: 25rem;
+  width: 20rem;
+  min-height: 12rem;
+  /* max-width: 100%; */
   align-items: flex-end;
-  padding: 1rem 1rem;
+  padding: 0.5rem 0 0.5rem 0.5rem;
   box-sizing: border-box;
   background-image: url(${({ regionImg }) => regionImg});
   background-size: cover;
@@ -91,35 +91,38 @@ const PostLeft = styled.div`
 
 const PostLetterContainer = styled.div`
   /* background-color: #41e191; */
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
 `
 const Title = styled.div`
-  font-size: 5rem;
-  margin-bottom: 2rem;
-  margin-left: 13rem;
+  /* background-color: #e1ac41; */
+  font-size: 1rem;
+  /* margin-bottom: 2rem; */
+  /* margin-left: 13rem; */
 `
 
 const PostTitle = styled(Title)`
-  font-size: 2.3rem;
-  margin-bottom: 1rem;
-  margin-left: 0rem;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+  /* margin-left: 0rem; */
 `
 const PostSubTitle = styled(Title)`
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  margin-left: 0rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.4rem;
+  /* margin-left: 0rem; */
 `
 const UserContainer = styled(FlexCenter)`
   /* background-color: #41e1e1; */
   min-height: 1rem;
+  /* padding-left: 1rem; */
+  box-sizing: border-box;
   justify-content: flex-start;
 `
 
 const UserImg = styled.div`
-  width: 3rem;
-  height: 3rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
-  margin-right: 1rem;
+  /* margin-right: 1rem; */
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
@@ -129,33 +132,34 @@ const UserImg = styled.div`
   }
 `
 const UserName = styled(FlexCenter)`
-  font-size: 1.2rem;
+  font-size: 0.7rem;
   width: 3rem;
-  margin-right: 1rem;
+  /* margin-right: 1rem; */
   position: relative;
   top: 2px;
 `
 
 const Date = styled(FlexCenter)`
-  font-size: 1.2rem;
+  font-size: 1rem;
+  font-size: 0.7rem;
 `
 const PostRight = styled(FlexCenter)`
   /* background-color: #41b4e1; */
-  min-height: 9rem;
+  /* min-height: 9rem; */
   flex: 1;
 `
 
 const TagContainer = styled(FlexCenter)`
-  padding: 0 1rem;
-  box-sizing: border-box;
+  /* padding: 0 1rem; */
+  /* box-sizing: border-box; */
   flex-wrap: wrap;
 `
 
 const Tag = styled(FlexCenter)`
-  min-width: 3rem;
-  padding: 0.2rem 0.3rem;
+  min-width: 2rem;
+  padding: 0.2rem 0.1rem;
   box-sizing: border-box;
-  font-size: 1rem;
+  font-size: 0.7rem;
   border-radius: 3rem;
   background-color: #cfcfcf85;
   margin: 0.2rem 0.2rem;
