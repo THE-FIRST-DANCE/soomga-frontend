@@ -18,11 +18,11 @@ export default ScheduleList
 const Title = styled.div`
   min-height: 3rem;
   width: 100%;
-  background-color: mediumaquamarine;
+  /* background-color: mediumaquamarine; */
 `
 
 const Wrapper = styled.div`
-  background-color: red;
+  /* background-color: red; */
   width: 25rem;
   height: 25rem;
   border: 1px solid #ddd;

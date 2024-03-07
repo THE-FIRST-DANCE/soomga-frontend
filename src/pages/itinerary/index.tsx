@@ -64,8 +64,12 @@ const ItineraryPage = () => {
 }
 
 export default ItineraryPage
-
-const Layout = styled.div`
+const FlexCenter = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const Layout = styled(FlexCenter)`
   width: 100%;
   min-height: 80vh;
   display: flex;
@@ -74,26 +78,22 @@ const Layout = styled.div`
 `
 const Blank = styled.div`
   width: 100%;
-  height: 8rem;
-`
-const FlexCenter = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 5rem;
 `
 
 const LeftSection = styled(FlexCenter)`
-  background-color: #5b5bea;
-  flex: 1;
+  /* background-color: #5b5bea; */
+  /* flex: 1; */
+  width: 30rem;
   min-height: 100vh;
 `
 
 const RightSection = styled(FlexCenter)`
-  background-color: #ff70c4;
+  /* background-color: #ff70c4; */
+  /* width: 30rem; */
   flex-direction: column;
   /* align-items: flex-start; */
-  justify-content: center;
-  flex: 1;
+  /* justify-content: center; */
 `
 
 const ScheduleLayout = styled.div`
