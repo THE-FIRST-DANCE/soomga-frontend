@@ -272,6 +272,7 @@ const HeaderIconContainer_div = styled.div<IconWrapperProps>`
 `
 const StyledLanguageIcon = styled(motion(LanguageIcon))`
   :hover {
+    color: var(--color-original);
   }
 `
 
@@ -286,6 +287,9 @@ const LanguageDropdown_ul = styled.ul`
   li {
     padding-bottom: 15px;
     box-sizing: border-box;
+    &:hover {
+      color: var(--color-original);
+    }
   }
 `
 
