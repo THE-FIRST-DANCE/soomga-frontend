@@ -168,21 +168,21 @@ const CardContainer = styled(FlexCenter)`
   padding: 2rem;
   box-sizing: border-box;
   border-bottom: 2px solid #dddddd;
-  /* background-color: #605e5e; */
+  /* background-color: mediumaquamarine; */
   justify-content: flex-start;
   position: relative;
 `
 const Temperature = styled(FlexCenter)`
   position: absolute;
-  width: 80px;
-  height: 80px;
-  right: -1rem;
-  top: -0.5rem;
-  font-size: 1.2rem;
+  width: 3rem;
+  height: 3rem;
+  right: 1rem;
+  top: 1rem;
+  font-size: 1rem;
   border-radius: 50%;
   color: white;
   background-color: #f55757;
-  box-shadow: 5px 5px 5px 5px #dddddd;
+  box-shadow: 3px 3px 3px 3px #dddddd;
 `
 
 /* 🟡 왼쪽 */
@@ -198,8 +198,8 @@ const UserImageLayout = styled.div`
   /* background-color: #54f55f; */
   border: 3px solid black;
   border-radius: 15%;
-  width: 150px;
-  height: 150px;
+  width: 7rem;
+  height: 7rem;
   position: relative;
 `
 
@@ -228,17 +228,17 @@ const ImageWrapper = styled.div`
 
 const UserName = styled(FlexCenter)`
   padding: 1rem 0;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   width: 100%;
 `
 
 /* 🟡 중앙 */
 const MiddleLayout = styled.div`
-  /* width: 40%; */
+  width: 30%;
 `
 
 const UserInfo = styled(FlexCenter)`
-  font-size: 1.5rem;
+  font-size: 1rem;
   width: 100%;
   padding: 0.5rem 1rem;
   box-sizing: border-box;
@@ -261,29 +261,31 @@ const RightTop = styled(FlexCenter)`
 `
 
 const Partition = styled.div`
-  padding: 1rem;
+  /* padding: 1rem; */
   box-sizing: border-box;
   /* background-color: red; */
 `
 const Title = styled(FlexCenter)`
-  font-size: 2rem;
+  font-size: 1.3rem;
 `
 const TitleValue = styled(FlexCenter)`
-  font-size: 1.5rem;
+  font-size: 1.1rem;
 `
 
 const RightBottom = styled(FlexCenter)`
   width: 100%;
   /* background-color: blueviolet; */
   flex-wrap: wrap;
+  gap: 0.6rem;
 `
 const Tag = styled.button`
+  background-color: #fff;
   text-align: center;
   display: inline-block;
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 2rem;
-  padding: 10px 20px;
+  padding: 0.2rem 0.7rem;
   min-width: 1.7rem;
   white-space: nowrap;
-  box-shadow: 2px 2px 2px 2px gray;
+  box-shadow: 1px 1px gray;
 `
