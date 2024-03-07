@@ -45,7 +45,7 @@ export default RangeComponent
 // 횟수
 const LangeTextWrapper = styled.div`
   display: flex;
-  width: 70%;
+  width: 40%;
   justify-content: space-around;
   /* background-color: #6e51e3; */
 `
@@ -55,7 +55,7 @@ const LangeText = styled.div`
   display: inline-block;
   border-bottom: 2px solid var(--bs-gray);
   padding-bottom: 7px;
-  font-size: 25px;
+  font-size: 1rem;
   font-weight: 700;
 `
 
