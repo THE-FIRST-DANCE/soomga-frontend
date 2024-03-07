@@ -9,15 +9,17 @@ import MainPage from 'pages/home'
 import LoginSignupPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
 
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
 import RedirectPage from 'pages/redirect'
 import ItineraryPage from 'pages/itinerary'
 import RecommendatedPostPage from 'pages/recommendationPage'
 import RegionsList from 'pages/recommendationPage/regionslist'
+import RegionDetailPage from 'pages/recommendationPage/detail'
 const Router = () => {
   // 토큰 관리
-  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+  // const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+  const recoilToken = useRecoilValue(AccessTokenAtom)
 
   return (
     <>
@@ -39,7 +41,9 @@ const Router = () => {
         {/* 5. 여행장소 추천 */}
         <Route path="/recommendations" element={<RecommendatedPostPage />} />
         <Route path="/recommendations/:region_Id" element={<RegionsList />} />
-        <Route path="/recommendations/:region_Id/:detail_Id" element={<h1> 여행 장소 상세 </h1>} />
+        <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
+        {/* 5-> CRUD 게시판 */}
+        <Route path="/recommendations/:region_Id" element={<RegionsList />} />
 
         {recoilToken && (
           <>
