@@ -17,8 +17,8 @@ const ChatBtnWrapper = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 120px;
-  height: 120px;
+  width: 3rem;
+  height: 3rem;
   z-index: 999;
   cursor: pointer;
 
