@@ -9,7 +9,7 @@ import { Title } from 'pages/guide/detail'
 
 import { targetDates } from '../../pages/itinerary/index'
 import { useRecoilState } from 'recoil'
-import { MonthAtom } from 'recoil/MonthAtom'
+import { MonthAtom } from 'state/store/MonthAtom'
 
 // import { targetDates } from
 type ValuePiece = Date | null

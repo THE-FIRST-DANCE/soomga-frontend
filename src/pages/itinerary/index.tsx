@@ -4,7 +4,7 @@ import moment from 'moment'
 import { Title } from 'pages/guide/detail'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
-import { MonthAtom } from 'recoil/MonthAtom'
+import { MonthAtom } from 'state/store/MonthAtom'
 import { styled } from 'styled-components'
 
 export const targetDates: { id: number; name: string; date: Date }[] = [
@@ -78,7 +78,7 @@ const Layout = styled(FlexCenter)`
 `
 const Blank = styled.div`
   width: 100%;
-  height: 5rem;
+  height: 3rem;
 `
 
 const LeftSection = styled(FlexCenter)`

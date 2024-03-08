@@ -25,7 +25,7 @@ import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { getCookie } from 'utils/cookie'
 import { useRecoilState } from 'recoil'
-import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
+import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import { onGoogleLogin, onLineLogin } from 'utils/oauth.connector'
 
 interface LoginForm {
