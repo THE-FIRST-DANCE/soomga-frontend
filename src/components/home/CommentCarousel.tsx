@@ -107,7 +107,7 @@ const CarouselLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 100px;
+  margin-bottom: 2rem;
 
   // 네비게이션 색깔 커스터마이징
   .swiper-pagination-bullet {

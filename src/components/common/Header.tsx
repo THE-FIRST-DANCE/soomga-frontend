@@ -11,7 +11,7 @@ import { motion } from 'framer-motion'
 import { getCookie, getRemoveCookie } from 'utils/cookie'
 import { toast } from 'react-toastify'
 import { useRecoilState } from 'recoil'
-import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
+import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 
 interface IconWrapperProps {
   flex: number
@@ -272,6 +272,7 @@ const HeaderIconContainer_div = styled.div<IconWrapperProps>`
 `
 const StyledLanguageIcon = styled(motion(LanguageIcon))`
   :hover {
+    color: var(--color-original);
   }
 `
 
@@ -286,6 +287,9 @@ const LanguageDropdown_ul = styled.ul`
   li {
     padding-bottom: 15px;
     box-sizing: border-box;
+    &:hover {
+      color: var(--color-original);
+    }
   }
 `
 

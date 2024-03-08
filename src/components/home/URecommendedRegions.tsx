@@ -141,11 +141,13 @@ const Inner = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
 `
 
 /* 🟡 1. 좌측 : 갑자기 도움이 필요할 때 (sos페이지) */
 const LeftSection = styled.div`
+  /* background-color: mediumaquamarine; */
+  /* overflow: hidden; */
   width: 40%;
   height: 100%;
   display: flex;
@@ -154,7 +156,8 @@ const LeftSection = styled.div`
   justify-content: center;
   align-items: center;
   span {
-    font-size: 30px;
+    font-size: 2rem;
+
     font-family: 'Black Han Sans', sans-serif;
   }
 `
@@ -183,8 +186,8 @@ const LeftLogoWrapper = styled.div`
 
 // 1.2 이미지 링크
 const LeftImgContainer = styled.div`
-  width: 500px;
-  height: 1200px;
+  width: 22rem;
+  height: 33rem;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -192,11 +195,6 @@ const LeftImgContainer = styled.div`
   box-shadow:
     5px 19px 38px rgba(0, 0, 0, 0.3),
     5px 15px 12px rgba(0, 0, 0, 0.22);
-
-  //! 화면 넓이가 1360px 이상일 때 적용되는 스타일
-  @media (min-width: 1360px) {
-    width: 800px;
-  }
 
   &:hover .mainLeftImage {
     transform: scale(1.2);
@@ -234,8 +232,9 @@ const LeftLetterWrapper = styled.div`
 
 /* 🟡 2. 우측 : 내 취향에 맞는 여행지를 찾아봐 (유저 순위 추천)  */
 const RigthSection = styled.div`
+  /* background-color: royalblue; */
   width: 60%;
-  height: 100%;
+  /* height: 100%; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -248,7 +247,7 @@ const RightTitleContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 30px;
+  font-size: 2rem;
   font-weight: 700;
 `
 
@@ -266,26 +265,21 @@ const RightLogoWrapper = styled.div`
 
 /* 2.2 추천 지역들  */
 const RightRegionsContainer = styled.div`
+  /* background-color: palegreen; */
   width: 100%;
-  height: 1200px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  gap: 6rem;
 `
 
 // 2.2.1 추천지역 Wrapper : Img + Title + Info
 const RegionsWrapper = styled.div`
-  width: 500px;
-  height: 400px;
-  margin: 0 30px;
+  /* background-color: red; */
+  width: 16rem;
+  height: 11rem;
+  margin: 0.5rem 0;
   cursor: pointer;
-
-  //! 화면 넓이가 1360px 이상일 때 적용되는 스타일
-  @media (min-width: 2270px) {
-    width: 500px;
-    height: 550px;
-    margin: 0 80px;
-  }
 
   &:hover img {
     transform: scale(1.2);
@@ -294,11 +288,11 @@ const RegionsWrapper = styled.div`
 // 2.2.1.1 추천지역 Img
 const RegionImg = styled.div`
   width: 100%;
-  height: 400px;
+  height: 100%;
   overflow: hidden;
   position: relative;
   border-radius: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 0.3rem;
   box-shadow:
     5px 7px 38px rgba(0, 0, 0, 0.3),
     5px 10px 12px rgba(0, 0, 0, 0.22);
@@ -312,9 +306,9 @@ const RegionImg = styled.div`
 `
 // 2.2.1.2 추천지역 Title
 const RegionTitle = styled.div`
-  font-size: 35px;
+  font-size: 1.5rem;
 `
 // 2.2.1.3 추천지역 Info
 const RegionInfo = styled.div`
-  font-size: 18px;
+  font-size: 0.8rem;
 `

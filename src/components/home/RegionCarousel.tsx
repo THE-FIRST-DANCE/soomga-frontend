@@ -123,25 +123,23 @@ export default RegionCarousel
 const CarouselLayout = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 300px;
-  margin-bottom: 200px;
+  margin-top: 7rem;
   /* background-color: #b725f6; */
 `
 
 // 1. Swiper 레이어아웃
 const SwiperLayout = styled.div`
   width: 80%;
-  height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 3rem;
   /* background-color: #faabd8; */
 `
 
 // 2. Swiper 이미지 컨테이너
 const SlideContainer = styled.div<ActivStatus>`
-  width: 100%;
-  height: 450px;
+  /* background-color: mediumaquamarine; */
+  margin: auto;
+  width: 30rem;
+  height: 15rem;
   /* background-color: ${({ activStatus }) => (activStatus === 'active' ? '#00000010' : 'transparent')}; */
   display: flex;
   justify-content: center;
@@ -175,7 +173,7 @@ const Letters = styled.div<ActivStatus>`
   > div {
     font-size: 50px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
   }
 
   > span {
