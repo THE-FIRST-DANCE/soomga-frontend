@@ -10,7 +10,7 @@ import LoginSignupPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
+import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import RedirectPage from 'pages/redirect'
 import ItineraryPage from 'pages/itinerary'
 import RecommendatedPostPage from 'pages/recommendationPage'
