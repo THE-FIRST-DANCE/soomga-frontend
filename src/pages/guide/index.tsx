@@ -54,7 +54,7 @@ const GuidePage = () => {
         <LeftSection>
           {/* 🟠 1. Search (text)  🟠 */}
           <SearchTagContainer>
-            <MagnifieirIcon width="50px" height="50px" background-color="red" />
+            <MagnifieirIcon width="40px" height="40px" background-color="red" />
             <span className="searchLetter">Search</span>
           </SearchTagContainer>
 
@@ -237,25 +237,27 @@ const GuidePage = () => {
                     {/* <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div> */}
-                    {CredentialsDatas.japanesse.map((language) => {
-                      const isSelected = selectedCredentials.includes(language)
+                    <Scores>
+                      {CredentialsDatas.japanesse.map((language) => {
+                        const isSelected = selectedCredentials.includes(language)
 
-                      return (
-                        <RegionIcon
-                          key={language}
-                          isSelected={isSelected}
-                          onClick={() => {
-                            {
-                              selectedCredentials.includes(language)
-                                ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                                : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
-                            }
-                          }}
-                        >
-                          {language}
-                        </RegionIcon>
-                      )
-                    })}
+                        return (
+                          <Credential
+                            key={language}
+                            isSelected={isSelected}
+                            onClick={() => {
+                              {
+                                selectedCredentials.includes(language)
+                                  ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
+                                  : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                              }
+                            }}
+                          >
+                            {language}
+                          </Credential>
+                        )
+                      })}
+                    </Scores>
                     {/* <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div> */}
@@ -263,26 +265,27 @@ const GuidePage = () => {
                     <LanguageTitle>English 🇬🇧 </LanguageTitle>
                     {/* <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div> */}
+                    <Scores>
+                      {CredentialsDatas.english.map((language) => {
+                        const isSelected = selectedCredentials.includes(language)
 
-                    {CredentialsDatas.english.map((language) => {
-                      const isSelected = selectedCredentials.includes(language)
-
-                      return (
-                        <RegionIcon
-                          key={language}
-                          isSelected={isSelected}
-                          onClick={() => {
-                            {
-                              selectedCredentials.includes(language)
-                                ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                                : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
-                            }
-                          }}
-                        >
-                          {language}
-                        </RegionIcon>
-                      )
-                    })}
+                        return (
+                          <Credential
+                            key={language}
+                            isSelected={isSelected}
+                            onClick={() => {
+                              {
+                                selectedCredentials.includes(language)
+                                  ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
+                                  : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                              }
+                            }}
+                          >
+                            {language}
+                          </Credential>
+                        )
+                      })}
+                    </Scores>
                   </CredentialDropWrapper>
                 )}
               </Container>
@@ -360,9 +363,10 @@ export default GuidePage
 /* ----------------------------- 💅 StyledComponent -----------------------------*/
 
 const GuidePageLayout = styled.div`
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: flex;
+  margin: 0 auto;
 `
 
 // top에 여백用
@@ -370,13 +374,12 @@ const Blank = styled.div`
   width: 100%;
   height: 10rem;
 `
-/* 🟡 왼쪽 */
+/* 🟡🟡🟡🟡🟡 왼쪽 🟡🟡🟡🟡🟡 */
 const LeftSection = styled.div`
-  width: 30%;
+  width: 27%;
   height: 100%;
-  padding: 3rem;
+  padding: 2rem;
   box-sizing: border-box;
-  /* display: flex; */
   /* background-color: #fedf41; */
 `
 
@@ -384,14 +387,17 @@ const SearchTagContainer = styled.div`
   width: 100%;
   height: 50px;
   /* background-color: #fff; */
-  border-bottom: 10px solid var(--color-original);
-  padding-bottom: 20px;
-  margin-bottom: 80px;
+  border-bottom: 5px solid var(--color-original);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
   display: flex;
   gap: 1.5rem;
 
   .searchLetter {
-    font-size: 50px;
+    /* font-size: 50px; */
+    /* margin-left: 1rem; */
+    font-size: 2.1rem;
+
     color: var(--color-original);
   }
 `
@@ -404,7 +410,7 @@ const Layout = styled.div`
   /* background-color: #4ff643; */
   margin-bottom: 2rem;
   /* padding: 10px; */
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
 `
 
 // 컨테이너🟠
@@ -412,15 +418,15 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   /* background-color: #ffffff; */
-  margin-bottom: 100px;
+  margin-bottom: 1.5rem;
 `
 
 // 범주 타이틀🟠
 export const LangeTitle = styled.div`
-  font-size: 30px;
+  font-size: 1.3rem;
   font-weight: 700;
   margin-left: 10px;
-  margin-bottom: 10px;
+  /* margin-bottom: 0.1rem; */
 `
 
 // input 전체 감싸기🟠
@@ -429,8 +435,9 @@ export const Wrapper = styled.div`
   height: 100%;
   /* background-color: #3bd2ea; */
   border: 3px solid var(--bs-gray);
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  /* padding: 20px; */
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -441,7 +448,7 @@ export const Wrapper = styled.div`
 
 const RadioButtonsContainer = styled.div`
   width: 100%;
-  margin-top: 150px;
+  margin-top: 1rem;
 `
 
 const GenderWrapper = styled(Wrapper)`
@@ -450,18 +457,24 @@ const GenderWrapper = styled(Wrapper)`
   justify-content: space-around;
 `
 
-const InputCheckBox = styled.input`
-  display: none;
-`
-
-const Label = styled.label`
-  margin-left: -20px;
-`
-
 /* 🟠   4. 지역 선택 : 8도  🟠  */
 const RegionsContainer = styled(Container)`
   width: 100%;
-  margin-top: 150px;
+  /* margin-top: 1rem; */
+  margin-bottom: 0;
+`
+
+const SelectContainer = styled.div`
+  width: 100%;
+  /* background-color: #3bd2ea; */
+  border: 3px solid var(--bs-gray);
+  border-radius: 0.5rem;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
 `
 
 const RegionIcon = styled.button<{ isSelected: boolean }>`
@@ -475,19 +488,6 @@ const RegionIcon = styled.button<{ isSelected: boolean }>`
   white-space: nowrap;
 `
 
-const SelectContainer = styled.div`
-  width: 100%;
-  /* background-color: #3bd2ea; */
-  border: 3px solid var(--bs-gray);
-  border-radius: 20px;
-  padding: 10px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  align-items: center;
-`
-
 const PlaceholderOfSelect = styled.div`
   /* background-color: #7de0b4; */
   width: 85%;
@@ -498,7 +498,7 @@ const PlaceholderOfSelect = styled.div`
 `
 
 const TriangleIcon = styled.span`
-  font-size: 30px;
+  font-size: 1rem;
   color: var(--color-original);
   transition: transform 1s;
 `
@@ -523,7 +523,7 @@ const RegionDropWrapper = styled(Wrapper)<{ isRegionClick: boolean }>`
 /* 🟠  5. 언어 선택 : 한국어 | 영어 | 일본어 🟠 */
 const LanguageContainer = styled(Container)`
   width: 100%;
-  margin-top: 150px;
+  /* margin-top: 150px; */
 `
 
 const LanguageTitle = styled.div`
@@ -537,10 +537,32 @@ const LanguageTitle = styled.div`
 /* 🟠 6. 자격증 선택 :  영어 | 일본어 🟠  */
 const CredentialsContainer = styled(Container)`
   width: 100%;
-  margin-top: 150px;
+  /* background-color: mediumaquamarine; */
+  /* margin-top: 150px; */
 `
 
-const CredentialDropWrapper = styled(RegionDropWrapper)``
+const CredentialDropWrapper = styled.div`
+  border: 3px solid var(--bs-gray);
+  border-radius: 0.6rem;
+  padding: 0.7rem;
+  box-sizing: border-box;
+`
+const Scores = styled.div`
+  margin-top: 0.8rem;
+  margin-bottom: 0.5rem;
+`
+
+const Credential = styled.button<{ isSelected: boolean }>`
+  text-align: center;
+  margin-right: 0.4rem;
+  display: inline-block;
+  border: 2px solid black;
+  border-radius: 2rem;
+  padding: 10px 10px;
+  background-color: ${({ isSelected }) => (isSelected ? '#fef4ba' : 'white')};
+  min-width: 1.7rem; // 이 줄을 추가하여 최소 너비를 설정합니다.
+  white-space: nowrap;
+`
 
 /* 🟠  7. 평점 선택 🟠   */
 const StarWrapper = styled(Wrapper)`

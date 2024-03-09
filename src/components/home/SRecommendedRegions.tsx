@@ -72,23 +72,24 @@ const SRecommendedRegionsLayout = styled.div`
 `
 /* 2. Soomga의 추천 지역 : Logo + letter */
 const LogoAndLetterContainer = styled.div`
+  /* background-color: orange; */
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 30px 0;
+  margin-top: 20px;
 
   /*  2.2 letter : Soomga의 추천 지역 */
   span {
-    font-size: 80px;
+    font-size: 2rem;
     font-family: 'Black Han Sans', sans-serif;
   }
 `
 /* 2.1 Logo : 그림 이미지  */
 const ImgWrapper = styled.div`
-  width: 120px;
-  height: 120px;
-
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
   img {
     width: 100%;
     height: 100%;
@@ -97,20 +98,24 @@ const ImgWrapper = styled.div`
 
 /* 3. 추천지역 List Container */
 const RegionsContainer = styled.div`
+  /* background-color: orange; */
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 30px 0;
+  /* margin: 0.5rem 0; */
 `
 
 /* 3.1 추천 지역 카드 */
 const Region = styled.div`
-  width: 300px;
-  height: 300px;
+  width: 10%;
+  height: 10%;
+  /* width: 10rem;
+  height: 10rem; */
   overflow: hidden;
   position: relative;
-  margin: 30px;
+  /* margin: 30px; */
+  margin: 1rem 1.9rem;
   border-radius: 20px;
   cursor: pointer;
   box-shadow:
@@ -140,7 +145,7 @@ const Region = styled.div`
     top: 90%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: 700;
     color: white;
     background-image: linear-gradient(to top, #000000ae, #00000045);

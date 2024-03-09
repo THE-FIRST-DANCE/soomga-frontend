@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
-import { AccessTokenAtom } from 'recoil/AccessTokenAtom'
+import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import { getCookie } from 'utils/cookie'
 
 const useAccessToken = () => {

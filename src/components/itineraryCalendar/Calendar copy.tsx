@@ -56,10 +56,12 @@ const CalendarComponent = () => {
             className="react-calendar"
             onChange={(date) => {
               onChange(date)
+
               const selectedMonth = moment(new Date(value as Date)).format('M')
-              if (month.month !== selectedMonth) {
-                setMonth({ month: selectedMonth })
-              }
+              setMonth({ month: selectedMonth })
+              // if (month.month !== selectedMonth) {
+              //   setMonth({ month: selectedMonth })
+              // }
 
               console.log('month 레코일: ', month)
             }}
@@ -68,10 +70,7 @@ const CalendarComponent = () => {
             formatDay={(locale, date: Date) => moment(date).format('D')}
             formatMonthYear={(locale, date: Date) => {
               console.log(moment(date).format('M'))
-              const selectedMonth = moment(new Date(value as Date)).format('M')
-              if (month.month !== selectedMonth) {
-                setMonth({ month: selectedMonth })
-              }
+
               return moment(date).format('YYYY년 M월')
             }}
             tileContent={tileContent} // tileContent 적용
@@ -110,10 +109,10 @@ const CustomDot = styled.div`
 const MiddleLayout = styled.div`
   /* background-color: #fdd049; */
   /* height: 100%; */
-  width: 90%;
-  /* padding: 3rem 3rem; */
+  /* width: 100%; */
+  padding: 3rem 3rem;
   /* box-sizing: border-box; */
-  /* margin-bottom: 3rem; */
+  margin-bottom: 3rem;
   /* position: relative; */
 `
 // 3. 현재 예약 일정

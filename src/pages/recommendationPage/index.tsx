@@ -1,10 +1,16 @@
 import { styled } from 'styled-components'
 
 import guideImg from 'assets/guideImg.png'
-import busan from 'assets/busan.png'
-import geoje from 'assets/geoje.png'
-import ulsan from 'assets/ulsan.png'
-import seoul from 'assets/seoul.png'
+
+import seoul from 'assets/regions/seoul.jpeg'
+import gyeonggi from 'assets/regions/gyeonggi.jpeg'
+import jeonbuk from 'assets/regions/jeonbuk.jpeg'
+import jeonnam from 'assets/regions/jeonnam.jpeg'
+import chungbuk from 'assets/regions/chungbuk.jpeg'
+import chungnam from 'assets/regions/chungnam.jpeg'
+import gyeongbuk from 'assets/regions/gyeongbuk.jpeg'
+import gyeongnam from 'assets/regions/gyeongnam.jpeg'
+import jeju from 'assets/regions/jeju.jpeg'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay, EffectCoverflow } from 'swiper/modules'
@@ -30,65 +36,65 @@ export let regionsArr = [
   },
   {
     id: 2,
-    regionName: '부산',
-    information: '살아있네 살아있어 부산아이가!',
-    img: busan,
+    regionName: '경기',
+    information: '대한민국의 심장',
+    img: gyeonggi,
     like: 4,
     guideImg: guideImg,
   },
   {
     id: 3,
-    regionName: '울산',
-    information: '울산의 자랑 울산의 얼굴 이재일입니다!',
-    img: ulsan,
+    regionName: '전북',
+    information: '전북 이랑께',
+    img: jeonbuk,
     like: 5,
     guideImg: guideImg,
   },
   {
     id: 4,
-    regionName: '서울',
-    information: '대한민국의 수도 아리수, 대한민국의 수도 아리수',
-    img: seoul,
+    regionName: '전남',
+    information: '전라도의 영광 전남',
+    img: jeonnam,
     like: 2,
     guideImg: guideImg,
   },
   {
     id: 5,
-    regionName: '부산',
-    information: '살아있네 살아있어 부산아이가!',
-    img: busan,
+    regionName: '충북',
+    information: '살아있구먼 충북!',
+    img: chungbuk,
     like: 4,
     guideImg: guideImg,
   },
   {
     id: 6,
-    regionName: '울산',
+    regionName: '충남',
     information: '울산의 자랑 울산의 얼굴 이재일입니다!',
-    img: ulsan,
+    img: chungnam,
     like: 5,
     guideImg: guideImg,
   },
   {
     id: 7,
-    regionName: '서울',
-    information: '대한민국의 수도 아리수, 대한민국의 수도 아리수',
-    img: seoul,
+    regionName: '경북',
+    information: '경북 좋아',
+    img: gyeongbuk,
     like: 2,
     guideImg: guideImg,
   },
   {
     id: 8,
-    regionName: '부산',
-    information: '살아있네 살아있어 부산아이가!',
-    img: busan,
+    regionName: '경남',
+    information: '살아있네 살아있어 경남아이가!',
+    img: gyeongnam,
     like: 4,
     guideImg: guideImg,
   },
   {
     id: 9,
-    regionName: '울산',
-    information: '울산의 자랑 울산의 얼굴 이재일입니다!',
-    img: ulsan,
+    regionName: '제주',
+    information: '제주의 자랑 제주의 얼굴 이재일입니다!',
+    img: jeju,
     like: 5,
     guideImg: guideImg,
   },
@@ -171,52 +177,59 @@ const Layout = styled.div`
   margin: 0 auto;
   width: 90%;
   min-height: 1000px;
-  margin-top: 11rem;
+  margin-top: 10rem;
 `
 
 const Title = styled.div`
-  font-size: 5rem;
-  margin-bottom: 2rem;
-  margin-left: 13rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  /* margin-left: 2rem; */
+  text-align: center;
 `
 
 /* 캐러셀 */
 const CarouselLayout = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 200px;
+  /* margin-bottom: 15rem; */
   /* background-color: #b725f6; */
+  width: 60rem;
+  margin: auto;
 `
 
 // 1. Swiper 레이어아웃
 const SwiperLayout = styled.div`
-  /* width: 80%; */
-  width: 93%;
-  height: 600px;
+  width: 90%;
+  /* width: 85%; */
+  margin-bottom: 2rem;
+  height: 15rem;
   display: flex;
   justify-content: center;
   align-items: center;
   /* background-color: #faabd8; */
 `
 
+/* 🟡 지역  🟡*/
 const RegionsTitle = styled(Title)`
-  font-size: 3.8rem;
+  font-size: 2rem;
   text-align: center;
-  margin-left: 0rem;
+  /* margin-left: 0rem; */
 `
 const RegionsContainer = styled(FlexCenter)`
+  margin: auto;
+  width: 55rem;
   flex-wrap: wrap;
-  /* background-color: #b725f6; */
+  /* background-color: #25f675; */
   min-height: 20rem;
   /* padding: 0.5rem; */
   /* box-sizing: border-box; */
-  gap: 2rem;
+  gap: 3.5rem;
   margin-bottom: 5rem;
 `
 const Region = styled(FlexCenter)<{ region: string }>`
   font-size: 2rem;
-  width: 30%;
-  height: 20rem;
+  width: 14rem;
+  height: 14rem;
   color: white;
   cursor: pointer;
   border-radius: 15px;

@@ -22,10 +22,13 @@ const MainPage = () => {
         {/* FIXME: 사용할 떄마다 요금이 청구되니 잠시 꺼두자 */}
         {/* <GoogleMapLoad
           mapContainerStyle={{
-            width: '70%',
-            height: '600px',
+            // width: '53%',
+            width: '50rem',
+            height: '20rem',
+            // height: '600px',
           }}
-          zoom={5}
+          zoom={7.4}
+          center={{ lat: 36.55, lng: 127.7669 }}
         /> */}
       </InnerContainer_div>
 
@@ -50,5 +53,5 @@ const InnerContainer_div = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 150px 0;
+  margin: 2rem 0 3rem 0;
 `

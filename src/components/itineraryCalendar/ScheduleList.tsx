@@ -1,23 +1,36 @@
+// import { Title } from 'pages/guide/detail'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 
 const ScheduleList = ({ children }: { children: ReactNode }) => {
   return (
-    <Wrapper>
-      <ScrollableContent>{children}</ScrollableContent>
-    </Wrapper>
+    <>
+      <Title></Title>
+      <Wrapper>
+        <ScrollableContent>{children}</ScrollableContent>
+      </Wrapper>
+    </>
   )
 }
 
 export default ScheduleList
 
+const Title = styled.div`
+  min-height: 3rem;
+  width: 100%;
+  /* background-color: mediumaquamarine; */
+`
+
 const Wrapper = styled.div`
-  width: 70%;
-  height: 42rem;
+  /* background-color: red; */
+  width: 25rem;
+  height: 25rem;
   border: 1px solid #ddd;
+  overflow: auto;
+  overflow-wrap: break-word;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  margin-top: 3rem;
+  /* margin-top: 3rem; */
 
   overflow: hidden;
   padding: 2rem 0;
