@@ -188,7 +188,7 @@ const QillWrapper = styled.div`
   transform: translateX(-3px);
 `
 const BtnWrapper = styled.div`
-  background-color: red;
+  /* background-color: red; */
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -197,7 +197,6 @@ const BtnWrapper = styled.div`
 `
 
 const Submit_Btn = styled.div`
-  color: red;
   width: 2rem;
   height: 3rem;
   cursor: pointer;
