@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { GooglePlaceResponse, PlaceData } from 'interfaces/plan'
-import { PlanListConfirm } from 'state/store/PlanList'
+import { PeriodList } from 'state/store/PlanList'
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/',
@@ -44,6 +44,11 @@ export const getPlaceRoute = async ({ planList, transport }: PlanListConfirm) =>
   const response = await api.post('plans/distance', data)
 
   return response.data
+}
+
+interface PlanListConfirm {
+  planList: PeriodList
+  transport: string
 }
 
 export const getPlaceRouteEdit = async ({ planList, transport }: PlanListConfirm) => {
