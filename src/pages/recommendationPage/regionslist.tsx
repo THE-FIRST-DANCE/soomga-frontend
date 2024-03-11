@@ -3,16 +3,48 @@ import { styled } from 'styled-components'
 import { regionsArr } from './index'
 import RecommedCard from 'components/recommendations/RecommedCard'
 
+import PageNation from 'components/recommendations/PageNation'
+
+interface ThProps {
+  width: string
+}
+
+type Post = {
+  id: number
+  title: string
+  author: string
+  date: string
+  views: number
+  likes: number
+}
+
+export const posts = [
+  { id: 1, region: '서울', title: '첫 번째 게시글', author: '桑田', date: '2021-09-01', views: 100, likes: 10 },
+  { id: 2, region: '부산', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 3, region: '울산', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 4, region: '대구', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 5, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 6, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 7, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 8, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 9, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 10, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 11, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 12, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 13, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 14, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  { id: 15, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
+  // 추가적인 게시글 데이터...
+]
+
 const RegionsList = () => {
   let { region_Id } = useParams()
   console.log(' region_Id: ', region_Id)
-  console.log(regionsArr)
   const navigate = useNavigate()
 
   return (
     <Layout>
       <Title>{region_Id}</Title>
-
       {/* 가이드 추천순 */}
       <GuideContainer>
         <SubTitle>가이드 추천순</SubTitle>
@@ -30,7 +62,6 @@ const RegionsList = () => {
           )}
         </Wrapper>
       </GuideContainer>
-
       {/* 여행자 추천순 */}
       <TravelerContainer>
         <SubTitle>여행자 추천순</SubTitle>
@@ -48,6 +79,10 @@ const RegionsList = () => {
           )}
         </Wrapper>
       </TravelerContainer>
+      {/* 게시판 */}
+
+      {/* 페이지 네이션 */}
+      <PageNation></PageNation>
     </Layout>
   )
 }
@@ -64,7 +99,8 @@ const FlexCenter = styled.div`
 const Layout = styled.div`
   /* background-color: mediumaquamarine; */
   margin: 0 auto;
-  width: 90%;
+  width: 80%;
+  /* width: 55%; */
   margin-top: 11rem;
   margin-bottom: 5rem;
   padding: 0 2rem;
@@ -72,26 +108,26 @@ const Layout = styled.div`
 `
 
 const Title = styled.div`
-  font-size: 5rem;
+  font-size: 3rem;
   text-align: center;
   margin-bottom: 5rem;
 `
 const GuideContainer = styled.div`
   /* background-color: #8741f1; */
   width: 100%;
-  min-height: 60rem;
+  /* min-height: 60rem; */
   margin-bottom: 5rem;
 `
 
 const SubTitle = styled.div`
-  font-size: 3rem;
+  font-size: 2rem;
   margin-bottom: 2rem;
   margin-left: 3.5rem;
 `
 const Wrapper = styled(FlexCenter)`
   /* background-color: #f1bc41; */
   width: 100%;
-  min-height: 700px;
+  /* min-height: 700px; */
   gap: 3rem;
   flex-wrap: wrap;
 `
@@ -99,5 +135,6 @@ const Wrapper = styled(FlexCenter)`
 /* Travelers */
 const TravelerContainer = styled.div`
   /* background-color: royalblue; */
-  min-height: 700px;
+  margin-bottom: 5rem;
+  /* min-height: 700px; */
 `
