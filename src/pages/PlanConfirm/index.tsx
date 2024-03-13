@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query'
 import { savePlan } from 'api/PlanAPI'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import PlanConfirmItem from 'components/planner/PlanConfirmItem'
@@ -16,12 +17,19 @@ import { svgToDataUrl } from 'utils/svgToDataUrl'
 const PlanConfirmPage = () => {
   const planConfirmList = useRecoilValue(PlanConfirmList)
 
-  const { planId } = useParams()
+  const { planId } = useParams<{ planId: string }>()
   const { confirmList, planList } = usePlanConfirm(planId ? planId : null)
 
   const [editMode, setEditMode] = useState<boolean>(false)
 
   const navigate = useNavigate()
+
+  const { mutate: savePlanMutate } = useMutation({
+    mutationFn: savePlan,
+    onSuccess: () => {
+      navigate('/planner')
+    },
+  })
 
   const onNext = async () => {
     const data = {
@@ -33,9 +41,7 @@ const PlanConfirmPage = () => {
       transport: planConfirmList.transport,
     }
 
-    await savePlan(data)
-
-    navigate('/planner')
+    savePlanMutate(data)
   }
 
   const onEdit = () => {
