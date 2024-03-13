@@ -27,7 +27,7 @@ const CreateEventModal = ({ isOpen, onRequestClose, editEvent, selectedDate }: E
   const [setDesc, setSetDesc] = useState<boolean>(editEvent?.description ? true : false)
   const [description, setDescription] = useState<string>(editEvent?.description || '')
   const [startTime, setStartTime] = useState<string>(editEvent ? format(editEvent.start, 'HH:mm') : '00:00')
-  const [endTime, setEndTime] = useState<string>(editEvent ? format(editEvent.end, 'HH:mm') : '00:00')
+  const [endTime, setEndTime] = useState<string>(editEvent ? format(editEvent.end, 'HH:mm') : '23:30')
 
   const toggleSetDesc = useCallback(() => {
     setSetDesc((prev) => !prev)
@@ -52,6 +52,10 @@ const CreateEventModal = ({ isOpen, onRequestClose, editEvent, selectedDate }: E
   })
 
   const onEventAddHandler = () => {
+    if (!allDay) {
+      startTime > endTime && alert('시작 시간이 종료 시간보다 늦습니다.')
+    }
+
     const data = {
       memberId: 1, // TODO: 로그인 정보로 대체
       title,
