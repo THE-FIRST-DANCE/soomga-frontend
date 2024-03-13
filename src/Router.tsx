@@ -16,6 +16,7 @@ import ItineraryPage from 'pages/itinerary'
 import RecommendatedPostPage from 'pages/recommendationPage'
 import RegionsList from 'pages/recommendationPage/regionslist'
 import RegionDetailPage from 'pages/recommendationPage/detail'
+import SchedulePage from 'pages/schedulePage'
 const Router = () => {
   // 토큰 관리
   // const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
@@ -37,6 +38,7 @@ const Router = () => {
 
         {/* 4. 여행일정 */}
         <Route path="/itinerary" element={<ItineraryPage />} />
+        <Route path="/schedule" element={<SchedulePage />} />
 
         {/* 5. 여행장소 추천 */}
         <Route path="/recommendations" element={<RecommendatedPostPage />} />
