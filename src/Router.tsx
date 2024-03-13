@@ -17,6 +17,9 @@ import RecommendatedPostPage from 'pages/recommendationPage'
 import RegionsList from 'pages/recommendationPage/regionslist'
 import RegionDetailPage from 'pages/recommendationPage/detail'
 import SchedulePage from 'pages/schedulePage'
+import PostCreate from 'components/recommendations/PostCreate'
+import PostEdit from 'components/recommendations/PostEdit'
+
 const Router = () => {
   // 토큰 관리
   // const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
@@ -44,8 +47,9 @@ const Router = () => {
         <Route path="/recommendations" element={<RecommendatedPostPage />} />
         <Route path="/recommendations/:region_Id" element={<RegionsList />} />
         <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
-        {/* 5-> CRUD 게시판 */}
-        <Route path="/recommendations/:region_Id" element={<RegionsList />} />
+        {/* FIXME: 라우팅만 처리 */}
+        <Route path="/post/create" element={<PostCreate />} />
+        <Route path="/post/edit/:post_Id" element={<PostEdit />} />
 
         {recoilToken && (
           <>
