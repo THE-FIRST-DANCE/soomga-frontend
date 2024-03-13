@@ -1,23 +1,37 @@
 import { getPlanList } from 'api/PlanAPI'
 import CreatePlan from 'components/planner/CreatePlan'
 import GoogleMapLoad from 'components/planner/GoogleMap'
-import PlanList from 'components/planner/PlanList'
 import { useQuery } from '@tanstack/react-query'
 import styled from 'styled-components'
+import { Plans } from 'interfaces/plan'
+import { useEffect, useState } from 'react'
+import PlanItem from 'components/planner/PlanItem'
 
 const PlanPage = () => {
+  const [plans, setPlans] = useState<Plans[]>([])
+
   const { data } = useQuery({
     queryKey: ['plans'],
     queryFn: () => getPlanList(1),
   })
 
-  console.log(data)
+  useEffect(() => {
+    if (data) {
+      setPlans(data)
+    }
+  }, [data])
 
   return (
     <Container>
       <LeftSection>
         <CreatePlan />
-        {data && <PlanList data={data} />}
+        <PlanListStyle>
+          <PlanItems>
+            {plans.map((plan: Plans) => (
+              <PlanItem key={plan.id} data={plan} />
+            ))}
+          </PlanItems>
+        </PlanListStyle>
       </LeftSection>
       <RightSection>
         <GoogleMapLoad mapContainerStyle={{ width: '100%', height: '100%' }} />
@@ -42,4 +56,15 @@ const LeftSection = styled.div`
 const RightSection = styled.div`
   flex: 2;
   height: 100vh;
+`
+
+const PlanListStyle = styled.div`
+  flex: 1;
+`
+
+const PlanItems = styled.div`
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `

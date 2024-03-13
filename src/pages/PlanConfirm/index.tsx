@@ -1,25 +1,35 @@
+import { useMutation } from '@tanstack/react-query'
 import { savePlan } from 'api/PlanAPI'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import PlanConfirmItem from 'components/planner/PlanConfirmItem'
 import PlanEdit from 'components/planner/PlanEdit'
 import PlanLeftTab from 'components/planner/PlanLeftTab'
+import FullLoading from 'components/shared/FullLoading'
 import { motion } from 'framer-motion'
+import { usePlanConfirm } from 'hooks/plan/usePlanConfirm'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { CurrentPeriod } from 'state/store/PlanInfo'
 import { PlanConfirmList } from 'state/store/PlanList'
 import styled from 'styled-components'
+import { svgToDataUrl } from 'utils/svgToDataUrl'
 
-const PlanConfirm = () => {
-  const [editMode, setEditMode] = useState<boolean>(false)
-
+const PlanConfirmPage = () => {
   const planConfirmList = useRecoilValue(PlanConfirmList)
-  const currentPeriod = useRecoilValue(CurrentPeriod)
+
+  const { planId } = useParams<{ planId: string }>()
+  const { confirmList, planList } = usePlanConfirm(planId ? planId : null)
+
+  const [editMode, setEditMode] = useState<boolean>(false)
 
   const navigate = useNavigate()
 
-  const planList = planConfirmList.periodPlan[currentPeriod] || []
+  const { mutate: savePlanMutate } = useMutation({
+    mutationFn: savePlan,
+    onSuccess: () => {
+      navigate('/planner')
+    },
+  })
 
   const onNext = async () => {
     const data = {
@@ -31,11 +41,7 @@ const PlanConfirm = () => {
       transport: planConfirmList.transport,
     }
 
-    console.log(data)
-
-    await savePlan(data)
-
-    navigate('/planner')
+    savePlanMutate(data)
   }
 
   const onEdit = () => {
@@ -44,12 +50,6 @@ const PlanConfirm = () => {
 
   const handleEdit = () => {
     setEditMode(false)
-  }
-
-  const svgToDataUrl = (svg: string) => {
-    const encoded = encodeURIComponent(svg).replace(/'/g, '%27').replace(/"/g, '%22')
-    const header = 'data:image/svg+xml,'
-    return header + encoded
   }
 
   const markers =
@@ -72,15 +72,19 @@ const PlanConfirm = () => {
       }
     })
 
+  if (!confirmList) {
+    return <FullLoading isLoading />
+  }
+
   return (
     <Container>
       <LeftSection initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 1 }}>
         {editMode ? (
           <PlanEdit
-            data={planConfirmList.periodPlan}
+            data={confirmList.periodPlan}
             handleEdit={handleEdit}
-            info={planConfirmList.info}
-            transport={planConfirmList.transport}
+            info={confirmList.info}
+            transport={confirmList.transport}
           />
         ) : (
           <>
@@ -89,16 +93,16 @@ const PlanConfirm = () => {
               onEdit={onEdit}
               nextText="저장"
               editText="편집"
-              period={planConfirmList.info.period}
+              period={confirmList.info.period}
             />
             <LeftItem>
               <Header>
-                <Title>{planConfirmList.info.title}</Title>
-                <Region>{planConfirmList.info.province}</Region>
+                <Title>{confirmList.info.title}</Title>
+                <Region>{confirmList.info.province}</Region>
               </Header>
               <PlanListDiv>
                 {planList.length > 0 &&
-                  planList.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)}
+                  planList?.map((item, index) => <PlanConfirmItem index={index} key={index} data={item} />)}
               </PlanListDiv>
             </LeftItem>
           </>
@@ -109,8 +113,8 @@ const PlanConfirm = () => {
         <GoogleMapLoad
           mapContainerStyle={{ width: '100%', height: '100%' }}
           center={{
-            lat: planConfirmList.info.lat,
-            lng: planConfirmList.info.lng,
+            lat: confirmList.info.lat,
+            lng: confirmList.info.lng,
           }}
           customMarker={editMode ? [] : markers}
         />
@@ -119,7 +123,7 @@ const PlanConfirm = () => {
   )
 }
 
-export default PlanConfirm
+export default PlanConfirmPage
 
 const Container = styled.div`
   display: flex;
