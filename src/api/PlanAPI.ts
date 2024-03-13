@@ -96,3 +96,9 @@ export const getTransCoord = async (x: number, y: number): Promise<{ x: number; 
     y: response.data.documents[0].y,
   }
 }
+
+export const getPlanById = async (planId: number) => {
+  const response = await api.get(`plans/${planId}`)
+
+  return response.data
+}
