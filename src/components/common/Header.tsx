@@ -77,7 +77,7 @@ const Header = () => {
           >
             {/* 3.1.1 지구본 아이콘 */}
 
-            <StyledLanguageIcon height="40px" width="40px" />
+            <StyledLanguageIcon height="2rem" width="2rem " />
 
             {/* 3.1.2 우측 : 토글  [ KO | EN | JP ]*/}
             <LanguageDropdown_ul>
@@ -119,7 +119,7 @@ const Header = () => {
           <div
             style={{
               width: '100px',
-              padding: '15px',
+              padding: '0.5rem 1rem',
               borderRadius: '50px',
               border: '3px solid lightgray',
               backgroundColor: 'white',
@@ -198,7 +198,6 @@ const HeaderLayout_div = styled.div`
   display: flex;
   min-width: 1200px;
   /* min-width: 70%; */
-  height: 102px;
   top: 30px;
   left: 50%;
   transform: translateX(-50%);
@@ -212,7 +211,7 @@ const HeaderLayout_div = styled.div`
 //　1. 좌측 : 로고
 const HeaderLeftWrapper_div = styled.div`
   width: 20%;
-  height: 102px;
+  height: 4rem;
   flex-grow: 1;
   // SOOMGA 로고 이미지
   img {
@@ -240,7 +239,7 @@ const HeaderMiddleBtn = styled.button<{ value?: string }>`
   width: auto;
   padding: 0 20px;
   height: 100%;
-  font-size: 25px;
+  font-size: 1.3rem;
   font-weight: 700;
   background-color: transparent;
   border: none;
@@ -255,7 +254,6 @@ const HeaderMiddleBtn = styled.button<{ value?: string }>`
 /* 右 */
 // 3. 우측 : 언어 | 버거 + 사용자 아이콘
 const HeaderRightContainer_div = styled.div`
-  width: 20%;
   position: relative;
   display: flex;
   justify-content: center;

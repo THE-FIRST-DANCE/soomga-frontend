@@ -65,58 +65,56 @@ const URecommendedRegions = () => {
   return (
     <URecommendedRegionsLayout>
       {/* Inner : 정렬 */}
-      <Inner>
-        {/* 🟡 1. 좌측 : 갑자기 도움이 필요할 때 (sos페이지) */}
-        <LeftSection>
-          {/* 1.1 로고 + 타이틀 */}
-          <LeftTitleContainer>
-            {/* 1.1.1 로고 */}
-            <LeftLogoWrapper>
-              <img src={logo} alt="logo" />
-            </LeftLogoWrapper>
-            {/* 1.1.2 타이틀 */}
-            <span>갑자기 도움이 필요할 때!</span>
-          </LeftTitleContainer>
-          {/* 1.2 이미지 링크 */}
-          <LeftImgContainer onClick={() => navigate(`/sos`)}>
-            <img className="mainLeftImage" src={main_leftImg} alt="nosyasin" />
-            {/* 1.2.1 글자 이미지 */}
-            <LeftLetterWrapper>
-              <img src={main_leftLetter} alt="" />
-            </LeftLetterWrapper>
-          </LeftImgContainer>
-        </LeftSection>
+      {/* 🟡 1. 좌측 : 갑자기 도움이 필요할 때 (sos페이지) */}
+      <LeftSection>
+        {/* 1.1 로고 + 타이틀 */}
+        <TitleContainer>
+          {/* 1.1.1 로고 */}
+          <LogoWrapper>
+            <img src={logo} alt="logo" />
+          </LogoWrapper>
+          {/* 1.1.2 타이틀 */}
+          <span>갑자기 도움이 필요할 때!</span>
+        </TitleContainer>
+        {/* 1.2 이미지 링크 */}
+        <LeftImgContainer onClick={() => navigate(`/sos`)}>
+          <img className="mainLeftImage" src={main_leftImg} alt="nosyasin" />
+          {/* 1.2.1 글자 이미지 */}
+          <LeftLetterWrapper>
+            <img src={main_leftLetter} alt="" />
+          </LeftLetterWrapper>
+        </LeftImgContainer>
+      </LeftSection>
 
-        {/* 🟡 2. 우측 : 내 취향에 맞는 여행지를 찾아봐 (유저 순위 추천) */}
-        <RigthSection>
-          {/* 2.1 로고 + 타이틀 */}
-          <RightTitleContainer>
-            {/* 2.1.1 로고 */}
-            <RightLogoWrapper>
-              <img src={logo} alt="logo" />
-            </RightLogoWrapper>
-            {/* 2.1.2 타이틀 */}
-            <span>내 취향에 맞는 여행지를 찾아봐!</span>
-          </RightTitleContainer>
+      {/* 🟡 2. 우측 : 내 취향에 맞는 여행지를 찾아봐 (유저 순위 추천) */}
+      <RigthSection>
+        {/* 2.1 로고 + 타이틀 */}
+        <TitleContainer>
+          {/* 2.1.1 로고 */}
+          <LogoWrapper>
+            <img src={logo} alt="logo" />
+          </LogoWrapper>
+          {/* 2.1.2 타이틀 */}
+          <span>내 취향에 맞는 여행지를 찾아봐!</span>
+        </TitleContainer>
 
-          {/* 2.2 추천 지역들 */}
-          <RightRegionsContainer>
-            {regionsArr.map((regionInformation) => (
-              // 2.2.1 추천지역 Wrapper : Img + Title + Info
-              <RegionsWrapper onClick={() => navigate(`/recommendations/region/${regionInformation.id}`)}>
-                {/* 2.2.1.1 추천지역 Img */}
-                <RegionImg key={regionInformation.regionName}>
-                  <img src={regionInformation.img} alt={regionInformation.regionName} />
-                </RegionImg>
-                {/* 2.2.1.2 추천지역 Title */}
-                <RegionTitle>{regionInformation.regionName}</RegionTitle>
-                {/* 2.2.1.3 추천지역 Info */}
-                <RegionInfo>{regionInformation.regionInfo}</RegionInfo>
-              </RegionsWrapper>
-            ))}
-          </RightRegionsContainer>
-        </RigthSection>
-      </Inner>
+        {/* 2.2 추천 지역들 */}
+        <RightRegionsContainer>
+          {regionsArr.map((regionInformation) => (
+            // 2.2.1 추천지역 Wrapper : Img + Title + Info
+            <RegionsWrapper onClick={() => navigate(`/recommendations/region/${regionInformation.id}`)}>
+              {/* 2.2.1.1 추천지역 Img */}
+              <RegionImg key={regionInformation.regionName}>
+                <img src={regionInformation.img} alt={regionInformation.regionName} />
+              </RegionImg>
+              {/* 2.2.1.2 추천지역 Title */}
+              <RegionTitle>{regionInformation.regionName}</RegionTitle>
+              {/* 2.2.1.3 추천지역 Info */}
+              <RegionInfo>{regionInformation.regionInfo}</RegionInfo>
+            </RegionsWrapper>
+          ))}
+        </RightRegionsContainer>
+      </RigthSection>
     </URecommendedRegionsLayout>
   )
 }
@@ -127,10 +125,8 @@ export default URecommendedRegions
 
 const URecommendedRegionsLayout = styled.div`
   width: 100%;
-  height: auto;
   display: flex;
   justify-content: center;
-  align-items: center;
   margin-bottom: 60px;
 `
 
@@ -146,36 +142,33 @@ const Inner = styled.div`
 
 /* 🟡 1. 좌측 : 갑자기 도움이 필요할 때 (sos페이지) */
 const LeftSection = styled.div`
-  /* background-color: mediumaquamarine; */
-  /* overflow: hidden; */
-  width: 40%;
+  flex: 0.2 1 auto;
   height: 100%;
   display: flex;
-  margin-left: 50px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+
+// 1.1 로고 + 타이틀
+const TitleContainer = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   span {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
 
     font-family: 'Black Han Sans', sans-serif;
   }
 `
 
-// 1.1 로고 + 타이틀
-const LeftTitleContainer = styled.div`
-  width: 100%;
-  /* height: 100px; */
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 // 1.1.1 로고 이미지
-const LeftLogoWrapper = styled.div`
-  width: 60px;
-  height: 60px;
+const LogoWrapper = styled.div`
+  width: 3rem;
+  height: 3rem;
   margin-right: 10px;
 
   img {
@@ -233,8 +226,7 @@ const LeftLetterWrapper = styled.div`
 /* 🟡 2. 우측 : 내 취향에 맞는 여행지를 찾아봐 (유저 순위 추천)  */
 const RigthSection = styled.div`
   /* background-color: royalblue; */
-  width: 60%;
-  /* height: 100%; */
+  flex: 0.3 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -266,10 +258,8 @@ const RightLogoWrapper = styled.div`
 /* 2.2 추천 지역들  */
 const RightRegionsContainer = styled.div`
   /* background-color: palegreen; */
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 6rem;
 `
 
