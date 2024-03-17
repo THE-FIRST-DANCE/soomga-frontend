@@ -205,7 +205,7 @@ const HeaderLayout_div = styled.div`
   background-color: transparent;
   backdrop-filter: blur(5px) !important;
   border-radius: 10px;
-  z-index: 50;
+  z-index: 3;
 `
 
 /* 左 */
@@ -219,7 +219,6 @@ const HeaderLeftWrapper_div = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 10px 0 0 10px;
-
     object-fit: cover; /* 필요에 따라 object-fit 속성을 조절할 수 있습니다 */
   }
 `
@@ -245,8 +244,7 @@ const HeaderMiddleBtn = styled.button<{ value?: string }>`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  z-index: 100;
-
+  /* z-index: 3; */
   &:hover {
     color: var(--color-original);
   }
@@ -283,7 +281,6 @@ const LanguageDropdown_ul = styled.ul`
   width: 50px;
   font-weight: 700;
   cursor: pointer;
-
   li {
     padding-bottom: 15px;
     box-sizing: border-box;
@@ -312,7 +309,6 @@ const UseTab_btn = styled(HeaderMiddleBtn)`
   width: 100%;
   border-radius: 20px;
   color: #403f3f;
-
   &:hover {
     background-color: #edeaea;
   }
