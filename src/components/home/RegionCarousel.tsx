@@ -64,7 +64,7 @@ const RegionCarousel = () => {
           modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay, EffectCoverflow]}
           effect="coverflow"
           coverflowEffect={{
-            rotate: 15, // 회전 각도
+            rotate: 20, // 회전 각도
             stretch: 0,
             depth: 100, // 카드 간의 간격
             modifier: 2.5, // "modifier"는 coverflow 효과에 적용되는 슬라이드의 z-index를 조절합니다.
@@ -103,7 +103,7 @@ const RegionCarousel = () => {
                     <div>
                       {isActive
                         ? Array.from({ length: regionInfo.like }, (_, index) => (
-                            <Star key={index} width="50px" height="50px" fill="var(--color-primary)" />
+                            <Star key={index} $width="2rem" $height="2rem" $color="var(--color-primary)" />
                           ))
                         : ''}
                     </div>
@@ -171,13 +171,13 @@ const Letters = styled.div<ActivStatus>`
   transform: ${({ activStatus }) => (activStatus === 'active' ? `translateY(25px)` : 'translateY(0)')};
   transition: all 0.7s;
   > div {
-    font-size: 50px;
+    font-size: 2rem;
     text-align: center;
     margin-bottom: 1rem;
   }
 
   > span {
-    font-size: 30px;
+    font-size: 1rem;
     display: block;
     text-align: center;
   }

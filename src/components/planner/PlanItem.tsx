@@ -1,10 +1,7 @@
 import Arrow from 'components/icons/Arrow'
 import Time from 'components/icons/Time'
-import { provinces } from 'data/region'
-import { PlanConfirmListItem, Plans } from 'interfaces/plan'
+import { Plans } from 'interfaces/plan'
 import { useNavigate } from 'react-router-dom'
-import { useSetRecoilState } from 'recoil'
-import { PlanConfirmList } from 'state/store/PlanList'
 import styled from 'styled-components'
 
 interface PlanListProp {
@@ -12,34 +9,11 @@ interface PlanListProp {
 }
 
 const PlanItem = ({ data }: PlanListProp) => {
-  const setPlanConfirmList = useSetRecoilState(PlanConfirmList)
-
-  const lat = provinces.find((item) => item.name === data.region)?.lat
-  const lng = provinces.find((item) => item.name === data.region)?.lng
-
   const navigate = useNavigate()
 
   // 여행 일정 컨펌 리스트로 이동 (리코일 상태 업데이트)
   const onClick = () => {
-    const periodPlan: { [key: number]: PlanConfirmListItem[] } = {}
-
-    data.daySchedules.forEach((item) => {
-      periodPlan[item.day] = item.schedules
-    })
-
-    setPlanConfirmList({
-      periodPlan,
-      transport: data.transport,
-      info: {
-        title: data.title,
-        province: data.region,
-        lat: lat || 0,
-        lng: lng || 0,
-        period: data.period,
-      },
-    })
-
-    navigate('/planner/confirm')
+    navigate(`/planner/confirm/${data.id}`)
   }
 
   return (

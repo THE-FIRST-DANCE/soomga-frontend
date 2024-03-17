@@ -77,7 +77,7 @@ const LogoAndLetterContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 2rem 0;
 
   /*  2.2 letter : Soomga의 추천 지역 */
   span {
@@ -103,19 +103,19 @@ const RegionsContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 5rem;
   /* margin: 0.5rem 0; */
 `
 
 /* 3.1 추천 지역 카드 */
 const Region = styled.div`
-  width: 10%;
-  height: 10%;
+  width: 12rem;
+  height: 12rem;
   /* width: 10rem;
   height: 10rem; */
   overflow: hidden;
   position: relative;
   /* margin: 30px; */
-  margin: 1rem 1.9rem;
   border-radius: 20px;
   cursor: pointer;
   box-shadow:

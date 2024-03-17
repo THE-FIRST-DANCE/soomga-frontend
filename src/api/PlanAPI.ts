@@ -2,7 +2,7 @@ import axios from 'axios'
 import { GooglePlaceResponse, PlaceData } from 'interfaces/plan'
 import { PeriodList } from 'state/store/PlanList'
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: 'http://localhost:3000/',
   withCredentials: true,
 })
@@ -95,4 +95,10 @@ export const getTransCoord = async (x: number, y: number): Promise<{ x: number; 
     x: response.data.documents[0].x,
     y: response.data.documents[0].y,
   }
+}
+
+export const getPlanById = async (planId: number) => {
+  const response = await api.get(`plans/${planId}`)
+
+  return response.data
 }

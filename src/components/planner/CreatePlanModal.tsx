@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { TravelSvg } from './CreatePlan'
 import Arrow from 'components/icons/Arrow'
 import { provinces } from 'data/region'
-import useCreatePlan from 'hooks/useCreatePlan'
+import useCreatePlan from 'hooks/plan/useCreatePlan'
 
 interface ICreatePlanModal {
   isOpen: boolean
