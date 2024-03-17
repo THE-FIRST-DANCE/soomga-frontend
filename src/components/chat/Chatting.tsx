@@ -124,59 +124,59 @@ const Chatting = ({ onClick }: ChatButtonProps) => {
     <ChatLayout>
       <Content>
         <CancleWrapper>
-          <CancleBtn onClick={onClick}>✖</CancleBtn>
+          {/* <CancleBtn onClick={onClick}>✖</CancleBtn> */}
           <ChatContent>
             <LeftSection>
+              <CancleBtn onClick={onClick}>✖</CancleBtn>
               <SearchWrapper>
                 <TopSearchWrap>
-                  <SearchIcon width="30px" height="30px" />
                   <Input placeholder="가이드 검색" />
+                  <SearchIcon width="30px" height="30px" />
                 </TopSearchWrap>
-
-                {/* 현재 대화중인 사람들 */}
-                <ChatListWrapper>
-                  {data.map((data, index) => (
-                    <GuideWrapper onContextMenu={handleContextMenu}>
-                      {/* 만약 우측 버튼을 누른다면 ContextMenu를 보여줘라 */}
-                      {isContextOpen && (
-                        <ContextMenu ref={refForLangToggle} {...mousePosition}>
-                          <ul>
-                            <li>채팅방 열기</li>
-                            <li style={{ borderTop: '1px solid #93939363', borderBottom: '1px solid #93939363' }}>
-                              즐겨 찾기
-                            </li>
-                            <li>채팅방 나가기</li>
-                          </ul>
-                        </ContextMenu>
-                      )}
-                      <Left>
-                        {/* 왼쪽 이미지 */}
-                        <ImgWrapper>
-                          <img src={userImg} alt="nmo" />
-                        </ImgWrapper>
-                      </Left>
-                      {/* 오른쪽 대화 내용 이름 */}
-                      <Right>
-                        <ChatCard>
-                          <ContentWrapper>
-                            <GuideName>{data.name}</GuideName>
-                            {false && <Star $width="30px" $height="30px" $color="yellow" />}
-                          </ContentWrapper>
-                          <ContentWrapper>
-                            <PreviewContent>
-                              {data.content.length > 14 && (
-                                <PreviewContent>{data.content.substring(0, 13) + '...'}</PreviewContent>
-                              )}
-                              {data.content.length <= 14 && <PreviewContent>{data.content}</PreviewContent>}
-                            </PreviewContent>
-                            ・<Time>{`${2} 시간전`}</Time>
-                          </ContentWrapper>
-                        </ChatCard>
-                      </Right>
-                    </GuideWrapper>
-                  ))}
-                </ChatListWrapper>
               </SearchWrapper>
+              {/* 현재 대화중인 사람들 */}
+              <ChatListWrapper>
+                {data.map((data, index) => (
+                  <GuideWrapper onContextMenu={handleContextMenu}>
+                    {/* 만약 우측 버튼을 누른다면 ContextMenu를 보여줘라 */}
+                    {isContextOpen && (
+                      <ContextMenu ref={refForLangToggle} {...mousePosition}>
+                        <ul>
+                          <li>채팅방 열기</li>
+                          <li style={{ borderTop: '1px solid #93939363', borderBottom: '1px solid #93939363' }}>
+                            즐겨 찾기
+                          </li>
+                          <li>채팅방 나가기</li>
+                        </ul>
+                      </ContextMenu>
+                    )}
+                    <Left>
+                      {/* 왼쪽 이미지 */}
+                      <ImgWrapper>
+                        <img src={userImg} alt="nmo" />
+                      </ImgWrapper>
+                    </Left>
+                    {/* 오른쪽 대화 내용 이름 */}
+                    <Right>
+                      <ChatCard>
+                        <ContentWrapper>
+                          <GuideName>{data.name}</GuideName>
+                          {false && <Star $width="30px" $height="30px" $color="yellow" />}
+                        </ContentWrapper>
+                        <ContentWrapper>
+                          <PreviewContent>
+                            {data.content.length > 14 && (
+                              <PreviewContent>{data.content.substring(0, 13) + '...'}</PreviewContent>
+                            )}
+                            {data.content.length <= 14 && <PreviewContent>{data.content}</PreviewContent>}
+                          </PreviewContent>
+                          ・<Time>{`${2} 시간전`}</Time>
+                        </ContentWrapper>
+                      </ChatCard>
+                    </Right>
+                  </GuideWrapper>
+                ))}
+              </ChatListWrapper>
             </LeftSection>
             {/* 오른쪽 색션 */}
             <RightSection>
@@ -213,22 +213,20 @@ const Chatting = ({ onClick }: ChatButtonProps) => {
                     <Conversation whose="guide">
                       <Speech whose="guide">가이드의 톡 내용</Speech>
                     </Conversation>
+                    <Conversation whose="me">
+                      <Speech whose="me">내가 지금 작성하고 있는 글이야</Speech>
+                    </Conversation>
+                    <Conversation whose="me">
+                      <Speech whose="me">내가 지금 작성하고 있는 글이야</Speech>
+                    </Conversation>
                   </ConversationWrapper>
                 </Middle>
                 <Bottom>
-                  {/* <label htmlFor="file-input" className="post-form__file">
-                    <FiImage className="post-form__file-icon" />
-                  </label> */}
-                  <InputTag />
-                </Bottom>
-                {/*  */}
-                <BtnWrapper>
                   <label htmlFor="file-input">
                     <ImageIcon />
                   </label>
-                  <ImgInputTag type="file" accept="image/*" name="file-input" id="file-input" />
-                  <SendBtn>보내기</SendBtn>
-                </BtnWrapper>
+                  <InputTag /> <SendBtn>보내기</SendBtn>
+                </Bottom>
               </RightWrapper>
             </RightSection>
           </ChatContent>
@@ -319,23 +317,26 @@ const LeftSection = styled.div`
   flex: 1;
 `
 
-const TopSearchWrap = styled.div`
-  margin-bottom: 1rem;
+// const TopSearchWrap = styled.div`
+const TopSearchWrap = styled(FlexCenter)`
+  margin-bottom: 0.5rem;
+  justify-content: flex-start;
+  background-color: white;
 `
 
 const SearchWrapper = styled(FlexCenter)`
-  margin: auto;
-  width: 90%;
+  /* margin: auto; */
+  width: 100%;
+  justify-content: flex-start;
+  width: 100%;
   /* background-color: #727070; */
-  flex-direction: column;
-  border-radius: 1rem;
-  gap: 0.5rem;
+  /* gap: 0.5rem; */
 `
 const Input = styled.input`
-  width: 80%;
+  width: 22rem;
   height: 2rem;
-  font-size: 1.5rem;
   border: none;
+  outline: none;
 `
 
 const ChatListWrapper = styled.div`
@@ -368,7 +369,7 @@ const GuideWrapper = styled(FlexCenter)`
   cursor: pointer;
 `
 
-const Left = styled.div`
+const Left = styled(FlexCenter)`
   /* background-color: tomato; */
   height: 4rem;
   display: flex;
@@ -378,9 +379,10 @@ const Left = styled.div`
 `
 
 const ImgWrapper = styled.div`
-  width: 4rem;
-  height: 4rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
+  margin-left: 1rem;
   overflow: hidden;
   img {
     width: 100%;
@@ -424,10 +426,8 @@ const RightSection = styled.div`
   flex: 1.9;
 `
 const RightWrapper = styled.div`
-  /* background-color: #f0f0f0; */
   position: relative;
   top: -1rem;
-  /* background-color: mediumslateblue; */
   width: 100%;
   height: 100%;
   border-radius: 0.5rem;
@@ -438,6 +438,8 @@ const RightWrapper = styled.div`
 `
 const Top = styled.div`
   /* background-color: mediumaquamarine; */
+  background-color: #e6e2db;
+  border-radius: 0.5rem 0.5rem 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -464,7 +466,7 @@ const Middle = styled.div`
 const ConversationWrapper = styled.div`
   /* background-color: #ee68c1; */
   width: 100%;
-  height: 25rem;
+  height: 29rem;
   overflow: auto;
 `
 // const Conversation = styled(FlexCenter)<WhoseChat>`
@@ -488,26 +490,23 @@ const Speech = styled.div<WhoseChat>`
 `
 
 const Bottom = styled(FlexCenter)`
-  /* background-color: #eee768; */
   width: 100%;
   margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 0 0 0.5rem 0.5rem;
 `
 const InputTag = styled.input`
-  width: 100%;
+  /* background-color: #eee768; */
+  width: 85%;
   height: 3rem;
   border: none;
   /* background-color: transparent; */
-  border-radius: 0 0 0 1rem;
   padding: 0.5rem 1rem;
   box-sizing: border-box;
   outline: none;
   resize: none;
 `
-const BtnWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-`
+
 const SendBtn = styled.button`
   width: 3rem;
   height: 1.5rem;
