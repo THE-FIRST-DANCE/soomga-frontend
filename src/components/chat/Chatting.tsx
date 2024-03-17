@@ -446,7 +446,10 @@ const Top = styled.div`
   /* margin-bottom: 1rem; */
 `
 
-const TopWrapper = styled.div``
+const TopWrapper = styled(FlexCenter)`
+  width: 100%;
+  margin-top: 1rem;
+`
 
 const Image = styled.div`
   width: 4rem;
@@ -466,7 +469,7 @@ const Middle = styled.div`
 const ConversationWrapper = styled.div`
   /* background-color: #ee68c1; */
   width: 100%;
-  height: 29rem;
+  height: 32rem;
   overflow: auto;
 `
 // const Conversation = styled(FlexCenter)<WhoseChat>`
