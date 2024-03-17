@@ -291,7 +291,6 @@ const ContextMenu = styled.div<MouseAxis>`
   top: ${({ yAxis }) => yAxis}px;
   left: ${({ xAxis }) => xAxis}px;
   background-color: #ffffffc7;
-  min-width: 10rem;
   z-index: 300;
   border-radius: 0.3rem;
 
@@ -328,7 +327,6 @@ const SearchWrapper = styled(FlexCenter)`
   /* margin: auto; */
   width: 100%;
   justify-content: flex-start;
-  width: 100%;
   /* background-color: #727070; */
   /* gap: 0.5rem; */
 `
@@ -343,7 +341,7 @@ const ChatListWrapper = styled.div`
   overflow: auto;
   /* background-color: mediumaquamarine; */
   width: 100%;
-  height: 32rem;
+  height: 35rem;
   border-radius: 0.5rem;
   /* 스크롤바 막대 꾸미기 */
   &::-webkit-scrollbar-thumb {
