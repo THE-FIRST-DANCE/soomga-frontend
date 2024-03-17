@@ -31,7 +31,7 @@ const ImageIconStyle = styled.svg<ImageIconProps>`
   height: ${(props) => props.height || '30px'};
   fill: ${(props) => props.color || 'black'};
   &:hover {
-    fill: ${(props) => props.hoverColor || 'black'};
+    fill: ${(props) => props.hoverColor || 'gray'};
   }
   cursor: pointer;
 `
