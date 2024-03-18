@@ -1,7 +1,8 @@
-import styled, { CSSProp } from 'styled-components'
+import styled from 'styled-components'
 
 interface SearchProps {
-  style: CSSProp
+  width: string // 추가
+  height: string // height 속성도 추가되어야 함
 }
 
 const SearchIcon = ({ ...props }: SearchProps) => {
@@ -15,5 +16,6 @@ const SearchIcon = ({ ...props }: SearchProps) => {
 export default SearchIcon
 
 const SearchIconStyled = styled.svg<SearchProps>`
-  ${(props) => props.style}
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
 `
