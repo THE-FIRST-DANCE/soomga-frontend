@@ -335,6 +335,9 @@ const Input = styled.input`
   height: 2rem;
   border: none;
   outline: none;
+  margin: 0 0.5rem;
+  box-sizing: border-box;
+  /* background-color: red; */
 `
 
 const ChatListWrapper = styled.div`
@@ -435,13 +438,13 @@ const RightWrapper = styled.div`
   flex-direction: column;
 `
 const Top = styled.div`
+  /* background-color: #e6e2db; */
   /* background-color: mediumaquamarine; */
-  background-color: #e6e2db;
   border-radius: 0.5rem 0.5rem 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* margin-bottom: 1rem; */
+  margin-bottom: 1.5rem;
 `
 
 const TopWrapper = styled(FlexCenter)`
@@ -467,7 +470,7 @@ const Middle = styled.div`
 const ConversationWrapper = styled.div`
   /* background-color: #ee68c1; */
   width: 100%;
-  height: 32rem;
+  height: 30rem;
   overflow: auto;
 `
 // const Conversation = styled(FlexCenter)<WhoseChat>`
