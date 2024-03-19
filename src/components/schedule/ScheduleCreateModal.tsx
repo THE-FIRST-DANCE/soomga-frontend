@@ -1,16 +1,19 @@
 import Modal from 'components/shared/Modal'
 import styled from 'styled-components'
-import { memo, useCallback, useState } from 'react'
+import { memo } from 'react'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import Check from 'components/icons/Check'
 import Cancel from 'components/icons/Cancel'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addEvent, updateEvent } from 'api/EventAPI'
+import { useQueryClient } from '@tanstack/react-query'
 import { EventData } from 'interfaces/event'
 import DescriptionEditor from './DescriptionEditor'
 import TimeSectionComponent from './TimeSection'
-import { format } from 'date-fns'
+import { Plans } from 'interfaces/plan'
+import { getPlanByUserId } from 'api/PlanAPI'
+import Arrow from 'components/icons/Arrow'
+import SchedulePlans from './SchedulePlans'
+import { useEventModal } from 'hooks/event/useEventForm'
 
 interface EventModalProps {
   isOpen: boolean
@@ -20,57 +23,45 @@ interface EventModalProps {
 }
 
 const CreateEventModal = ({ isOpen, onRequestClose, editEvent, selectedDate }: EventModalProps) => {
-  const [title, setTitle] = useState<string>(editEvent?.title || '')
-  const [allDay, setAllDay] = useState<boolean>(editEvent?.allDay || false)
-  const [startDate, setStartDate] = useState<Date>(selectedDate)
-  const [endDate, setEndDate] = useState<Date>(editEvent?.end || selectedDate)
-  const [setDesc, setSetDesc] = useState<boolean>(editEvent?.description ? true : false)
-  const [description, setDescription] = useState<string>(editEvent?.description || '')
-  const [startTime, setStartTime] = useState<string>(editEvent ? format(editEvent.start, 'HH:mm') : '00:00')
-  const [endTime, setEndTime] = useState<string>(editEvent ? format(editEvent.end, 'HH:mm') : '23:30')
-
-  const toggleSetDesc = useCallback(() => {
-    setSetDesc((prev) => !prev)
-  }, [])
+  const {
+    title,
+    setTitle,
+    allDay,
+    setAllDay,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    setDesc,
+    description,
+    setDescription,
+    startTime,
+    setStartTime,
+    endTime,
+    setEndTime,
+    onEventAddHandler,
+    plans,
+    setPlans,
+    openPlanList,
+    setOpenPlanList,
+    selectedPlan,
+    setSelectedPlan,
+    toggleSetDesc,
+  } = useEventModal({ onRequestClose, editEvent, selectedDate })
 
   const queryClient = useQueryClient()
 
-  const { mutate: addMutate } = useMutation({
-    mutationFn: addEvent,
-    onSuccess: () => {
-      onRequestClose()
-      queryClient.invalidateQueries({ queryKey: ['events'] })
-    },
-  })
+  const onPlanAddHandler = async (userId: number) => {
+    await queryClient.prefetchQuery({
+      queryKey: ['plans', userId],
+      queryFn: () => getPlanByUserId(userId),
+    })
 
-  const { mutate: updateMutate } = useMutation({
-    mutationFn: updateEvent,
-    onSuccess: () => {
-      onRequestClose()
-      queryClient.invalidateQueries({ queryKey: ['events'] })
-    },
-  })
+    const plan = queryClient.getQueryData<Plans[]>(['plans', userId])
 
-  const onEventAddHandler = () => {
-    if (!allDay) {
-      startTime > endTime && alert('시작 시간이 종료 시간보다 늦습니다.')
+    if (plan) {
+      setPlans(plan)
     }
-
-    const data = {
-      memberId: 1, // TODO: 로그인 정보로 대체
-      title,
-      start: format(startDate, 'yyyy-MM-dd') + 'T' + startTime,
-      end: format(endDate, 'yyyy-MM-dd') + 'T' + endTime,
-      allDay,
-      description,
-    }
-
-    if (editEvent) {
-      updateMutate({ id: editEvent.id, data })
-      return
-    }
-
-    addMutate(data)
   }
 
   return (
@@ -138,7 +129,40 @@ const CreateEventModal = ({ isOpen, onRequestClose, editEvent, selectedDate }: E
             <EventIcon>
               <Check style={{ width: '1rem', height: '1rem' }} />
             </EventIcon>
-            <ClickItem>플랜</ClickItem>
+            {plans.length > 0 ? (
+              <ClickItem
+                onClick={() => {
+                  setOpenPlanList((prev) => !prev)
+                }}
+              >
+                {selectedPlan ? selectedPlan.title : '플랜 선택'}
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                  }}
+                >
+                  <Arrow $width="1rem" $height="1rem" $angle="90deg" />
+                </div>
+                {openPlanList && (
+                  <DropDown>
+                    {plans.map((plan) => (
+                      <SchedulePlans key={plan.id} plan={plan} setSelectedPlanId={setSelectedPlan} />
+                    ))}
+                  </DropDown>
+                )}
+              </ClickItem>
+            ) : (
+              <ClickItem
+                onClick={() => {
+                  onPlanAddHandler(1) // TODO: 로그인 정보로 대체
+                }}
+              >
+                플랜
+              </ClickItem>
+            )}
           </IconText>
         </EventModalBody>
 
@@ -265,5 +289,27 @@ const SaveButton = styled.button`
 
   &:hover {
     background-color: var(--bs-gray-400);
+  }
+`
+
+const DropDown = styled.div`
+  position: absolute;
+  top: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+  padding: 10px;
+  gap: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  z-index: 100;
+
+  ::-webkit-scrollbar {
+    display: none;
   }
 `

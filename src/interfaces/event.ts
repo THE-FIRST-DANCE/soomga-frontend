@@ -1,3 +1,5 @@
+import { Plans } from './plan'
+
 export interface EventData {
   id: number
   memberId: number
@@ -6,4 +8,5 @@ export interface EventData {
   end: Date
   allDay: boolean
   description: string
+  plan: Plans
 }
