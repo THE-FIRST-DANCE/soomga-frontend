@@ -1,3 +1,4 @@
+import Chatting from 'components/chat/Chatting'
 import ChatButton from 'components/home/ChatButton'
 import CommentCarousel from 'components/home/CommentCarousel'
 import MainVideo from 'components/home/MainVideo'
@@ -6,8 +7,17 @@ import RecommendedRegions from 'components/home/SRecommendedRegions'
 import URecommendedRegions from 'components/home/URecommendedRegions'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import { styled } from 'styled-components'
+import ReactModal from 'react-modal'
+import { useState } from 'react'
+ReactModal.setAppElement('#root')
 
 const MainPage = () => {
+  const [isOpenChat, setIsOpenChat] = useState<boolean>(false)
+
+  const openChatHandler = () => {
+    setIsOpenChat((prev) => !prev)
+  }
+
   return (
     <>
       {/* 1. 비디오 */}
@@ -41,8 +51,9 @@ const MainPage = () => {
       {/* 6. 사용자 댓글 캐러셀 */}
       <CommentCarousel />
 
-      {/* 7. 대화 버튼 */}
-      <ChatButton />
+      {/* 7. 대화 버튼 - 버튼 누르면 모달발생 */}
+      <ChatButton onClick={openChatHandler} />
+      {isOpenChat && <Chatting onClick={openChatHandler} />}
     </>
   )
 }

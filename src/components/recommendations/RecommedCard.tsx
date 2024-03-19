@@ -57,7 +57,7 @@ const PostContainer = styled(FlexCenter)`
   /* background-color: coral; */
   /* width: 100%; */
   width: auto;
-  min-height: 10rem;
+  /* min-height: 10rem; */
 `
 
 const Post = styled(FlexCenter)<{ regionImg: string }>`
@@ -122,7 +122,6 @@ const UserImg = styled.div`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-  /* margin-right: 1rem; */
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
@@ -134,7 +133,6 @@ const UserImg = styled.div`
 const UserName = styled(FlexCenter)`
   font-size: 0.7rem;
   width: 3rem;
-  /* margin-right: 1rem; */
   position: relative;
   top: 2px;
 `
@@ -145,7 +143,6 @@ const Date = styled(FlexCenter)`
 `
 const PostRight = styled(FlexCenter)`
   /* background-color: #41b4e1; */
-  /* min-height: 9rem; */
   flex: 1;
 `
 

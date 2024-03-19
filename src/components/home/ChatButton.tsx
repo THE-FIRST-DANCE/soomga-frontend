@@ -1,11 +1,14 @@
 import styled from 'styled-components'
 import chatBtn from 'assets/chatBtn.svg'
-import { useNavigate } from 'react-router-dom'
-const ChatButton = () => {
-  let navigate = useNavigate()
+
+interface ChatButtonProps {
+  onClick: () => void
+}
+
+const ChatButton = ({ onClick }: ChatButtonProps) => {
   return (
     /* 우측 하단 채팅 바로가기 버튼 */
-    <ChatBtnWrapper onClick={() => navigate('/chatting')}>
+    <ChatBtnWrapper onClick={onClick}>
       <img src={chatBtn} alt="" />
     </ChatBtnWrapper>
   )

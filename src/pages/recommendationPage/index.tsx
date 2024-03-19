@@ -195,6 +195,7 @@ const CarouselLayout = styled.div`
   /* background-color: #b725f6; */
   width: 60rem;
   margin: auto;
+  z-index: 1;
 `
 
 // 1. Swiper 레이어아웃
