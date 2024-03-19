@@ -57,6 +57,7 @@ const Router = () => {
             <Route path="/planner" element={<PlanPage />} />
             <Route path="/planner/create" element={<PlanCreatePage />} />
             <Route path="/planner/confirm" element={<PlanConfirm />} />
+            <Route path="/planner/confirm/:planId" element={<PlanConfirm />} />
 
             {/* 7. 채팅 페이지 */}
             <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
