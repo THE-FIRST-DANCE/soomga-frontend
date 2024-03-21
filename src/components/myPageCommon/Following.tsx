@@ -207,12 +207,14 @@ const SendBtn = styled.button`
 `
 
 /* 🟣🟣🟣🟣🟣 타이틀 🟣🟣🟣🟣🟣 */
-const Title = styled(FlexCenterd)`
+// const Title = styled(FlexCenterd)`
+const Title = styled.div`
   width: 100%;
   font-size: 1.3rem;
-  margin-left: 15rem;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
+  margin-left: 7rem;
   justify-content: flex-start;
+  /* background-color: red; */
 `
 
 /* 🟣🟣🟣🟣🟣 리뷰 박스 🟣🟣🟣🟣🟣 */
