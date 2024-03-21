@@ -153,7 +153,7 @@ const PlanContainer = styled(FlexCenterd)`
   border-radius: 0.5rem;
 `
 const PlanWrapper = styled(PlanContainer)`
-  width: 100%;
+  width: 70%;
   /* background-color: yellow; */
 `
 const Plan = styled(FlexCenterd)`
@@ -218,7 +218,7 @@ const ContentFrame = styled(FlexCenterd)`
 
 const TravelTime = styled(ContentFrame)`
   justify-content: flex-start;
-  padding-left: 9rem;
+  padding-left: 5rem;
   box-sizing: border-box;
   margin: 1rem 0;
   position: relative;
@@ -230,7 +230,7 @@ const TravelTime = styled(ContentFrame)`
     display: block;
     /* left: 0px; */
     top: 1.7rem;
-    left: 9.5rem;
+    left: 6.5rem;
     /* left: 0.5rem; */
     width: 1px;
     height: 20px;
@@ -243,7 +243,7 @@ const TravelTime = styled(ContentFrame)`
     display: block;
     /* left: 0px; */
     top: -1.4rem;
-    left: 9.5rem;
+    left: 6.5rem;
     /* left: 0.5rem; */
     width: 1px;
     height: 20px;
