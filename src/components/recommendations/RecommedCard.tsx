@@ -66,7 +66,6 @@ const Post = styled(FlexCenter)<{ regionImg: string }>`
   /* width: 100%; */
   width: 20rem;
   min-height: 12rem;
-  /* max-width: 100%; */
   align-items: flex-end;
   padding: 0.5rem 0 0.5rem 0.5rem;
   box-sizing: border-box;
@@ -84,6 +83,7 @@ const Post = styled(FlexCenter)<{ regionImg: string }>`
   }
 `
 
+// 왼쪽 : 제목 내용 사진 이름 날짜
 const PostLeft = styled.div`
   /* background-color: #e1be41; */
   flex: 1.5;
