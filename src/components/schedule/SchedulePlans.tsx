@@ -1,0 +1,88 @@
+import Arrow from 'components/icons/Arrow'
+import Time from 'components/icons/Time'
+import { Plans } from 'interfaces/plan'
+import styled from 'styled-components'
+
+interface PlanProps {
+  plan: Plans
+  setSelectedPlanId?: (plan: Plans) => void
+}
+
+const SchedulePlans = ({ plan, setSelectedPlanId }: PlanProps) => {
+  return (
+    <Container
+      onClick={() => {
+        if (setSelectedPlanId) {
+          setSelectedPlanId(plan)
+        }
+      }}
+    >
+      <PlanItems style={{ cursor: 'pointer' }}>
+        <PlanInfo>
+          <PlanTitle>{plan.title}</PlanTitle>
+          <PlanDesc>{plan.region}</PlanDesc>
+        </PlanInfo>
+        <PlanDateBox>
+          <Time $width="20px" $height="20px" $color="var(--color-primary)" />
+          <PlanDate>{plan.daySchedules.length}일</PlanDate>
+        </PlanDateBox>
+        <Arrow $width="24px" $height="24px" $color="var(--bs-gray-dark)" />
+      </PlanItems>
+    </Container>
+  )
+}
+
+export default SchedulePlans
+
+const Container = styled.div`
+  width: 100%;
+  height: 3rem;
+  border: 1px solid var(--bs-black);
+  box-shadow: var(--bs-box-shadow);
+  border-radius: 0.5rem;
+`
+
+const PlanItems = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 1rem;
+`
+
+const PlanTitle = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+`
+
+const PlanDesc = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`
+
+const PlanInfo = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 100%;
+`
+
+const PlanDateBox = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+`
+
+const PlanDate = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--bs-gray);
+  margin-left: 0.5rem;
+  margin-top: 0.2rem;
+`

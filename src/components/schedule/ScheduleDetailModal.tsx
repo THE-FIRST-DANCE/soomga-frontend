@@ -10,6 +10,7 @@ import Description from 'components/icons/Description'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteEvent } from 'api/EventAPI'
 import DOMPurify from 'dompurify'
+import PlanItem from 'components/planner/PlanItem'
 
 interface ScheduleDetailModalProps {
   isOpen: boolean
@@ -86,6 +87,15 @@ const ScheduleDetailModal = ({ event, isOpen, onRequestClose, editMode }: Schedu
                 <Description style={{ width: '1rem', height: '1rem' }} />
               </Icon>
               <Text dangerouslySetInnerHTML={sanitizedData()} />
+            </IconText>
+          )}
+
+          {event?.plan && (
+            <IconText>
+              <Icon>
+                <Time $width="1rem" $height="1rem" />
+              </Icon>
+              <PlanItem data={event.plan} />
             </IconText>
           )}
         </Body>
