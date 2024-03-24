@@ -129,9 +129,11 @@ const Layout = styled(FlexCenterd)`
 /* 🟣🟣🟣🟣🟣 플랜 🟣🟣🟣🟣🟣*/
 const Title = styled.div`
   width: 100%;
+  /* background-color: #bc7de9; */
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
+  margin-left: 15rem;
 `
 
 // const PlanOutsideWrapper = styled(FlexCenterd)`

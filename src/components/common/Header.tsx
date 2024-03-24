@@ -60,7 +60,6 @@ const Header = () => {
         <HeaderMiddleBtn onClick={() => navigate('/itinerary')}>여행 일정</HeaderMiddleBtn>
         <HeaderMiddleBtn onClick={() => navigate('/recommendations')}>여행지 추천</HeaderMiddleBtn>
         <HeaderMiddleBtn onClick={() => navigate('/planner')}>플랜</HeaderMiddleBtn>
-        <HeaderMiddleBtn onClick={() => navigate('/chatting')}>채팅</HeaderMiddleBtn>
       </HeaderMiddleContainer_div>
 
       {/* 3. 우측 : 언어 | 버거 + 사용자 아이콘 */}
@@ -228,6 +227,7 @@ const HeaderMiddleContainer_div = styled.div`
   width: 60%;
   display: flex;
   flex-grow: 2;
+  gap: 1.5rem;
   padding-left: 50px;
   box-sizing: border-box;
   align-items: center;

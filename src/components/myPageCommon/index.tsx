@@ -10,6 +10,7 @@ const MyPage = () => {
   const [posting, setPosting] = useState<boolean>(false)
   const [following, setFollowing] = useState<boolean>(false)
   const [planing, setPlaning] = useState<boolean>(false)
+  const [guide, setGuide] = useState<boolean>(false)
 
   // 선택된 태그 순번관리
   const [selectedTag, setSelectedTag] = useState<number>(0)
@@ -25,6 +26,7 @@ const MyPage = () => {
         setPosting(false)
         setFollowing(false)
         setPlaning(false)
+        setGuide(false)
         break
       case '리뷰':
         setBasicInfo(false)
@@ -32,6 +34,7 @@ const MyPage = () => {
         setPosting(false)
         setFollowing(false)
         setPlaning(false)
+        setGuide(false)
         break
       case '포스트':
         setBasicInfo(false)
@@ -39,6 +42,7 @@ const MyPage = () => {
         setPosting(true)
         setFollowing(false)
         setPlaning(false)
+        setGuide(false)
         break
       case '팔로잉':
         setBasicInfo(false)
@@ -46,6 +50,7 @@ const MyPage = () => {
         setPosting(false)
         setFollowing(true)
         setPlaning(false)
+        setGuide(false)
         break
       case '플랜':
         setBasicInfo(false)
@@ -53,6 +58,15 @@ const MyPage = () => {
         setPosting(false)
         setFollowing(false)
         setPlaning(true)
+        setGuide(false)
+        break
+      case '가이드':
+        setBasicInfo(false)
+        setReview(false)
+        setPosting(false)
+        setFollowing(false)
+        setPlaning(false)
+        setGuide(true)
         break
       default:
         break
@@ -80,6 +94,7 @@ const MyPage = () => {
             posting={posting}
             following={following}
             planing={planing}
+            guide={guide}
           />
 
           {/* 🟡 오른쪽 : 태그 */}
@@ -99,6 +114,13 @@ const MyPage = () => {
             <TagCategory onClick={(e) => changeTagHandler(4, e)} selected={selectedTag === 4}>
               플랜
             </TagCategory>
+
+            {/* 🟡 가이드가 로그인 한 경우에만 활성화 */}
+            {true && (
+              <TagCategory onClick={(e) => changeTagHandler(5, e)} selected={selectedTag === 5}>
+                가이드
+              </TagCategory>
+            )}
           </TagCategoryContainer>
         </RedOuterFrame>
       </OverallLayout>
