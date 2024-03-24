@@ -4,6 +4,7 @@ import Review from './Review'
 import Posting from './Posting'
 import Following from './Following'
 import Planing from './Planing'
+import Guide from './Guide'
 
 interface TagOpenStateProps {
   basicInfo: boolean
@@ -11,9 +12,10 @@ interface TagOpenStateProps {
   posting: boolean
   following: boolean
   planing: boolean
+  guide: boolean
 }
 
-const MainContainer = ({ basicInfo = true, review, posting, following, planing }: TagOpenStateProps) => {
+const MainContainer = ({ basicInfo = true, review, posting, following, planing, guide }: TagOpenStateProps) => {
   return (
     <Layouy>
       {/* 1. 기본정보 */}
@@ -34,6 +36,8 @@ const MainContainer = ({ basicInfo = true, review, posting, following, planing }
       {following && <Following />}
       {/* 5. 플랜 */}
       {planing && <Planing />}
+      {/* 6. 가이드 FIXME: 만약 가이드로 로그인을 한 경우에만 활성화해서 보이게  */}
+      {guide && <Guide />}
     </Layouy>
   )
 }
