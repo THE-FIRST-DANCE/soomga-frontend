@@ -799,7 +799,7 @@ export const Title = styled.div`
   width: 100%;
   /* background-color: red; */
   min-height: 1.5rem;
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 `
 const ImageContainer = styled(FlexCenterd)`
