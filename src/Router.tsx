@@ -19,6 +19,7 @@ import RegionDetailPage from 'pages/recommendationPage/detail'
 import SchedulePage from 'pages/schedulePage'
 import PostCreate from 'components/recommendations/PostCreate'
 import PostEdit from 'components/recommendations/PostEdit'
+import MyPage from 'components/myPageCommon'
 
 const Router = () => {
   // 토큰 관리
@@ -68,7 +69,7 @@ const Router = () => {
             <Route path="/sos/edit" element={<h1> SOS edit 페이지 </h1>} />
 
             {/* 9. my 페이지  FIXME: 유저 + 가이드 ?  나눠서?? */}
-            <Route path="/mypage/info" element={<h1> 기본 정보 </h1>} />
+            <Route path="/mypage/info" element={<MyPage />} />
             <Route path="/mypage/review" element={<h1> 리뷰 </h1>} />
             <Route path="/mypage/follwing" element={<h1> 팔로잉 </h1>} />
             <Route path="/mypage/destination" element={<h1> 여행지 </h1>} />

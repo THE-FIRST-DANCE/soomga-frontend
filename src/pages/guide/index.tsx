@@ -221,7 +221,9 @@ const GuidePage = () => {
               <Container>
                 <LangeTitle>자격증</LangeTitle>
                 <SelectContainer>
-                  <PlaceholderOfSelect>자격증을 선택하세요</PlaceholderOfSelect>
+                  <PlaceholderOfSelect onClick={() => setIsCredentialsClick(!isCredentialsClick)}>
+                    자격증을 선택하세요
+                  </PlaceholderOfSelect>
                   {isCredentialsClick ? (
                     <TriangleIcon onClick={() => setIsCredentialsClick(!isCredentialsClick)}>▼</TriangleIcon>
                   ) : (
@@ -232,6 +234,7 @@ const GuidePage = () => {
                 {/* 자격증 데이터 */}
                 {isCredentialsClick && (
                   <CredentialDropWrapper isRegionClick={isCredentialsClick}>
+                    {/* <CredentialDropWrapper> */}
                     {/* 일본어 */}
                     <LanguageTitle>日本語🇯🇵</LanguageTitle>
                     {/* <div style={{ width: '100%', height: '1rem' }}></div>
@@ -541,7 +544,7 @@ const CredentialsContainer = styled(Container)`
   /* margin-top: 150px; */
 `
 
-const CredentialDropWrapper = styled.div`
+const CredentialDropWrapper = styled.div<{ isRegionClick: boolean }>`
   border: 3px solid var(--bs-gray);
   border-radius: 0.6rem;
   padding: 0.7rem;

@@ -225,7 +225,9 @@ const Chatting = ({ onClick }: ChatButtonProps) => {
                   <label htmlFor="file-input">
                     <ImageIcon />
                   </label>
-                  <InputTag /> <SendBtn>보내기</SendBtn>
+                  <ImgInputTag id="file-input" type="file" onChange={handleFileUpload} />
+                  <InputTag />
+                  <SendBtn>보내기</SendBtn>
                 </Bottom>
               </RightWrapper>
             </RightSection>

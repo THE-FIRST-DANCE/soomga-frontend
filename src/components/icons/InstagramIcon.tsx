@@ -3,7 +3,9 @@ import React from 'react'
 import styled, { CSSProp } from 'styled-components'
 
 interface InstagramProps {
-  style: CSSProp
+  $width?: string
+  $height?: string
+  $color?: string
 }
 const InstagramIcon = ({ ...props }: InstagramProps) => {
   return (
@@ -38,5 +40,7 @@ const InstagramIcon = ({ ...props }: InstagramProps) => {
 export default InstagramIcon
 
 const InstagramStyled = styled.svg<InstagramProps>`
-  ${(props) => props.style};
+  width: ${(props) => props.$width};
+  height: ${(props) => props.$height};
+  fill: ${(props) => props.$color};
 `

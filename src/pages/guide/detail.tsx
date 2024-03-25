@@ -178,6 +178,16 @@ const GuideDetailPage = () => {
     setvisibleComments(visibleComments + ADDCOMMENT)
   }
 
+  /* 우측 이동 메뉴 */
+  const travelPlanRef = useRef<HTMLDivElement>(null)
+  const serviceRef = useRef<HTMLDivElement>(null)
+  const reviewRef = useRef<HTMLDivElement>(null)
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <>
       <Layout>
@@ -295,7 +305,7 @@ const GuideDetailPage = () => {
         <MiddleSection>
           <BlankTop10Rem />
           {/* 1. 서비스 */}
-          <ServiceLayout>
+          <ServiceLayout ref={serviceRef}>
             <Title>서비스</Title>
             <ImageContainer>
               <ServiceImageWrapper>
@@ -310,7 +320,7 @@ const GuideDetailPage = () => {
             </ImageContainer>
             <ServiceContent>{serviceContent}</ServiceContent>
           </ServiceLayout>
-          <Partition>
+          <Partition ref={travelPlanRef}>
             <Line />
           </Partition>
 
@@ -393,7 +403,7 @@ const GuideDetailPage = () => {
             <Line />
           </Partition>
           {/* 4. 리뷰 */}
-          <ReviewLayout>
+          <ReviewLayout ref={reviewRef}>
             <Title>리뷰</Title>
             <ReviewScoreContainer>
               {/* 🟠 왼쪽 */}
@@ -474,9 +484,9 @@ const GuideDetailPage = () => {
         <RightSection>
           <MenuBanner>
             <MenuTitle>MENU</MenuTitle>
-            <MenuItem>여행플랜</MenuItem>
-            <MenuItem>서비스</MenuItem>
-            <MenuItem>리뷰</MenuItem>
+            <MenuItem onClick={() => scrollToRef(serviceRef)}>서비스</MenuItem>
+            <MenuItem onClick={() => scrollToRef(travelPlanRef)}>여행플랜</MenuItem>
+            <MenuItem onClick={() => scrollToRef(reviewRef)}>리뷰</MenuItem>
             <MoveTopTab onClick={MoveTopClick}>▲ TOP</MoveTopTab>
           </MenuBanner>
         </RightSection>
@@ -789,7 +799,7 @@ export const Title = styled.div`
   width: 100%;
   /* background-color: red; */
   min-height: 1.5rem;
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 `
 const ImageContainer = styled(FlexCenterd)`
@@ -822,14 +832,14 @@ const ServiceContent = styled.div`
 
 // 2. 여행 플랜
 const TravelPlanLayout = styled(MiddleLayout)`
-  background-color: #f2618aff;
+  /* background-color: #f2618aff; */
   /* width: 90%; */
   margin: auto;
   gap: 1rem;
 `
 
 const PlanContainer = styled(FlexCenterd)`
-  background-color: #6bf37f;
+  /* background-color: #6bf37f; */
   gap: 4rem;
   width: 100%;
   flex-direction: column;
@@ -854,7 +864,6 @@ const Plan = styled(FlexCenterd)`
   /* position: relative; */
   color: white;
   /* gap: 1rem; */
-  margin
 `
 const PlanTitle = styled.div`
   /* flex-basis: 50%; */
@@ -882,7 +891,7 @@ const DropdownBtn = styled(FlexCenterd)`
 const PlanContent = styled.div<{ isPlanOpen: boolean }>`
   display: ${({ isPlanOpen }) => (isPlanOpen ? 'block' : 'none')};
   /* visibility: ${({ isPlanOpen }) => (isPlanOpen ? 'block' : 'none')}; */
-  background-color: #408efb;
+  /* background-color: #408efb; */
   width: 87%;
   min-height: 10rem;
   border: 3px solid black;
@@ -1206,7 +1215,7 @@ const RightSection = styled.div`
 `
 
 const MenuBanner = styled.div`
-  background-color: #77f875;
+  /* background-color: #77f875; */
   width: 6rem;
   position: sticky;
   top: 40%;

@@ -19,7 +19,7 @@ import CommentIcon from 'components/icons/Comment'
 
 type RegionId = '서울' | '경기' | '전북' | '전남' | '충북' | '충남' | '경북' | '경남' | '제주'
 
-let postInfo = {
+export let postInfo = {
   id: 1,
   regionName: '경기',
   title: '송도 센트럴 파크',
