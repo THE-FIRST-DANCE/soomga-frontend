@@ -5,11 +5,10 @@ import { Calendar as CalendarComponent, OnArgs } from 'react-calendar'
 
 interface SetDateCalendarProps {
   onNavigate: (action: NavigateAction, newDate: Date) => void
-  date: Date
   setOpen: (open: boolean) => void
 }
 
-const SetDateCalendar = ({ onNavigate, date, setOpen }: SetDateCalendarProps) => {
+const SetDateCalendar = ({ onNavigate, setOpen }: SetDateCalendarProps) => {
   const [view, setView] = useState<'month' | 'year' | 'decade' | 'century'>('year')
 
   const onViewChange = ({ action, activeStartDate, view }: OnArgs) => {
@@ -24,14 +23,7 @@ const SetDateCalendar = ({ onNavigate, date, setOpen }: SetDateCalendarProps) =>
 
   return (
     <SetDateCalendarContainer>
-      <CalendarComponent
-        locale="ko"
-        value={date}
-        view={view}
-        onViewChange={onViewChange}
-        next2Label={null}
-        prev2Label={null}
-      />
+      <CalendarComponent locale="ko" view={view} onViewChange={onViewChange} next2Label={null} prev2Label={null} />
     </SetDateCalendarContainer>
   )
 }

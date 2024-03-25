@@ -4,7 +4,6 @@ import ReactDatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Time from 'components/icons/Time'
 import { format } from 'date-fns'
-import { TimeSlots24 } from 'utils/timeSlots'
 
 interface TimeSectionProps {
   allDay: boolean
@@ -60,7 +59,6 @@ const TimeSectionComponent = memo(
                     setStartDateOpen(false)
                   }}
                   inline
-                  calendarClassName="calendar"
                 />
               </DateDropdown>
             )}
@@ -90,17 +88,18 @@ const TimeSectionComponent = memo(
                 {startTime}
                 {openStartTime && (
                   <DateDropdown>
-                    {TimeSlots24.map((time, index) => (
-                      <TimeDropdownText
-                        onClick={() => {
-                          setStartTime(time)
-                          setOpenStartTime(false)
-                        }}
-                        key={index}
-                      >
-                        {time}
-                      </TimeDropdownText>
-                    ))}
+                    <ReactDatePicker
+                      selected={startDate}
+                      onChange={(time) => {
+                        setStartTime(format(time as Date, "hh:mmaaaaa'm'"))
+                        setOpenStartTime(false)
+                      }}
+                      inline
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeFormat="hh:mmaaaaa'm'"
+                      timeIntervals={30}
+                    />
                   </DateDropdown>
                 )}
               </ClickTime>
@@ -109,17 +108,18 @@ const TimeSectionComponent = memo(
                 {endTime}
                 {openEndTime && (
                   <DateDropdown>
-                    {TimeSlots24.map((time, index) => (
-                      <TimeDropdownText
-                        onClick={() => {
-                          setEndTime(time)
-                          setOpenEndTime(false)
-                        }}
-                        key={index}
-                      >
-                        {time}
-                      </TimeDropdownText>
-                    ))}
+                    <ReactDatePicker
+                      selected={endDate}
+                      onChange={(time) => {
+                        setEndTime(format(time as Date, "hh:mmaaaaa'm'"))
+                        setOpenStartTime(false)
+                      }}
+                      inline
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeFormat="hh:mmaaaaa'm'"
+                      timeIntervals={30}
+                    />
                   </DateDropdown>
                 )}
               </ClickTime>
@@ -206,7 +206,6 @@ const DateDropdown = styled.div`
   display: flex;
   flex-direction: column;
   height: 15rem;
-  overflow-y: auto;
   background-color: #f8f9fa;
   padding: 10px;
   border-radius: 5px;
@@ -216,15 +215,14 @@ const DateDropdown = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-`
 
-const TimeDropdownText = styled.div`
-  padding: 10px 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  .react-datepicker--time-only {
+    border: none;
+  }
 
-  &:hover {
-    background-color: #e9ecef;
+  .react-datepicker__time-list-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `

@@ -19,8 +19,8 @@ export const useEventModal = ({ onRequestClose, editEvent, selectedDate }: Event
   const [endDate, setEndDate] = useState<Date>(editEvent?.end || selectedDate)
   const [setDesc, setSetDesc] = useState<boolean>(editEvent?.description ? true : false)
   const [description, setDescription] = useState<string>(editEvent?.description || '')
-  const [startTime, setStartTime] = useState<string>(editEvent ? format(editEvent.start, 'HH:mm') : '00:00')
-  const [endTime, setEndTime] = useState<string>(editEvent ? format(editEvent.end, 'HH:mm') : '23:30')
+  const [startTime, setStartTime] = useState<string>(editEvent ? format(editEvent.start, "hh:mmaaaaa'm'") : '00:00am')
+  const [endTime, setEndTime] = useState<string>(editEvent ? format(editEvent.end, "hh:mmaaaaa'm'") : '23:30pm')
 
   const [plans, setPlans] = useState<Plans[]>([])
   const [openPlanList, setOpenPlanList] = useState<boolean>(false)
@@ -91,8 +91,20 @@ export const useEventModal = ({ onRequestClose, editEvent, selectedDate }: Event
       }
     }
 
-    const formatStart = format(startDate, 'yyyy-MM-dd') + 'T' + startTime
-    const formatEnd = format(endDate, 'yyyy-MM-dd') + 'T' + endTime
+    const formatTime = (time: string) => {
+      const timeArr = time.split(':')
+      const hour = Number(timeArr[0])
+      const minute = Number(timeArr[1].slice(0, 2))
+
+      if (timeArr[1].slice(2) === 'pm') {
+        return (hour + 12).toString().padStart(2, '0') + ':' + minute.toString().padStart(2, '0')
+      }
+
+      return hour.toString().padStart(2, '0') + ':' + minute.toString().padStart(2, '0')
+    }
+
+    const formatStart = format(startDate, 'yyyy-MM-dd') + 'T' + formatTime(startTime)
+    const formatEnd = format(endDate, 'yyyy-MM-dd') + 'T' + formatTime(endTime)
 
     const data = {
       memberId: 1, // TODO: 로그인 정보로 대체

@@ -55,6 +55,7 @@ const SelectTransportation = ({ isOpen, onRequestClose }: SelectTransportationPr
         style={{
           content: {
             maxWidth: '400px',
+            minHeight: '300px',
           },
         }}
       >

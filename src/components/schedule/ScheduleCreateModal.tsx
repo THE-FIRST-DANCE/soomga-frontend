@@ -181,7 +181,7 @@ const EventModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  padding: 2rem 3rem;
+  padding: 6rem 3rem;
   border-radius: 10px;
 `
 
