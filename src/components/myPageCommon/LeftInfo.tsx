@@ -1,5 +1,7 @@
 import guideImg from '../../assets/guideImg.png'
 import { styled } from 'styled-components'
+import { useSetRecoilState } from 'recoil'
+import { RequestGuide } from 'state/store/RequestGuide'
 
 export interface userInfoProps {
   name: string
@@ -10,6 +12,8 @@ export interface userInfoProps {
 }
 
 const LeftInfo = ({ name, mail, nickName, phonNum, password }: userInfoProps) => {
+  // const setRequestOpend = useSetRecoilState<RequestGuideType>(RequestGuide)
+  const setRequestOpend = useSetRecoilState(RequestGuide)
   return (
     <>
       <InfoContainer>
@@ -34,7 +38,9 @@ const LeftInfo = ({ name, mail, nickName, phonNum, password }: userInfoProps) =>
           <InfoName>비밀번호</InfoName>
           <Info>{password}</Info>
         </InfoBox>
-        <Application>가이드 신청</Application>
+        <Application onClick={() => setRequestOpend((prev) => ({ ...prev, isClick: !prev.isClick }))}>
+          가이드 신청
+        </Application>
       </InfoContainer>
     </>
   )

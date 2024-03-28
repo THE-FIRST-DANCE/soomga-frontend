@@ -2,7 +2,9 @@ import { styled } from 'styled-components'
 
 import LeftInfo from './LeftInfo'
 import MainContainer from './MainContainer'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { RequestGuide } from 'state/store/RequestGuide'
 const MyPage = () => {
   // 태그별 열림 상태
   const [basicInfo, setBasicInfo] = useState<boolean>(true)
@@ -15,7 +17,30 @@ const MyPage = () => {
   // 선택된 태그 순번관리
   const [selectedTag, setSelectedTag] = useState<number>(0)
 
-  const changeTagHandler = (index: number, e: { target: any }) => {
+  // 🟡 가이드 신청하기 리코일 🟡
+  const [guideRequest, setGuideRequest] = useRecoilState(RequestGuide)
+
+  useEffect(() => {
+    console.log('useCallback 실행')
+    setBasicInfo(false)
+    setReview(false)
+    setPosting(false)
+    setFollowing(false)
+    setPlaning(false)
+    setGuide(false)
+    changeTagHandler(6)
+  }, [guideRequest])
+
+  useEffect(() => {
+    setBasicInfo(true)
+    setSelectedTag(0)
+  }, [])
+
+  const changeTagHandler = (index: number, e: { target: any } = { target: '' }) => {
+    if (guideRequest.isClick) {
+      setGuideRequest((prev) => ({ ...prev, isClick: false }))
+    }
+
     setSelectedTag(index)
 
     const target = e.target.textContent
@@ -27,6 +52,7 @@ const MyPage = () => {
         setFollowing(false)
         setPlaning(false)
         setGuide(false)
+
         break
       case '리뷰':
         setBasicInfo(false)
@@ -95,6 +121,7 @@ const MyPage = () => {
             following={following}
             planing={planing}
             guide={guide}
+            requetGuide={!!guideRequest.isClick}
           />
 
           {/* 🟡 오른쪽 : 태그 */}
