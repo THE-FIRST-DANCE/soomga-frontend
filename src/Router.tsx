@@ -20,6 +20,7 @@ import SchedulePage from 'pages/schedulePage'
 import PostCreate from 'components/recommendations/PostCreate'
 import PostEdit from 'components/recommendations/PostEdit'
 import MyPage from 'components/myPageCommon'
+import RequestGuide from 'components/myPageCommon/RequestGuide'
 
 const Router = () => {
   // 토큰 관리
@@ -63,16 +64,14 @@ const Router = () => {
             {/* 7. 채팅 페이지 */}
             <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
 
-            {/* 8. SOS 페이지 */}
-            <Route path="/sos" element={<h1> SOS 페이지 </h1>} />
-            <Route path="/sos/:id" element={<h1> SOS detail 페이지 </h1>} />
-            <Route path="/sos/edit" element={<h1> SOS edit 페이지 </h1>} />
-
-            {/* 9. my 페이지  FIXME: 유저 + 가이드 ?  나눠서?? */}
+            {/* 8. my 페이지  FIXME: 유저 + 가이드 ?  나눠서?? */}
             <Route path="/mypage/info" element={<MyPage />} />
-            <Route path="/mypage/review" element={<h1> 리뷰 </h1>} />
+            {/* <Route path="/mypage/review" element={<h1> 리뷰 </h1>} />
             <Route path="/mypage/follwing" element={<h1> 팔로잉 </h1>} />
-            <Route path="/mypage/destination" element={<h1> 여행지 </h1>} />
+            <Route path="/mypage/destination" element={<h1> 여행지 </h1>} /> */}
+
+            {/* 9. 가이드 신청 페이지 */}
+            <Route path="/mypage/RequestGuide" element={<RequestGuide />} />
           </>
         )}
         <Route path="redirect" element={<RedirectPage />} />
