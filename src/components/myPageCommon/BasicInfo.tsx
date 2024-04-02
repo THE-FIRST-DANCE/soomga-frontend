@@ -71,7 +71,7 @@ const BasicInfo: React.FC<userInfoProps> = ({ name, mail, nickName, phonNum, pas
           </Table>
         )}
       </Layout>
-      {/* 수정 кнопка */}
+      {/* 수정 */}
       {isFix ? (
         <>
           <SubmitBtn

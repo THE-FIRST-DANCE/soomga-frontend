@@ -44,7 +44,7 @@ const GuidePage = () => {
   const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]) // 선택된 자격증
 
   // 평점
-  // const [selectedRating, setSelectedRating] = useState<string[]>([]) // 선택된 자격증
+  const [selectedRating, setSelectedRating] = useState<string[]>([]) // 선택된 자격증
 
   return (
     <>
@@ -309,8 +309,6 @@ const GuidePage = () => {
                         style={{ display: 'none' }}
                         onClick={(e) => {
                           console.log(totalindex, '개 별 클릭')
-                          // console.log('체크 여부 ', e.target.checked)
-                          // console.log('어떤 것체크', e.target.name)
                         }}
                       />
                       <RatingFakeCheckbox
@@ -325,7 +323,7 @@ const GuidePage = () => {
                         }}
                         checked={isRatingChecked[totalindex]}
                       />
-                      {/* if : checked가 되면 fake에도 체크 표시가 되게 */}
+
                       <div>
                         {Array.from({ length: totalindex + 1 }, (_, index) => (
                           <label
