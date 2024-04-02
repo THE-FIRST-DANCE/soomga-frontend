@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { GLOBAL_CONFIG } from 'global.config'
 import { GuideInfo, Pagination } from 'interfaces/guideInfo'
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3000/',
+  baseURL: GLOBAL_CONFIG.VITE_APP_BASE_URL,
   withCredentials: true,
 })
 
