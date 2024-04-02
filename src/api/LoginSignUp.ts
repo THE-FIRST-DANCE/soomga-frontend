@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { GLOBAL_CONFIG } from 'global.config'
 
 export const baseApi = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: GLOBAL_CONFIG.VITE_APP_BASE_URL,
   withCredentials: true,
 
   // 왜 이부분을 추가하니 에러가 뜨지>??
