@@ -1,9 +1,10 @@
 import axios from 'axios'
+import { GLOBAL_CONFIG } from 'global.config'
 import { GooglePlaceResponse, PlaceData, Plans } from 'interfaces/plan'
 import { PeriodList } from 'state/store/PlanList'
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3000/',
+  baseURL: GLOBAL_CONFIG.VITE_APP_BASE_URL,
   withCredentials: true,
 })
 
