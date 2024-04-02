@@ -125,7 +125,7 @@ const Application = styled.div`
   cursor: pointer;
 
   &:hover {
-    transform: translateX(0.1rem) translateY(-0.1rem);
+    transform: translateX(-0.1rem) translateY(-0.1rem);
     transition: all 0.5s;
   }
 `
