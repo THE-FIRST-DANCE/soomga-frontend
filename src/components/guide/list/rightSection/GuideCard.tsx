@@ -1,28 +1,40 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { styled } from 'styled-components'
 import userImage from 'assets/userImage.svg'
 import logo from 'assets/logo.svg'
 import { useNavigate } from 'react-router-dom'
 import { getGuideList } from 'api/GuidePageAPI'
 import moment from 'moment'
+import useObserver from 'hooks/useObserver'
+
 const GuideCard = () => {
   const [guideDatas, setGuideDatas] = useState<any[]>([])
   console.log('guideDatas: ', guideDatas)
 
-  useEffect(() => {
-    const fetchGuideList = async () => {
-      try {
-        // const result = await getGuideList() // 비동기 함수의 결과를 기다림
-        const result = await getGuideList({ cursor: 64, limit: 3 }) // 비동기 함수의 결과를 기다림
-        setGuideDatas(result)
-        return result
-      } catch (error) {
-        console.error('Error fetching guide list:', error) // 오류 처리
-      }
-    }
+  /* 페이지네이션 커서 */
+  const [nowCursor, setNowCursor] = useState<number | any>()
 
+  // 가져오기
+  const fetchGuideList = async () => {
+    try {
+      // const result = await getGuideList() // 비동기 함수의 결과를 기다림
+      const result = await getGuideList({ cursor: nowCursor, limit: 3 }) // 비동기 함수의 결과를 기다림
+
+      setNowCursor(result.nextCursor)
+      console.log(nowCursor) // 마지막 다음 커서
+
+      setGuideDatas((prev) => [...prev, ...result.items])
+      return result
+    } catch (error) {
+      console.error('Error fetching guide list:', error) // 오류 처리
+    }
+  }
+
+  useCallback(() => {
     fetchGuideList()
   }, [])
+
+  const observeRef = useObserver(fetchGuideList)
 
   //  테스트 데이터
   const navigate = useNavigate()
@@ -98,6 +110,7 @@ const GuideCard = () => {
           </CardLayout>
         )
       })}
+      <div style={{ height: '1rem', width: '100%', backgroundColor: 'red' }} ref={observeRef}></div>
     </>
   )
 }
