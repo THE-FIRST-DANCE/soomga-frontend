@@ -41,9 +41,13 @@ const Router = () => {
         <Route path="/guides" element={<GuidePage />} />
         <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
-        {/* 4. 여행일정 */}
-        <Route path="/itinerary" element={<ItineraryPage />} />
-        <Route path="/schedule" element={<SchedulePage />} />
+        {recoilToken.token && (
+          <>
+            {/* 4. 여행일정 */}
+            <Route path="/itinerary" element={<ItineraryPage />} />
+            <Route path="/schedule" element={<SchedulePage />} />
+          </>
+        )}
 
         {/* 5. 여행장소 추천 */}
         <Route path="/recommendations" element={<RecommendatedPostPage />} />
@@ -53,7 +57,7 @@ const Router = () => {
         <Route path="/post/create" element={<PostCreate />} />
         <Route path="/post/edit/:post_Id" element={<PostEdit />} />
 
-        {recoilToken && (
+        {recoilToken.token && (
           <>
             {/* 6. 여행 플래너 생성 */}
             <Route path="/planner" element={<PlanPage />} />
