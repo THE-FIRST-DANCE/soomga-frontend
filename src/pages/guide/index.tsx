@@ -234,7 +234,6 @@ const GuidePage = () => {
                 {/* 자격증 데이터 */}
                 {isCredentialsClick && (
                   <CredentialDropWrapper isRegionClick={isCredentialsClick}>
-                    {/* <CredentialDropWrapper> */}
                     {/* 일본어 */}
                     <LanguageTitle>日本語🇯🇵</LanguageTitle>
                     {/* <div style={{ width: '100%', height: '1rem' }}></div>
@@ -261,13 +260,9 @@ const GuidePage = () => {
                         )
                       })}
                     </Scores>
-                    {/* <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div> */}
+
                     {/* 영어 */}
                     <LanguageTitle>English 🇬🇧 </LanguageTitle>
-                    {/* <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div> */}
                     <Scores>
                       {CredentialsDatas.english.map((language) => {
                         const isSelected = selectedCredentials.includes(language)
