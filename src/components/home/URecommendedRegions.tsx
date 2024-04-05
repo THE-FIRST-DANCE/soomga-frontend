@@ -102,7 +102,10 @@ const URecommendedRegions = () => {
         <RightRegionsContainer>
           {regionsArr.map((regionInformation) => (
             // 2.2.1 추천지역 Wrapper : Img + Title + Info
-            <RegionsWrapper onClick={() => navigate(`/recommendations/region/${regionInformation.id}`)}>
+            <RegionsWrapper
+              key={regionInformation.regionName}
+              onClick={() => navigate(`/recommendations/region/${regionInformation.id}`)}
+            >
               {/* 2.2.1.1 추천지역 Img */}
               <RegionImg key={regionInformation.regionName}>
                 <img src={regionInformation.img} alt={regionInformation.regionName} />
