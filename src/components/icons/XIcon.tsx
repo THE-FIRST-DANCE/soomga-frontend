@@ -1,4 +1,4 @@
-import styled, { CSSProp } from 'styled-components'
+import styled from 'styled-components'
 
 interface XProps {
   $width?: string

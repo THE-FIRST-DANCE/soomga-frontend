@@ -1,7 +1,8 @@
 import { CSSProp, styled } from 'styled-components'
 
 interface ComunicationProps {
-  style: CSSProp
+  $width?: string
+  $height?: string
 }
 const Comunication = ({ ...props }: ComunicationProps) => {
   return (
@@ -32,5 +33,6 @@ const Comunication = ({ ...props }: ComunicationProps) => {
 export default Comunication
 
 const ComunicationStyle = styled.svg<ComunicationProps>`
-  ${(props) => props.style}
+  width: ${({ $width }) => $width};
+  height: ${({ $height }) => $height};
 `
