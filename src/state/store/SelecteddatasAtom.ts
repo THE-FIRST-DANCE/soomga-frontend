@@ -1,13 +1,13 @@
 import { atom } from 'recoil'
 
 export interface SelecteddatasAtomType {
-  age: number[]
-  temperature: number[]
-  guideCount: number[]
-  sex: { all: boolean; male: boolean; female: boolean }
-  regions: string[]
-  languages: string[]
-  credentials: string[]
+  age: string[] | number[]
+  temperature: string[]
+  guideCount: string[]
+  gender: { all: boolean; male: boolean; female: boolean }
+  areas: number[]
+  languages: number[]
+  guideCeritifications: number[]
   rating: boolean[]
 }
 
@@ -17,10 +17,10 @@ export const selectedDatasState = atom<SelecteddatasAtomType>({
     age: [],
     temperature: [],
     guideCount: [],
-    sex: { all: false, male: false, female: false },
-    regions: [],
+    gender: { all: false, male: false, female: false },
+    areas: [],
     languages: [],
-    credentials: [],
+    guideCeritifications: [],
     rating: [],
   },
 })
