@@ -1,41 +1,71 @@
-export interface GuideInfo {
-  id: string
-  nickname: string
-  avatar: string | null
-  birthdate: string
-  languages: LanguageInfo[]
-  guideProfile: GuideProfile
-  guideReviews: any[]
-  tags: any[]
+/* getGuideList에서 사용 */
+export interface GuideProfile {
+  id: number
+  temperature: number | null
+  service: string | null
+  phoneNumber: string | null
+  verifiedAt: string | null
+  verifiedId: boolean | null
+  verifiedBankAccount: boolean | null
+  member: Member
+  areas: Areas[]
+  languageCertifications: LanguageCertifications[]
+  _count: Count
   avgLocationScore: number
   avgKindnessScore: number
   avgCommunicationScore: number
   totalAvgScore: number
 }
 
-export interface Pagination<Type> {
-  items: Type[]
-  nextCursor: number | null
+export interface Member {
+  id: number
+  email: string
+  nickname: string
+  password: string
+  avatar: null
+  birthdate: string
+  gender: string
+  status: string
+  role: string
+  provider: string
+  providerId: null
+  pushToken: null
+  createdAt: string
+  updatedAt: string
+  deletedAt: null
+  languages: Languages[]
 }
 
-// languages
-interface LanguageInfo {
+interface Languages {
   language: {
     id: number
     name: string
   }
 }
 
-// guideProfile
-interface GuideProfile {
-  areas: AreaInfo[]
-  temperature: number
+interface Areas {
+  area: Area
+}
+interface Area {
+  id: number
+  name: string
 }
 
-// guideProfile - areas
-interface AreaInfo {
-  area: {
-    id: number
-    name: string
-  }
+interface LanguageCertifications {
+  languageCertification: LanguageCertification
+}
+interface LanguageCertification {
+  id: number
+  name: string
+  LanguageId: number
+}
+
+interface Count {
+  reviews: number
+}
+
+/* getGuideList에서 사용, 페이지 네이션 인터페이스   */
+export interface Pagination<Type> {
+  items: Type[]
+  nextCursor: number | null
 }
