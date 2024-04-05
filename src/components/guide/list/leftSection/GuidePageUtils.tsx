@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { getAreaDatas } from 'api/GuidePageAPI'
+import { useEffect, useState } from 'react'
 
 export interface CredentialsData {
   japanesse: string[]
@@ -20,34 +21,46 @@ const useGuideStateMethods = () => {
   const [isWomanChecked, setWomanChecked] = useState(false) // 여자
 
   const [isRatingChecked, setIsRatingChecked] = useState<boolean[]>([false, false, false, false, false].reverse())
+  // const [isRatingChecked, setIsRatingChecked] = useState<number[]>([])
 
-  // 샘플 데이터
-  const [regionsDatas, setRegionsDatas] = useState<string[]>([
-    '서울',
-    '인천',
-    '대전',
-    '부산',
-    '울산',
-    '대구',
-    '광주',
-    '경기',
-    '강원',
-    '충남',
-    '충북',
-    '경북',
-    '경남',
-    '전북',
-    '전남',
-    '제주',
-  ])
+  useEffect(() => {
+    const fetchAreaData = async () => {
+      const data = await getAreaDatas()
+      setRegionsDatas(data)
+    }
+
+    fetchAreaData() // 호출!!
+  }, [])
+
+  // 지역 데이터
+  const [areasDatas, setRegionsDatas] = useState([])
+  // console.log('🟢🟢🟢🟢🟢🟢🟢🟢🟢areasDatas: ', areasDatas)
 
   // 언어 데이터
-  const [languageDatas, setLanguageDatas] = useState<string[]>(['한국어', 'English', '日本語'])
+  // const [languageDatas, setLanguageDatas] = useState<string[]>(['한국어', 'English', '日本語'])
+
+  const [languageDatas, setLanguageDatas] = useState([
+    { id: 1, name: '한국어' },
+    { id: 2, name: 'English' },
+    { id: 3, name: '日本語' },
+  ])
 
   // 자격증 데이터
-  const [CredentialsDatas, setCredentialsDatas] = useState<CredentialsData>({
-    japanesse: ['N1', 'N2', 'N3', 'N4', 'N5'],
-    english: ['900', '800', '700', '600', '500'],
+  const [CredentialsDatas, setCredentialsDatas] = useState({
+    english: [
+      { id: 7, name: '900' },
+      { id: 8, name: '800' },
+      { id: 9, name: '700' },
+      { id: 10, name: '600' },
+      { id: 11, name: '500' },
+    ],
+    japanesse: [
+      { id: 12, name: 'N1' },
+      { id: 13, name: 'N2' },
+      { id: 14, name: 'N3' },
+      { id: 15, name: 'N4' },
+      { id: 16, name: 'N5' },
+    ],
   })
 
   // 평점
@@ -212,7 +225,7 @@ const useGuideStateMethods = () => {
     isAllChecked,
     isManChecked,
     isWomanChecked,
-    regionsDatas,
+    areasDatas,
     onChangeRange,
     onClickGender,
     onChangeCheckBox,
