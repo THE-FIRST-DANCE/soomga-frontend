@@ -19,19 +19,19 @@ const AuthPresence: IsAuthActive = {
 const RequestGuidePage = () => {
   const navigate = useNavigate()
 
-  const { regionsDatas, languageDatas, CredentialsDatas } = useGuideStateMethods()
+  const { areasDatas, languageDatas, CredentialsDatas } = useGuideStateMethods()
 
   // 지역
   const [isRegionClick, setIsRegionClick] = useState<boolean>(true) // 토굴
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]) // 선택된 지역
+  const [selectedRegions, setSelectedRegions] = useState<number[]>([]) // 선택된 지역
 
   // 언어
   const [isLanguageClick, setIsLanguageClick] = useState<boolean>(true) //토굴
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]) // 선택된 언어
+  const [selectedLanguages, setSelectedLanguages] = useState<number[]>([]) // 선택된 언어
 
   // 자격증
   const [isCredentialsClick, setIsCredentialsClick] = useState<boolean>(true) //  토굴
-  const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]) // 선택된 자격증
+  const [selectedCredentials, setSelectedCredentials] = useState<number[]>([]) // 선택된 자격증
 
   const handleSubmit = () => {
     window.scrollTo({ top: 0 })
@@ -59,22 +59,22 @@ const RequestGuidePage = () => {
 
           {isRegionClick && (
             <RegionDropWrapper isRegionClick={isRegionClick}>
-              {regionsDatas.map((region) => {
-                const isSelected = selectedRegions.includes(region)
+              {areasDatas.map((area) => {
+                const isSelected = selectedRegions.includes(area.id)
 
                 return (
                   <RegionIcon
-                    key={region}
+                    key={`areas${area.id}`}
                     isSelected={isSelected}
                     onClick={() => {
                       {
-                        selectedRegions.includes(region)
-                          ? setSelectedRegions((prev) => prev.filter((item) => item !== region)) //  있으면 제거
-                          : setSelectedRegions((prev) => [...prev, region]) // 없으면 추가
+                        selectedRegions.includes(area.id)
+                          ? setSelectedRegions((prev) => prev.filter((item) => item !== area.id)) //  있으면 제거
+                          : setSelectedRegions((prev) => [...prev, area.id]) // 없으면 추가
                       }
                     }}
                   >
-                    {region}
+                    {area.name}
                   </RegionIcon>
                 )
               })}
@@ -100,21 +100,21 @@ const RequestGuidePage = () => {
             {isLanguageClick && (
               <RegionDropWrapper isRegionClick={isLanguageClick}>
                 {languageDatas.map((language) => {
-                  const isSelected = selectedLanguages.includes(language)
+                  const isSelected = selectedLanguages.includes(language.id)
 
                   return (
                     <RegionIcon
-                      key={language}
+                      key={language.id}
                       isSelected={isSelected}
                       onClick={() => {
                         {
-                          selectedLanguages.includes(language)
-                            ? setSelectedLanguages((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                            : setSelectedLanguages((prev) => [...prev, language]) // 없으면 추가
+                          selectedLanguages.includes(language.id)
+                            ? setSelectedLanguages((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                            : setSelectedLanguages((prev) => [...prev, language.id]) // 없으면 추가
                         }
                       }}
                     >
-                      {language}
+                      {language.name}
                     </RegionIcon>
                   )
                 })}
@@ -148,21 +148,21 @@ const RequestGuidePage = () => {
 
                 <Scores>
                   {CredentialsDatas.japanesse.map((language) => {
-                    const isSelected = selectedCredentials.includes(language)
+                    const isSelected = selectedCredentials.includes(language.id)
 
                     return (
                       <Credential
-                        key={language}
+                        key={language.id}
                         isSelected={isSelected}
                         onClick={() => {
                           {
-                            selectedCredentials.includes(language)
-                              ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                              : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                            selectedCredentials.includes(language.id)
+                              ? setSelectedCredentials((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                              : setSelectedCredentials((prev) => [...prev, language.id]) // 없으면 추가
                           }
                         }}
                       >
-                        {language}
+                        {language.name}
                       </Credential>
                     )
                   })}
@@ -173,21 +173,21 @@ const RequestGuidePage = () => {
 
                 <Scores>
                   {CredentialsDatas.english.map((language) => {
-                    const isSelected = selectedCredentials.includes(language)
+                    const isSelected = selectedCredentials.includes(language.id)
 
                     return (
                       <Credential
-                        key={language}
+                        key={language.id}
                         isSelected={isSelected}
                         onClick={() => {
                           {
-                            selectedCredentials.includes(language)
-                              ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                              : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                            selectedCredentials.includes(language.id)
+                              ? setSelectedCredentials((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                              : setSelectedCredentials((prev) => [...prev, language.id]) // 없으면 추가
                           }
                         }}
                       >
-                        {language}
+                        {language.name}
                       </Credential>
                     )
                   })}
@@ -197,7 +197,8 @@ const RequestGuidePage = () => {
           </Container>
         </CredentialsContainer>
 
-        {/* 4. 인증 */}
+        {/* FIXME: 처리 결과에 따라 색 다시 넣기 */}
+        {/*  4. 인증 */}
         <AuthContainer>
           <Title>인증</Title>
           <AuthWrapper>
