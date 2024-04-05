@@ -1,5 +1,5 @@
 import MagnifieirIcon from 'components/home/MagnifieirIcon'
-import { styled } from 'styled-components'
+import styled from 'styled-components'
 import { useState } from 'react'
 import useGuideStateMethods from '../../components/guide/list/leftSection/GuidePageUtils'
 import RangeComponent from '../../components/guide/list/leftSection/RangeComponent'
@@ -8,26 +8,28 @@ import CheckboxComponent from '../../components/guide/list/leftSection/CheckboxC
 import Star from 'components/icons/Star'
 import RatingFakeCheckbox from '../../components/guide/list/leftSection/RatingFakeCheckbox'
 import GuideCard from '../../components/guide/list/rightSection/GuideCard'
+import { useRecoilState } from 'recoil'
+import { selectedDatasState } from 'state/store/SelecteddatasAtom'
 
 const GuidePage = () => {
   const {
     /* useState */
     age,
-    ageRange,
+    ageRange, // 나이
     temperature,
-    temperatureRange,
+    temperatureRange, // 온도
     guideCount,
-    guideCountRange,
-    isAllChecked,
-    isManChecked,
-    isWomanChecked,
+    guideCountRange, // 가이드 횟수
+    isAllChecked, // 모두
+    isManChecked, // 남자
+    isWomanChecked, // 여자
     regionsDatas,
     onChangeRange,
     onClickGender,
     onChangeCheckBox,
     languageDatas,
     CredentialsDatas,
-    isRatingChecked,
+    isRatingChecked, // 평점
     setIsRatingChecked,
   } = useGuideStateMethods()
 
@@ -43,8 +45,19 @@ const GuidePage = () => {
   const [isCredentialsClick, setIsCredentialsClick] = useState<boolean>(true) //  토굴
   const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]) // 선택된 자격증
 
-  // 평점
-  const [selectedRating, setSelectedRating] = useState<string[]>([]) // 선택된 자격증
+  /* 선택된 데이터들 */
+  let selectedDatasObj = {
+    age: ageRange,
+    temperature: temperatureRange,
+    guideCount: guideCountRange,
+    sex: { all: isAllChecked, male: isManChecked, female: isWomanChecked },
+    regions: selectedRegions,
+    languages: selectedLanguages,
+    credentials: selectedCredentials,
+    rating: isRatingChecked,
+  }
+
+  const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
 
   return (
     <>
@@ -57,7 +70,6 @@ const GuidePage = () => {
             <MagnifieirIcon width="40px" height="40px" background-color="red" />
             <span className="searchLetter">Search</span>
           </SearchTagContainer>
-
           {/* 🟠 2. 범위 선택 (range) : 나이 | 온도 | 가이드 횟수  🟠  */}
           <Layout>
             {/* 1. Age */}
@@ -302,14 +314,10 @@ const GuidePage = () => {
                         id={`star${totalindex}`}
                         name={`star${totalindex}`}
                         style={{ display: 'none' }}
-                        onClick={(e) => {
-                          console.log(totalindex, '개 별 클릭')
-                        }}
                       />
                       <RatingFakeCheckbox
                         name={`star${totalindex}`}
                         onClick={() => {
-                          console.log('isRatingChecked: ', isRatingChecked)
                           setIsRatingChecked((prevState) => {
                             const newState = [...prevState]
                             newState[totalindex] = !newState[totalindex]
@@ -322,9 +330,9 @@ const GuidePage = () => {
                       <div>
                         {Array.from({ length: totalindex + 1 }, (_, index) => (
                           <label
+                            key={index}
                             htmlFor={`star${totalindex}`}
                             onClick={() => {
-                              console.log('isRatingChecked: ', isRatingChecked)
                               setIsRatingChecked((prevState) => {
                                 const newState = [...prevState]
                                 newState[totalindex] = !newState[totalindex]
@@ -342,6 +350,19 @@ const GuidePage = () => {
               </Container>
             </RadioButtonsContainer>
           </Layout>
+
+          {/*  ⭐️ 버튼  ⭐️*/}
+          <BtnWrapper>
+            <SearchBtn
+              onClick={() => {
+                setSelectedDatas((prev) => {
+                  return { ...prev, ...selectedDatasObj }
+                })
+              }}
+            >
+              검색
+            </SearchBtn>
+          </BtnWrapper>
         </LeftSection>
 
         {/* 🟢🟢🟢 오른쪽 🟢🟢🟢 */}
@@ -573,12 +594,32 @@ const StartCheckBoxContainer = styled.div`
   background-color: #fff;
 `
 
+const BtnWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+`
+
+const SearchBtn = styled.button`
+  cursor: pointer;
+  width: 100%;
+  height: 50px;
+  font-size: 20px;
+  font-weight: 700;
+  border: 3px solid var(--bs-gray);
+  border-radius: 0.6rem;
+  &:active {
+    transform: translateX(0.1rem) translateY(0.1rem);
+  }
+`
+
 /* 🟡 오른쪽 */
 const RightSection = styled.div`
   width: 70%;
   height: 100%;
   padding: 2rem;
   box-sizing: border-box;
-  /* background-color: #3ca7ff; */
-  /* display: flex; */
 `
