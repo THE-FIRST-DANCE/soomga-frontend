@@ -9,19 +9,8 @@ export const api = axios.create({
   withCredentials: true,
 })
 
-/* 1. 가이드 리스트 기본 */
-export const getGuideList = async ({ cursor, limit }: { cursor?: number; limit?: number }) => {
-  const response = await api.get<Pagination<GuideProfile>>(`guides/search`, {
-    params: {
-      cursor,
-      limit,
-    },
-  })
-  return response.data
-}
-
-/* 2. 조건 선택 가이드 리스트 */
-export const getGuideListBySelected = async ({
+/*  🟡 1. 가이드 리스트 요청 🟡 */
+export const getGuideList = async ({
   cursor,
   limit,
   requestParams,
@@ -45,6 +34,8 @@ export const getGuideListBySelected = async ({
       rating,
     },
   })
+  console.log('🟡🟡 response API 보낼 내용', response)
+
   return response.data
 }
 
