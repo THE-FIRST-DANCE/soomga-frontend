@@ -1,6 +1,7 @@
 import { atom } from 'recoil'
 
 export interface SelecteddatasAtomType {
+  isClick: boolean
   age: string[] | number[]
   temperature: string[]
   guideCount: string[]
@@ -14,6 +15,7 @@ export interface SelecteddatasAtomType {
 export const selectedDatasState = atom<SelecteddatasAtomType>({
   key: 'selectedDatasState',
   default: {
+    isClick: false,
     age: [],
     temperature: [],
     guideCount: [],
