@@ -34,7 +34,6 @@ const useGuideStateMethods = () => {
 
   // 지역 데이터
   const [areasDatas, setRegionsDatas] = useState([])
-  // console.log('🟢🟢🟢🟢🟢🟢🟢🟢🟢areasDatas: ', areasDatas)
 
   // 언어 데이터
   // const [languageDatas, setLanguageDatas] = useState<string[]>(['한국어', 'English', '日本語'])
@@ -171,12 +170,12 @@ const useGuideStateMethods = () => {
         setManChecked(false)
         setWomanChecked(false)
         break
-      case 'man':
+      case 'MALE':
         setManChecked(!isManChecked)
         setAllChecked(false)
         setWomanChecked(false)
         break
-      case 'woman':
+      case 'FEMALE':
         setWomanChecked(!isWomanChecked)
         setAllChecked(false)
         setManChecked(false)
@@ -197,14 +196,14 @@ const useGuideStateMethods = () => {
         setManChecked(false)
         setWomanChecked(false)
         break
-      case 'man':
-        console.log('man 선택됨')
+      case 'MALE':
+        console.log('MALE 선택됨')
         setManChecked(checked)
         setAllChecked(false)
         setWomanChecked(false)
         break
-      case 'woman':
-        console.log('woman 선택됨')
+      case 'FEMALE':
+        console.log('FEMALE 선택됨')
         setWomanChecked(checked)
         setAllChecked(false)
         setManChecked(false)
