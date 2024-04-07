@@ -9,7 +9,7 @@ import MainPage from 'pages/home'
 import LoginSignupPage from 'pages/login'
 import { Routes, Route, Navigate } from 'react-router-dom'
 
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import RedirectPage from 'pages/redirect'
 import ItineraryPage from 'pages/itinerary'
@@ -21,11 +21,19 @@ import PostCreate from 'components/recommendations/PostCreate'
 import PostEdit from 'components/recommendations/PostEdit'
 import MyPage from 'components/myPageCommon'
 import RequestGuide from 'components/myPageCommon/RequestGuide'
+import { useEffect } from 'react'
+import { getCookie } from 'utils/cookie'
 
 const Router = () => {
   // 토큰 관리
   // const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
-  const recoilToken = useRecoilValue(AccessTokenAtom)
+  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+
+  /* 🟡🟡🟡 기본적으로 토큰이 들어있는지 토큰 상태를 브라우저에서 가져와서 확인 🟡🟡🟡 */
+  useEffect(() => {
+    const accessToken = getCookie('accessToken')
+    setRecoilToken({ ...recoilToken, token: !!accessToken })
+  }, [])
 
   return (
     <>
