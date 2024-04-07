@@ -59,6 +59,7 @@ const GuidePage = () => {
     credentials: selectedCredentials,
     rating: isRatingChecked,
   }
+  console.log('🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢selectedDatasObj: ', selectedDatasObj)
 
   return (
     <>
@@ -80,7 +81,8 @@ const GuidePage = () => {
               value={age}
               name="age"
               max="70"
-              min="10"
+              // min="10"
+              min="0"
               step="10"
               onChange={onChangeRange}
             />
@@ -92,7 +94,7 @@ const GuidePage = () => {
               value={temperature}
               name="temperature"
               max="70"
-              min="10"
+              min="0"
               step="10"
               onChange={onChangeRange}
             />
@@ -104,7 +106,7 @@ const GuidePage = () => {
               value={guideCount}
               name="guideCount"
               max="80"
-              min="10"
+              min="0"
               step="10"
               onChange={onChangeRange}
             />

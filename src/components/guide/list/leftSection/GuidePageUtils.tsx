@@ -6,14 +6,19 @@ export interface CredentialsData {
   english: string[]
 }
 const useGuideStateMethods = () => {
-  const [age, setAge] = useState<number>(10) // 나이
-  const [ageRange, setAgeRange] = useState<number[]>([10, 19])
+  const [age, setAge] = useState<number>(0) // 나이
+  // const [age, setAge] = useState<number>(10) // 나이
+  // const [ageRange, setAgeRange] = useState<number[]>([10, 19])
+  const [ageRange, setAgeRange] = useState<number[]>([])
 
-  const [temperature, setTemperature] = useState<number>(10) // 온도
-  const [temperatureRange, setTemperatureRange] = useState<number[]>([10, 19])
+  const [temperature, setTemperature] = useState<number>(0) // 온도
+  // const [temperature, setTemperature] = useState<number>(10) // 온도
+  // const [temperatureRange, setTemperatureRange] = useState<number[]>([10, 19])
+  const [temperatureRange, setTemperatureRange] = useState<number[]>([])
 
   const [guideCount, setGuideCount] = useState(0) // 가이드 횟수
-  const [guideCountRange, setGuideCountRange] = useState<number[]>([0, 9])
+  // const [guideCountRange, setGuideCountRange] = useState<number[]>([0, 9])
+  const [guideCountRange, setGuideCountRange] = useState<number[]>([])
 
   // 성별 체크 박스
   const [isAllChecked, setAllChecked] = useState(false) // 전체
@@ -68,12 +73,27 @@ const useGuideStateMethods = () => {
   // 범위 선택
   const onChangeRange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let { value, name } = e.target
+
+    if (value === '') {
+      if (name === 'age') {
+        setAgeRange([])
+      } else if (name === 'temperature') {
+        setTemperatureRange([])
+      } else if (name === 'guideCount') {
+        setGuideCountRange([])
+      }
+      return
+    }
+
     const intedValue = parseInt(value)
 
     /* 🟡 나이 */
     if (name === 'age') {
       setAge(intedValue)
       switch (intedValue) {
+        case 0:
+          setAgeRange([])
+          break
         case 10:
           setAgeRange([10, 19])
           break
@@ -102,6 +122,9 @@ const useGuideStateMethods = () => {
     } else if (name === 'temperature') {
       setTemperature(intedValue)
       switch (intedValue) {
+        case 0:
+          setTemperatureRange([])
+          break
         case 10:
           setTemperatureRange([10, 19])
           break
@@ -130,6 +153,9 @@ const useGuideStateMethods = () => {
     } else if (name === 'guideCount') {
       setGuideCount(intedValue)
       switch (intedValue) {
+        case 0:
+          setGuideCountRange([])
+          break
         case 10:
           setGuideCountRange([0, 5])
           break
