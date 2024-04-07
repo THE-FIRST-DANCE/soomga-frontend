@@ -54,7 +54,7 @@ const LangeTextWrapper = styled.div`
   /* width: 40%; */
   width: 80%;
   justify-content: space-around;
-  background-color: #6e51e3;
+  /* background-color: #6e51e3; */
 `
 
 // 범위 텍스트
