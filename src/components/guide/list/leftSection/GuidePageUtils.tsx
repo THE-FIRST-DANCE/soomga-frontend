@@ -5,6 +5,11 @@ export interface CredentialsData {
   japanesse: string[]
   english: string[]
 }
+
+interface Area {
+  id: number
+  name: string
+}
 const useGuideStateMethods = () => {
   const [age, setAge] = useState<number>(0) // 나이
   // const [age, setAge] = useState<number>(10) // 나이
@@ -38,7 +43,8 @@ const useGuideStateMethods = () => {
   }, [])
 
   // 지역 데이터
-  const [areasDatas, setRegionsDatas] = useState([])
+  const [areasDatas, setRegionsDatas] = useState<Area[]>([])
+  console.log('🟢🟢불러온 지역 데이터: ', areasDatas)
 
   // 언어 데이터
   // const [languageDatas, setLanguageDatas] = useState<string[]>(['한국어', 'English', '日本語'])
