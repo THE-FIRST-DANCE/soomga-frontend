@@ -17,19 +17,19 @@ const AuthPresence: IsAuthActive = {
 }
 
 const Guide = () => {
-  const { regionsDatas, languageDatas, CredentialsDatas } = useGuideStateMethods()
+  const { areasDatas, languageDatas, CredentialsDatas } = useGuideStateMethods()
 
   // 지역
   const [isRegionClick, setIsRegionClick] = useState<boolean>(true) // 토굴
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]) // 선택된 지역
+  const [selectedRegions, setSelectedRegions] = useState<number[]>([]) // 선택된 지역
 
   // 언어
   const [isLanguageClick, setIsLanguageClick] = useState<boolean>(true) //토굴
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]) // 선택된 언어
+  const [selectedLanguages, setSelectedLanguages] = useState<number[]>([]) // 선택된 언어
 
   // 자격증
   const [isCredentialsClick, setIsCredentialsClick] = useState<boolean>(true) //  토굴
-  const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]) // 선택된 자격증
+  const [selectedCredentials, setSelectedCredentials] = useState<number[]>([]) // 선택된 자격증
 
   return (
     <Layout>
@@ -48,29 +48,28 @@ const Guide = () => {
 
         {isRegionClick && (
           <RegionDropWrapper isRegionClick={isRegionClick}>
-            {regionsDatas.map((region) => {
-              const isSelected = selectedRegions.includes(region)
+            {areasDatas.map((region) => {
+              const isSelected = selectedRegions.includes(region.id)
 
               return (
                 <RegionIcon
-                  key={region}
+                  key={region.id}
                   isSelected={isSelected}
                   onClick={() => {
                     {
-                      selectedRegions.includes(region)
-                        ? setSelectedRegions((prev) => prev.filter((item) => item !== region)) //  있으면 제거
-                        : setSelectedRegions((prev) => [...prev, region]) // 없으면 추가
+                      selectedRegions.includes(region.id)
+                        ? setSelectedRegions((prev) => prev.filter((item) => item.id !== region.id)) //  있으면 제거
+                        : setSelectedRegions((prev) => [...prev, region.id]) // 없으면 추가
                     }
                   }}
                 >
-                  {region}
+                  {region.name}
                 </RegionIcon>
               )
             })}
           </RegionDropWrapper>
         )}
       </Container>
-
       {/* 🟠  2. 언어 선택 : 한국어 | 영어 | 일본어 🟠   */}
       <LanguageContainer>
         {/* 하얀색으로 감싸는 부분 */}
@@ -89,21 +88,21 @@ const Guide = () => {
           {isLanguageClick && (
             <RegionDropWrapper isRegionClick={isLanguageClick}>
               {languageDatas.map((language) => {
-                const isSelected = selectedLanguages.includes(language)
+                const isSelected = selectedLanguages.includes(language.id)
 
                 return (
                   <RegionIcon
-                    key={language}
+                    key={language.id}
                     isSelected={isSelected}
                     onClick={() => {
                       {
-                        selectedLanguages.includes(language)
-                          ? setSelectedLanguages((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                          : setSelectedLanguages((prev) => [...prev, language]) // 없으면 추가
+                        selectedLanguages.includes(language.id)
+                          ? setSelectedLanguages((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                          : setSelectedLanguages((prev) => [...prev, language.id]) // 없으면 추가
                       }
                     }}
                   >
-                    {language}
+                    {language.name}
                   </RegionIcon>
                 )
               })}
@@ -111,7 +110,6 @@ const Guide = () => {
           )}
         </Container>
       </LanguageContainer>
-
       {/* 🟠 3. 자격증 선택 :   영어 | 일본어 🟠   */}
       <CredentialsContainer>
         {/* 하얀색으로 감싸는 부분 */}
@@ -139,21 +137,21 @@ const Guide = () => {
                     <div style={{ width: '100%', height: '1rem' }}></div> */}
               <Scores>
                 {CredentialsDatas.japanesse.map((language) => {
-                  const isSelected = selectedCredentials.includes(language)
+                  const isSelected = selectedCredentials.includes(language.id)
 
                   return (
                     <Credential
-                      key={language}
+                      key={language.id}
                       isSelected={isSelected}
                       onClick={() => {
                         {
-                          selectedCredentials.includes(language)
-                            ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                            : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                          selectedCredentials.includes(language.id)
+                            ? setSelectedCredentials((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                            : setSelectedCredentials((prev) => [...prev, language.id]) // 없으면 추가
                         }
                       }}
                     >
-                      {language}
+                      {language.name}
                     </Credential>
                   )
                 })}
@@ -167,21 +165,21 @@ const Guide = () => {
                     <div style={{ width: '100%', height: '1rem' }}></div> */}
               <Scores>
                 {CredentialsDatas.english.map((language) => {
-                  const isSelected = selectedCredentials.includes(language)
+                  const isSelected = selectedCredentials.includes(language.id)
 
                   return (
                     <Credential
-                      key={language}
+                      key={language.id}
                       isSelected={isSelected}
                       onClick={() => {
                         {
-                          selectedCredentials.includes(language)
-                            ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                            : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                          selectedCredentials.includes(language.id)
+                            ? setSelectedCredentials((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                            : setSelectedCredentials((prev) => [...prev, language.id]) // 없으면 추가
                         }
                       }}
                     >
-                      {language}
+                      {language.name}
                     </Credential>
                   )
                 })}
@@ -190,17 +188,15 @@ const Guide = () => {
           )}
         </Container>
       </CredentialsContainer>
-
       {/* 4. 인증 */}
       <AuthContainer>
         <Title>인증</Title>
         <AuthWrapper>
-          <AuthType isAuthActive={AuthPresence.phone}>휴대폰 인증</AuthType>
-          <AuthType isAuthActive={AuthPresence.idCard}>신분증 인증</AuthType>
-          <AuthType isAuthActive={AuthPresence.account}>계좌 인증</AuthType>
+          <AuthType $isAuthActive={AuthPresence.phone}>휴대폰 인증</AuthType>
+          <AuthType $isAuthActive={AuthPresence.idCard}>신분증 인증</AuthType>
+          <AuthType $isAuthActive={AuthPresence.account}>계좌 인증</AuthType>
         </AuthWrapper>
       </AuthContainer>
-
       {/* 5. 소셜 정보 */}
       <SnsInfoContainer>
         <Title>소셜 정보</Title>
@@ -213,6 +209,10 @@ const Guide = () => {
           <SnsInfoInput placeholder="URL" />
         </SnsInfoWrapper>
       </SnsInfoContainer>
+      {/* 6. 가이드 버튼 */}
+      <SubmitBtnWrapper>
+        <SubmitBtn>Submit</SubmitBtn>
+      </SubmitBtnWrapper>
     </Layout>
   )
 }
@@ -375,12 +375,12 @@ const AuthWrapper = styled.div`
   padding: 1rem;
 `
 
-const AuthType = styled.span<{ isAuthActive: boolean }>`
-  color: ${({ isAuthActive }) => (isAuthActive ? 'black' : 'lightgray')};
+const AuthType = styled.span<{ $isAuthActive: boolean }>`
+  color: ${({ $isAuthActive }) => ($isAuthActive ? 'black' : 'lightgray')};
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 5px;
-  border: 3px solid ${({ isAuthActive }) => (isAuthActive ? 'black' : 'lightgray')};
+  border: 3px solid ${({ $isAuthActive }) => ($isAuthActive ? 'black' : 'lightgray')};
 
   grid-column: span 4;
   padding: 0.5rem;
@@ -410,6 +410,24 @@ const SnsInfoInput = styled.input`
   box-sizing: border-box;
 `
 
+// 가이드 버튼
+
+const SubmitBtnWrapper = styled(FlexCenterd)`
+  background-color: #f7f76e;
+  width: 100%;
+  margin-top: 1rem;
+`
+const SubmitBtn = styled.button`
+  width: 6rem;
+  height: 2.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    color: var(--color-original);
+    transition: all 0.3s;
+  }
+`
 // 플랜 리스트
 const PlansContainer = styled(Container)`
   background-color: #f7f76e;
