@@ -96,7 +96,7 @@ const Following = () => {
           {/*  */}
           {userTestDatas.map((data) => {
             return (
-              <CardLayout onClick={() => navigate(`/guides/detail/${data.id}`)}>
+              <CardLayout key={data.id} onClick={() => navigate(`/guides/detail/${data.id}`)}>
                 <CardContainer>
                   {/* FIXME: 온도 */}
                   <Temperature>{`${data.temperature}°C`}</Temperature>
@@ -104,7 +104,7 @@ const Following = () => {
                   <LeftLayout>
                     <UserImageLayout>
                       <ImageWrapper>
-                        <GenderMarker sex={data.sex} />
+                        <GenderMarker $sex={data.sex} />
                         {/* FIXME: 이미지 */}
                         {data.image ? (
                           <img src={data.image} alt="userImage" />
@@ -145,7 +145,7 @@ const Following = () => {
                     <RightBottom>
                       {/* FIXME: 태그 */}
                       {data.tags.map((tag) => (
-                        <Tag>#{tag}</Tag>
+                        <Tag key={tag}>#{tag}</Tag>
                       ))}
                     </RightBottom>
                   </RightLayout>
@@ -298,11 +298,11 @@ const UserImageLayout = styled.div`
 `
 
 // 성별에 따른 색상 변경
-const GenderMarker = styled.div<{ sex: string }>`
+const GenderMarker = styled.div<{ $sex: string }>`
   position: absolute;
   width: 1rem;
   height: 1rem;
-  background-color: ${({ sex }) => (sex === 'male' ? '#4bb3ff' : '#ff8090')};
+  background-color: ${({ $sex }) => ($sex === 'male' ? '#4bb3ff' : '#ff8090')};
   /* background-color: #4bb3ff; */ // 남자
   /* background-color: #ff8090; */ // 여자
   border-radius: 50%;
