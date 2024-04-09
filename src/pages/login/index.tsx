@@ -64,9 +64,12 @@ const LoginSignupPage = () => {
   // FIXME:Post 요청할 때 보내기
   const onSubmitForLogin = async (data: LoginForm) => {
     console.log(data)
+
     try {
+      localStorage.setItem('userInfo', JSON.stringify(data)) // 현재 유저 정보 넣기
+      console.log('💛NowuserInfo ', JSON.parse(localStorage.getItem('userInfo') ?? ''))
+
       const loginResult = await getLogin(data.email, data.password)
-      console.log(loginResult.message)
       const result = await getCookie('accessToken')
       setRecoilToken({ ...recoilToken, token: !!result })
       console.log('리코일 내부 토큰: ', recoilToken)
