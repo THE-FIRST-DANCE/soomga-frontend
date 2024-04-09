@@ -14,6 +14,9 @@ export interface userInfoProps {
 const LeftInfo = ({ name, mail, nickName, phonNum, password }: userInfoProps) => {
   // const setRequestOpend = useSetRecoilState<RequestGuideType>(RequestGuide)
   const setRequestOpend = useSetRecoilState(RequestGuide)
+  let userInfo = JSON.parse(localStorage.getItem('userInfo') ?? '')
+  console.log('🩷[myPageCommon.LeftInfo] 현재 로그인 유저 정보 :', userInfo)
+
   return (
     <>
       <InfoContainer>
@@ -24,7 +27,7 @@ const LeftInfo = ({ name, mail, nickName, phonNum, password }: userInfoProps) =>
           </UserImageLayout>
         </GuideImageWrapper>
         <Name>{name}</Name>
-        <InfoMail>{mail}</InfoMail>
+        <InfoMail>{userInfo.email}</InfoMail>
 
         <InfoBox>
           <InfoName>닉네임</InfoName>
