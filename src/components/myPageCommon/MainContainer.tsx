@@ -6,6 +6,7 @@ import Following from './Following'
 import Planing from './Planing'
 import Guide from './Guide'
 import RequestGuidePage from './RequestGuide'
+import { userInfoProps } from './LeftInfo'
 
 interface TagOpenStateProps {
   basicInfo: boolean
@@ -15,6 +16,7 @@ interface TagOpenStateProps {
   planing: boolean
   guide: boolean
   requetGuide: boolean
+  userInformation: userInfoProps
 }
 
 const MainContainer = ({
@@ -25,6 +27,7 @@ const MainContainer = ({
   planing,
   guide,
   requetGuide,
+  userInformation,
 }: TagOpenStateProps) => {
   console.log(requetGuide)
 
@@ -34,8 +37,8 @@ const MainContainer = ({
       {basicInfo && (
         <BasicInfo
           name={'이다슬'}
-          mail={'suhyon0527@naver.com'}
-          nickName={'젤이'}
+          email={userInformation.email}
+          nickname={userInformation.nickname}
           phonNum={'010-1234-1234'}
           password={'12312312'}
         />
