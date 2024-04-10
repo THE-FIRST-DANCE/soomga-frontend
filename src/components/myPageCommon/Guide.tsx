@@ -3,6 +3,7 @@ import { styled } from 'styled-components'
 import useGuideStateMethods from '../../components/guide/list/leftSection/GuidePageUtils'
 import InstagramIcon from 'components/icons/InstagramIcon'
 import XIcon from 'components/icons/XIcon'
+import { toast } from 'react-toastify'
 
 interface IsAuthActive {
   phone: boolean
@@ -30,6 +31,11 @@ const Guide = () => {
   // 자격증
   const [isCredentialsClick, setIsCredentialsClick] = useState<boolean>(true) //  토굴
   const [selectedCredentials, setSelectedCredentials] = useState<number[]>([]) // 선택된 자격증
+
+  const handleSubmit = () => {
+    window.scrollTo({ top: 0 })
+    toast.success('가이드 정보 수정이 완료되었습니다!')
+  }
 
   return (
     <Layout>
@@ -211,7 +217,7 @@ const Guide = () => {
       </SnsInfoContainer>
       {/* 6. 가이드 버튼 */}
       <SubmitBtnWrapper>
-        <SubmitBtn>Submit</SubmitBtn>
+        <SubmitBtn onClick={handleSubmit}>Submit</SubmitBtn>
       </SubmitBtnWrapper>
     </Layout>
   )
@@ -413,7 +419,6 @@ const SnsInfoInput = styled.input`
 // 가이드 버튼
 
 const SubmitBtnWrapper = styled(FlexCenterd)`
-  background-color: #f7f76e;
   width: 100%;
   margin-top: 1rem;
 `
