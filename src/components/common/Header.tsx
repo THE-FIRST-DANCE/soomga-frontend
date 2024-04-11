@@ -174,6 +174,8 @@ const Header = () => {
                       getRemoveCookie('accessToken')
                       setRecoilToken({ token: false })
                       // setRecoilToken((prev) => !prev)
+
+                      localStorage.setItem('userInfo', JSON.stringify({}))
                       toast.success('로그아웃 되었습니다')
                       navigate('/')
                     }}
