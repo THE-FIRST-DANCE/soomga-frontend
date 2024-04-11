@@ -1,5 +1,7 @@
 import useGuideStateMethods from 'components/guide/list/leftSection/GuidePageUtils'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { styled } from 'styled-components'
 
 interface IsAuthActive {
@@ -15,19 +17,27 @@ const AuthPresence: IsAuthActive = {
 }
 
 const RequestGuidePage = () => {
-  const { regionsDatas, languageDatas, CredentialsDatas } = useGuideStateMethods()
+  const navigate = useNavigate()
+
+  const { areasDatas, languageDatas, CredentialsDatas } = useGuideStateMethods()
 
   // 지역
   const [isRegionClick, setIsRegionClick] = useState<boolean>(true) // 토굴
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]) // 선택된 지역
+  const [selectedRegions, setSelectedRegions] = useState<number[]>([]) // 선택된 지역
 
   // 언어
   const [isLanguageClick, setIsLanguageClick] = useState<boolean>(true) //토굴
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]) // 선택된 언어
+  const [selectedLanguages, setSelectedLanguages] = useState<number[]>([]) // 선택된 언어
 
   // 자격증
   const [isCredentialsClick, setIsCredentialsClick] = useState<boolean>(true) //  토굴
-  const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]) // 선택된 자격증
+  const [selectedCredentials, setSelectedCredentials] = useState<number[]>([]) // 선택된 자격증
+
+  const handleSubmit = () => {
+    window.scrollTo({ top: 0 })
+    navigate('/')
+    toast.success('가이드 신청이 완료되었습니다!')
+  }
 
   return (
     <>
@@ -49,22 +59,22 @@ const RequestGuidePage = () => {
 
           {isRegionClick && (
             <RegionDropWrapper isRegionClick={isRegionClick}>
-              {regionsDatas.map((region) => {
-                const isSelected = selectedRegions.includes(region)
+              {areasDatas.map((area) => {
+                const isSelected = selectedRegions.includes(area.id)
 
                 return (
                   <RegionIcon
-                    key={region}
+                    key={`areas${area.id}`}
                     isSelected={isSelected}
                     onClick={() => {
                       {
-                        selectedRegions.includes(region)
-                          ? setSelectedRegions((prev) => prev.filter((item) => item !== region)) //  있으면 제거
-                          : setSelectedRegions((prev) => [...prev, region]) // 없으면 추가
+                        selectedRegions.includes(area.id)
+                          ? setSelectedRegions((prev) => prev.filter((item) => item !== area.id)) //  있으면 제거
+                          : setSelectedRegions((prev) => [...prev, area.id]) // 없으면 추가
                       }
                     }}
                   >
-                    {region}
+                    {area.name}
                   </RegionIcon>
                 )
               })}
@@ -90,21 +100,21 @@ const RequestGuidePage = () => {
             {isLanguageClick && (
               <RegionDropWrapper isRegionClick={isLanguageClick}>
                 {languageDatas.map((language) => {
-                  const isSelected = selectedLanguages.includes(language)
+                  const isSelected = selectedLanguages.includes(language.id)
 
                   return (
                     <RegionIcon
-                      key={language}
+                      key={language.id}
                       isSelected={isSelected}
                       onClick={() => {
                         {
-                          selectedLanguages.includes(language)
-                            ? setSelectedLanguages((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                            : setSelectedLanguages((prev) => [...prev, language]) // 없으면 추가
+                          selectedLanguages.includes(language.id)
+                            ? setSelectedLanguages((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                            : setSelectedLanguages((prev) => [...prev, language.id]) // 없으면 추가
                         }
                       }}
                     >
-                      {language}
+                      {language.name}
                     </RegionIcon>
                   )
                 })}
@@ -135,54 +145,49 @@ const RequestGuidePage = () => {
               <CredentialDropWrapper>
                 {/* 일본어 */}
                 <LanguageTitle>日本語🇯🇵</LanguageTitle>
-                {/* <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div> */}
+
                 <Scores>
                   {CredentialsDatas.japanesse.map((language) => {
-                    const isSelected = selectedCredentials.includes(language)
+                    const isSelected = selectedCredentials.includes(language.id)
 
                     return (
                       <Credential
-                        key={language}
+                        key={language.id}
                         isSelected={isSelected}
                         onClick={() => {
                           {
-                            selectedCredentials.includes(language)
-                              ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                              : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                            selectedCredentials.includes(language.id)
+                              ? setSelectedCredentials((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                              : setSelectedCredentials((prev) => [...prev, language.id]) // 없으면 추가
                           }
                         }}
                       >
-                        {language}
+                        {language.name}
                       </Credential>
                     )
                   })}
                 </Scores>
-                {/* <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div> */}
+
                 {/* 영어 */}
                 <LanguageTitle>English 🇬🇧 </LanguageTitle>
-                {/* <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div> */}
+
                 <Scores>
                   {CredentialsDatas.english.map((language) => {
-                    const isSelected = selectedCredentials.includes(language)
+                    const isSelected = selectedCredentials.includes(language.id)
 
                     return (
                       <Credential
-                        key={language}
+                        key={language.id}
                         isSelected={isSelected}
                         onClick={() => {
                           {
-                            selectedCredentials.includes(language)
-                              ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                              : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                            selectedCredentials.includes(language.id)
+                              ? setSelectedCredentials((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                              : setSelectedCredentials((prev) => [...prev, language.id]) // 없으면 추가
                           }
                         }}
                       >
-                        {language}
+                        {language.name}
                       </Credential>
                     )
                   })}
@@ -192,7 +197,8 @@ const RequestGuidePage = () => {
           </Container>
         </CredentialsContainer>
 
-        {/* 4. 인증 */}
+        {/* FIXME: 처리 결과에 따라 색 다시 넣기 */}
+        {/*  4. 인증 */}
         <AuthContainer>
           <Title>인증</Title>
           <AuthWrapper>
@@ -201,6 +207,11 @@ const RequestGuidePage = () => {
             <AuthType isAuthActive={AuthPresence.account}>계좌 인증</AuthType>
           </AuthWrapper>{' '}
         </AuthContainer>
+
+        {/* 신청하기 버튼 */}
+        <ApplyWrapper>
+          <ApplyButton onClick={handleSubmit}>신청하기</ApplyButton>
+        </ApplyWrapper>
       </Layout>
     </>
   )
@@ -216,6 +227,12 @@ const Layout = styled.div`
   box-sizing: border-box;
   overflow: auto;
   /* background-color: #bc7de9; */
+`
+
+const FlexCenterd = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const TotalTitle = styled.div`
@@ -371,4 +388,26 @@ const AuthType = styled.span<{ isAuthActive: boolean }>`
   padding: 0.5rem;
   border-radius: 10px;
   margin-right: 1rem;
+`
+
+const ApplyWrapper = styled(FlexCenterd)`
+  /* background-color: mediumaquamarine; */
+`
+const ApplyButton = styled.button`
+  width: 6rem;
+  height: 2.5rem;
+  background-color: transparent;
+  border: none;
+  /* border: 3px solid black; */
+  border-radius: 0.2rem;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  background-color: var(--color-original);
+  cursor: pointer;
+  transition: all 0.3s;
+  &:hover {
+    transform: translateX(-0.3rem) translateY(-0.3rem);
+    transition: all 0.5s;
+  }
 `

@@ -30,6 +30,11 @@ export const getSignup = async (email: string, nickname: string, password: strin
   })
   return response.data
 }
+
+export const getUserInfo = async () => {
+  const response = await baseApi.get('/mypage')
+  return response.data
+}
 // export const getGoogleSignup = async () => {
 //   const response = await baseApi.get('/auth/google')
 //   return response.data

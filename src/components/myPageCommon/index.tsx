@@ -3,8 +3,9 @@ import { styled } from 'styled-components'
 import LeftInfo from './LeftInfo'
 import MainContainer from './MainContainer'
 import { useCallback, useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { RequestGuide } from 'state/store/RequestGuide'
+import { getUserInfo } from 'api/LoginSignUp'
 const MyPage = () => {
   // 태그별 열림 상태
   const [basicInfo, setBasicInfo] = useState<boolean>(true)
@@ -19,6 +20,27 @@ const MyPage = () => {
 
   // 🟡 가이드 신청하기 리코일 🟡
   const [guideRequest, setGuideRequest] = useRecoilState(RequestGuide)
+
+  /* ⭐️⭐️ 로그인 유저 정보 가져오기 ⭐️⭐️ */
+  let userInfo = JSON.parse(localStorage.getItem('userInfo') ?? '')
+  console.log('💛[myPageCommon.index] 현재 로그인 유저 정보 :', userInfo)
+
+  const [userInformation, setuserInformation] = useState()
+  console.log('userInformation: ', userInformation)
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const result = await getUserInfo()
+        setuserInformation(result)
+        console.log('🟡🟡🟡🟡🟡🟡🟡🟡🟡 API 요청 정보', result)
+      } catch (error) {
+        console.error('유저 정보를 가져오는 중 에러가 발생했습니다.', error)
+      }
+    }
+
+    fetchUserInfo()
+  }, [])
 
   useEffect(() => {
     console.log('useCallback 실행')

@@ -1,5 +1,5 @@
 import MagnifieirIcon from 'components/home/MagnifieirIcon'
-import { styled } from 'styled-components'
+import styled from 'styled-components'
 import { useState } from 'react'
 import useGuideStateMethods from '../../components/guide/list/leftSection/GuidePageUtils'
 import RangeComponent from '../../components/guide/list/leftSection/RangeComponent'
@@ -8,43 +8,58 @@ import CheckboxComponent from '../../components/guide/list/leftSection/CheckboxC
 import Star from 'components/icons/Star'
 import RatingFakeCheckbox from '../../components/guide/list/leftSection/RatingFakeCheckbox'
 import GuideCard from '../../components/guide/list/rightSection/GuideCard'
+import { useRecoilState } from 'recoil'
+import { selectedDatasState } from 'state/store/SelecteddatasAtom'
 
 const GuidePage = () => {
   const {
     /* useState */
     age,
-    ageRange,
+    ageRange, // 나이
     temperature,
-    temperatureRange,
+    temperatureRange, // 온도
     guideCount,
-    guideCountRange,
-    isAllChecked,
-    isManChecked,
-    isWomanChecked,
-    regionsDatas,
+    guideCountRange, // 가이드 횟수
+    isAllChecked, // 모두
+    isManChecked, // 남자
+    isWomanChecked, // 여자
+    areasDatas,
     onChangeRange,
     onClickGender,
     onChangeCheckBox,
     languageDatas,
     CredentialsDatas,
-    isRatingChecked,
+    isRatingChecked, // 평점
     setIsRatingChecked,
   } = useGuideStateMethods()
 
   // 지역
   const [isRegionClick, setIsRegionClick] = useState<boolean>(true) // 토굴
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]) // 선택된 지역
+  const [selectedRegions, setSelectedRegions] = useState<number[]>([]) // 선택된 지역
 
   // 언어
   const [isLanguageClick, setIsLanguageClick] = useState<boolean>(true) //토굴
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]) // 선택된 언어
+  const [selectedLanguages, setSelectedLanguages] = useState<number[]>([]) // 선택된 언어
 
   // 자격증
   const [isCredentialsClick, setIsCredentialsClick] = useState<boolean>(true) //  토굴
-  const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]) // 선택된 자격증
+  const [selectedCredentials, setSelectedCredentials] = useState<number[]>([]) // 선택된 자격증
 
-  // 평점
-  // const [selectedRating, setSelectedRating] = useState<string[]>([]) // 선택된 자격증
+  const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
+  /* 선택된 데이터들 */
+  let selectedDatasObj = {
+    // isClick: !selectedDatas.isClick,
+    isClick: true,
+    age: ageRange,
+    temperature: temperatureRange,
+    guideCount: guideCountRange,
+    gender: { all: isAllChecked, male: isManChecked, female: isWomanChecked },
+    areas: selectedRegions,
+    languages: selectedLanguages,
+    credentials: selectedCredentials,
+    rating: isRatingChecked,
+  }
+  console.log('🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢selectedDatasObj: ', selectedDatasObj)
 
   return (
     <>
@@ -54,10 +69,9 @@ const GuidePage = () => {
         <LeftSection>
           {/* 🟠 1. Search (text)  🟠 */}
           <SearchTagContainer>
-            <MagnifieirIcon width="40px" height="40px" background-color="red" />
+            <MagnifieirIcon $width="40px" $height="40px" $fill="red" />
             <span className="searchLetter">Search</span>
           </SearchTagContainer>
-
           {/* 🟠 2. 범위 선택 (range) : 나이 | 온도 | 가이드 횟수  🟠  */}
           <Layout>
             {/* 1. Age */}
@@ -67,7 +81,8 @@ const GuidePage = () => {
               value={age}
               name="age"
               max="70"
-              min="10"
+              // min="10"
+              min="0"
               step="10"
               onChange={onChangeRange}
             />
@@ -79,7 +94,7 @@ const GuidePage = () => {
               value={temperature}
               name="temperature"
               max="70"
-              min="10"
+              min="0"
               step="10"
               onChange={onChangeRange}
             />
@@ -91,7 +106,7 @@ const GuidePage = () => {
               value={guideCount}
               name="guideCount"
               max="80"
-              min="10"
+              min="0"
               step="10"
               onChange={onChangeRange}
             />
@@ -112,8 +127,8 @@ const GuidePage = () => {
 
                   {/* 3.2 남자 */}
                   <CheckboxComponent
-                    id="man"
-                    name="man"
+                    id="MALE"
+                    name="MALE"
                     checked={isManChecked}
                     onChange={onChangeCheckBox}
                     onClick={onClickGender}
@@ -122,8 +137,8 @@ const GuidePage = () => {
 
                   {/* 3.3 여자 */}
                   <CheckboxComponent
-                    id="woman"
-                    name="woman"
+                    id="FEMALE"
+                    name="FEMALE"
                     checked={isWomanChecked}
                     onChange={onChangeCheckBox}
                     onClick={onClickGender}
@@ -150,22 +165,22 @@ const GuidePage = () => {
 
                 {isRegionClick && (
                   <RegionDropWrapper isRegionClick={isRegionClick}>
-                    {regionsDatas.map((region) => {
-                      const isSelected = selectedRegions.includes(region)
+                    {areasDatas.map((area: { id: number; name: string }) => {
+                      const isSelected = selectedRegions.includes(area.id)
 
                       return (
                         <RegionIcon
-                          key={region}
+                          key={`areas${area.id}`}
                           isSelected={isSelected}
                           onClick={() => {
                             {
-                              selectedRegions.includes(region)
-                                ? setSelectedRegions((prev) => prev.filter((item) => item !== region)) //  있으면 제거
-                                : setSelectedRegions((prev) => [...prev, region]) // 없으면 추가
+                              selectedRegions.includes(area.id)
+                                ? setSelectedRegions((prev) => prev.filter((item) => item !== area.id)) //  있으면 제거
+                                : setSelectedRegions((prev) => [...prev, area.id]) // 없으면 추가
                             }
                           }}
                         >
-                          {region}
+                          {area.name}
                         </RegionIcon>
                       )
                     })}
@@ -192,21 +207,21 @@ const GuidePage = () => {
                 {isLanguageClick && (
                   <RegionDropWrapper isRegionClick={isLanguageClick}>
                     {languageDatas.map((language) => {
-                      const isSelected = selectedLanguages.includes(language)
+                      const isSelected = selectedLanguages.includes(language.id)
 
                       return (
                         <RegionIcon
-                          key={language}
+                          key={language.id}
                           isSelected={isSelected}
                           onClick={() => {
                             {
-                              selectedLanguages.includes(language)
-                                ? setSelectedLanguages((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                                : setSelectedLanguages((prev) => [...prev, language]) // 없으면 추가
+                              selectedLanguages.includes(language.id)
+                                ? setSelectedLanguages((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                                : setSelectedLanguages((prev) => [...prev, language.id]) // 없으면 추가
                             }
                           }}
                         >
-                          {language}
+                          {language.name}
                         </RegionIcon>
                       )
                     })}
@@ -234,57 +249,52 @@ const GuidePage = () => {
                 {/* 자격증 데이터 */}
                 {isCredentialsClick && (
                   <CredentialDropWrapper isRegionClick={isCredentialsClick}>
-                    {/* <CredentialDropWrapper> */}
                     {/* 일본어 */}
-                    <LanguageTitle>日本語🇯🇵</LanguageTitle>
+                    <LanguageTitle>日本語(JLPT) 🇯🇵</LanguageTitle>
                     {/* <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div>
                     <div style={{ width: '100%', height: '1rem' }}></div> */}
                     <Scores>
                       {CredentialsDatas.japanesse.map((language) => {
-                        const isSelected = selectedCredentials.includes(language)
+                        const isSelected = selectedCredentials.includes(language.id)
 
                         return (
                           <Credential
-                            key={language}
+                            key={language.id}
                             isSelected={isSelected}
                             onClick={() => {
                               {
-                                selectedCredentials.includes(language)
-                                  ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                                  : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                                selectedCredentials.includes(language.id)
+                                  ? setSelectedCredentials((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                                  : setSelectedCredentials((prev) => [...prev, language.id]) // 없으면 추가
                               }
                             }}
                           >
-                            {language}
+                            {language.name}
                           </Credential>
                         )
                       })}
                     </Scores>
-                    {/* <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div> */}
+
                     {/* 영어 */}
-                    <LanguageTitle>English 🇬🇧 </LanguageTitle>
-                    {/* <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div> */}
+                    <LanguageTitle>English(TOEIC) 🇬🇧 </LanguageTitle>
                     <Scores>
                       {CredentialsDatas.english.map((language) => {
-                        const isSelected = selectedCredentials.includes(language)
+                        const isSelected = selectedCredentials.includes(language.id)
 
                         return (
                           <Credential
-                            key={language}
+                            key={language.id}
                             isSelected={isSelected}
                             onClick={() => {
                               {
-                                selectedCredentials.includes(language)
-                                  ? setSelectedCredentials((prev) => prev.filter((item) => item !== language)) //  있으면 제거
-                                  : setSelectedCredentials((prev) => [...prev, language]) // 없으면 추가
+                                selectedCredentials.includes(language.id)
+                                  ? setSelectedCredentials((prev) => prev.filter((item) => item !== language.id)) //  있으면 제거
+                                  : setSelectedCredentials((prev) => [...prev, language.id]) // 없으면 추가
                               }
                             }}
                           >
-                            {language}
+                            {language.name}
                           </Credential>
                         )
                       })}
@@ -307,16 +317,10 @@ const GuidePage = () => {
                         id={`star${totalindex}`}
                         name={`star${totalindex}`}
                         style={{ display: 'none' }}
-                        onClick={(e) => {
-                          console.log(totalindex, '개 별 클릭')
-                          // console.log('체크 여부 ', e.target.checked)
-                          // console.log('어떤 것체크', e.target.name)
-                        }}
                       />
                       <RatingFakeCheckbox
                         name={`star${totalindex}`}
                         onClick={() => {
-                          console.log('isRatingChecked: ', isRatingChecked)
                           setIsRatingChecked((prevState) => {
                             const newState = [...prevState]
                             newState[totalindex] = !newState[totalindex]
@@ -325,13 +329,13 @@ const GuidePage = () => {
                         }}
                         checked={isRatingChecked[totalindex]}
                       />
-                      {/* if : checked가 되면 fake에도 체크 표시가 되게 */}
+
                       <div>
                         {Array.from({ length: totalindex + 1 }, (_, index) => (
                           <label
+                            key={index}
                             htmlFor={`star${totalindex}`}
                             onClick={() => {
-                              console.log('isRatingChecked: ', isRatingChecked)
                               setIsRatingChecked((prevState) => {
                                 const newState = [...prevState]
                                 newState[totalindex] = !newState[totalindex]
@@ -349,6 +353,19 @@ const GuidePage = () => {
               </Container>
             </RadioButtonsContainer>
           </Layout>
+
+          {/*  ⭐️ 버튼  ⭐️*/}
+          <BtnWrapper>
+            <SearchBtn
+              onClick={() => {
+                setSelectedDatas((prev): any => {
+                  return { ...prev, ...selectedDatasObj }
+                })
+              }}
+            >
+              검색
+            </SearchBtn>
+          </BtnWrapper>
         </LeftSection>
 
         {/* 🟢🟢🟢 오른쪽 🟢🟢🟢 */}
@@ -580,12 +597,32 @@ const StartCheckBoxContainer = styled.div`
   background-color: #fff;
 `
 
+const BtnWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+`
+
+const SearchBtn = styled.button`
+  cursor: pointer;
+  width: 100%;
+  height: 50px;
+  font-size: 20px;
+  font-weight: 700;
+  border: 3px solid var(--bs-gray);
+  border-radius: 0.6rem;
+  &:active {
+    transform: translateX(0.1rem) translateY(0.1rem);
+  }
+`
+
 /* 🟡 오른쪽 */
 const RightSection = styled.div`
   width: 70%;
   height: 100%;
   padding: 2rem;
   box-sizing: border-box;
-  /* background-color: #3ca7ff; */
-  /* display: flex; */
 `

@@ -1,7 +1,7 @@
-import styled, { CSSProp } from 'styled-components'
+import styled from 'styled-components'
 interface AuthIconProps {
-  style: CSSProp
-  fill: string
+  $width: string
+  $height: string
 }
 
 const AuthIcon = ({ ...props }: AuthIconProps) => {
@@ -16,5 +16,4 @@ export default AuthIcon
 
 const AuthIconStyled = styled.svg<AuthIconProps>`
   fill: ${(props) => props.fill || 'var(--color-original)'};
-  ${(props) => props.style};
 `

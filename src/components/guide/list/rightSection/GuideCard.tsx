@@ -1,139 +1,176 @@
-import React from 'react'
-import { styled } from 'styled-components'
+import { useCallback, useEffect, useState } from 'react'
+import styled from 'styled-components'
 import userImage from 'assets/userImage.svg'
-import logo from 'assets/logo.svg'
 import { useNavigate } from 'react-router-dom'
+import { getGuideList } from 'api/GuidePageAPI'
+import moment from 'moment'
+import useObserver from 'hooks/useObserver'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { selectedDatasState } from 'state/store/SelecteddatasAtom'
+
 const GuideCard = () => {
-  //  테스트 데이터
   const navigate = useNavigate()
 
-  const userTestDatas = [
-    {
-      id: 1,
-      temperature: 35,
-      image: '',
-      sex: 'male',
-      userName: '사용자2',
-      location: '서울',
-      age: 32,
-      languages: ' 영어, 한국어',
-      guideCount: 315,
-      rating: 4.7,
-      tags: ['서울 탐험', '한식 미식', '태그3', '태그4', '태그5'],
-    },
+  const [guideDatas, setGuideDatas] = useState<any[]>([]) // 가이드 데이터
+  // console.log('가이드 데이터: ', guideDatas)
 
-    {
-      id: 2,
-      temperature: 28,
-      image: logo,
-      sex: 'female',
-      userName: '사용자3',
-      location: '부산',
-      age: 28,
-      languages: '영어, 일본어',
-      guideCount: 200,
-      rating: 4.6,
-      tags: ['해운대', '부산', '태그3', '태그4', '태그5'],
-    },
-    {
-      id: 3,
-      temperature: 36,
-      image: logo,
-      sex: 'female',
-      userName: '사용자4',
-      location: '대구',
-      age: 35,
-      languages: '일본어, 한국어',
-      guideCount: 400,
-      rating: 4.8,
-      tags: ['팔공산', '대구', '태그3', '태그4', '태그5'],
-    },
-    {
-      id: 4,
-      temperature: 30,
-      image: logo,
-      sex: 'male',
-      userName: '사용자5',
-      location: '인천',
-      age: 25,
-      languages: '영어, 한국, 스페인어',
-      guideCount: 150,
-      rating: 4.3,
-      tags: ['인천공항', '인천', '태그3', '태그4', '태그5'],
-    },
-    {
-      id: 5,
-      temperature: 31,
-      image: logo,
-      sex: 'male',
-      userName: '사용자6',
-      location: '대전',
-      age: 40,
-      languages: '영어, 한국어',
-      guideCount: 500,
-      rating: 4.9,
-      tags: ['대전역', '대전', '태그3', '태그4', '태그5'],
-    },
-  ]
+  const [noData, setNoData] = useState('')
+
+  const [nowCursor, setNowCursor] = useState<number | any>() // 페이지네이션 커서
+
+  const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
+
+  console.log('⭐️리코일에 저장된 값 : ', selectedDatas)
+
+  // fetchSelectedGuideList에서 rating의 booleanr값을 정수로 변환
+  const selectedRatingsRating = selectedDatas.rating
+    .map((val, index) => (val ? index + 1 : null))
+    .filter((val) => val !== null) // null 아닌거 거르기
+    .join(',') // 배열로 안줄라면
+
+  /* 데이터 요청 */
+
+  // 🟡 데이터 가져오기  🟡
+  const fetchOriginalGuideList = useCallback(async () => {
+    try {
+      const requestParams = {
+        age: selectedDatas.age.join('-'),
+        // temperature: '30-41',
+        temperature: selectedDatas.temperature.join('-'),
+        guideCount: selectedDatas.guideCount.join('-'),
+        // guideCount: undefined,
+        gender: selectedDatas.gender.male ? 'MALE' : selectedDatas.gender.female ? 'FEMALE' : undefined,
+        areas: selectedDatas.areas.toString(),
+        languages: selectedDatas.languages.toString(),
+        guideCeritifications: selectedDatas.guideCeritifications.toString(),
+        rating: selectedRatingsRating,
+      }
+      console.log('🟢 보낼 값 🟢 ', requestParams)
+
+      console.log(selectedDatas.age.length, selectedDatas.temperature.length, selectedDatas.guideCount.length)
+
+      const result = await getGuideList({ cursor: nowCursor, limit: 4, requestParams })
+      console.log('🟠 받아온 값 🟠', result)
+
+      setNowCursor(result.nextCursor)
+
+      // if (result.items.length === 0) {
+      //   setNoData('데이터 없음')
+      //   setGuideDatas(() => [])
+      //   return
+      // }
+
+      if (selectedDatas.isClick) {
+        // if (selectedDatas.isClick && result.items.length !== 0) {
+        /* 검색 버튼 눌렀을 때 */
+        console.log('🔶🔶🔶🔶🔶')
+        if (
+          selectedDatas.age.length == 0 &&
+          selectedDatas.temperature.length == 0 &&
+          selectedDatas.guideCount.length == 0
+        ) {
+          return setGuideDatas((prev) => [...prev, ...result.items])
+        }
+        setNowCursor(null)
+        setGuideDatas(() => [])
+        setGuideDatas((prev) => [...prev, ...result.items])
+      } else {
+        /* 검색 버튼 안눌렀을 때 */
+        // setNowCursor(null)
+        console.log('🔵🔵🔵🔵')
+        setGuideDatas((prev) => [...prev, ...result.items])
+      }
+      setNoData('')
+      // return result
+    } catch (error) {
+      console.error('🔴🔴필터링 리스트 에러🔴🔴 :', error)
+    }
+    // }, [selectedDatas])
+  }, [nowCursor, selectedDatas])
+
+  useEffect(() => {
+    // console.log('🟣🟣🟣selectedDatas 업데이로 실행 🟣🟣🟣:', selectedDatas)
+    window.scrollTo({ top: 100 })
+    fetchOriginalGuideList()
+  }, [selectedDatas])
+
+  // 객체 감지 Ref
+  const originObserveRef = useObserver(fetchOriginalGuideList)
+
+  // 나이 계산
+  const calculateAge = (birthdate: string) => {
+    return moment().diff(moment(birthdate), 'years')
+  }
 
   return (
     <>
-      <RightSectionTitle>{`SoomGa의 가이드님, ${userTestDatas.length} 명`}</RightSectionTitle>
-      {userTestDatas.map((data) => {
-        return (
-          <CardLayout onClick={() => navigate(`/guides/detail/${data.id}`)}>
-            <CardContainer>
-              {/* FIXME: 온도 */}
-              <Temperature>{`${data.temperature}°C`}</Temperature>
-              {/* 🟡 왼쪽 */}
-              <LeftLayout>
-                <UserImageLayout>
-                  <ImageWrapper>
-                    <GenderMarker sex={data.sex} />
-                    {/* FIXME: 이미지 */}
-                    {data.image ? <img src={data.image} alt="userImage" /> : <img src={userImage} alt="userImage" />}
-                  </ImageWrapper>
-                </UserImageLayout>
-                {/* FIXME: 아이디 */}
-                <UserName>{data.userName}</UserName>
-              </LeftLayout>
+      <RightSectionTitle>{`SoomGa의 가이드님, ${guideDatas.length} 명`}</RightSectionTitle>
 
-              {/* 🟡 중앙 */}
-              <MiddleLayout>
-                {/* FIXME: 유저 정보 */}
-                <UserInfo>활동지역: {data.location}</UserInfo>
-                <UserInfo>나이대: {data.age}</UserInfo>
-                <UserInfo>사용언어: {data.languages}</UserInfo>
-              </MiddleLayout>
+      {guideDatas.length === 0 || noData === '데이터 없음' ? (
+        <Nodata>일치하는 데이터가 없습니다....</Nodata>
+      ) : (
+        guideDatas.map((guideData, i) => {
+          return (
+            <CardLayout key={`CardLayout${i}`} onClick={() => navigate(`/guides/detail/${guideData.id}`)}>
+              <CardContainer>
+                <Temperature>{`${guideData.temperature}°C`}</Temperature>
+                {/* 🟡 왼쪽 */}
+                <LeftLayout>
+                  <UserImageLayout>
+                    <ImageWrapper>
+                      <GenderMarker gender={guideData.member.gender} />
+                      {/* <GenderMarker gender={`일단 보류`} /> */}
 
-              {/* 🟡 우측 */}
-              <RightLayout>
-                {/* 가이드 횟수 | 평점 */}
-                <RightTop>
-                  <Partition>
-                    <Title>가이드 횟수</Title>
-                    {/* FIXME: 가이드 횟수 */}
-                    <TitleValue>{data.guideCount}</TitleValue>
-                  </Partition>
+                      {guideData.member.avatar ? (
+                        <img src={guideData.member.avatar} alt="userImage" />
+                      ) : (
+                        <img src={userImage} alt="userImage" />
+                      )}
+                    </ImageWrapper>
+                  </UserImageLayout>
 
-                  <Partition>
-                    <Title>평점</Title>
-                    {/* FIXME: 평점 */}
-                    <TitleValue>{data.rating}</TitleValue>
-                  </Partition>
-                </RightTop>
-                {/* 사용자 태그 */}
-                <RightBottom>
-                  {/* FIXME: 태그 */}
-                  {data.tags.map((tag) => (
-                    <Tag>#{tag}</Tag>
-                  ))}
-                </RightBottom>
-              </RightLayout>
-            </CardContainer>
-          </CardLayout>
-        )
-      })}
+                  <UserName>{guideData.member.nickname}</UserName>
+                </LeftLayout>
+
+                {/* 🟡 중앙 */}
+                <MiddleLayout>
+                  <UserInfo>활동지역: {guideData.areas?.map((area: any) => area.area.name).join(', ')}</UserInfo>
+                  <UserInfo>나이: {calculateAge(guideData.member.birthdate)} 세</UserInfo>
+
+                  <UserInfo>
+                    사용언어: {guideData.member.languages?.map((language: any) => language.language.name).join(', ')}
+                  </UserInfo>
+                </MiddleLayout>
+
+                {/* 🟡 우측 */}
+                <RightLayout>
+                  {/* 가이드 횟수 | 평점 */}
+                  <RightTop>
+                    <Partition>
+                      <Title>가이드 횟수</Title>
+                      {/* FIXME: 가이드 횟수  FIXME: */}
+                      <TitleValue>{guideData.guideCount}</TitleValue>
+                      {/* <TitleValue>{guideData.guideCount}</TitleValue> */}
+                    </Partition>
+
+                    <Partition>
+                      <Title>평점</Title>
+                      <TitleValue>{guideData.totalAvgScore}</TitleValue>
+                    </Partition>
+                  </RightTop>
+                  {/* 사용자 태그 */}
+                  <RightBottom>
+                    {guideData.member.tags.map((tag: any) => (
+                      <Tag>#{tag}</Tag>
+                    ))}
+                  </RightBottom>
+                </RightLayout>
+              </CardContainer>
+            </CardLayout>
+          )
+        })
+      )}
+      <div style={{ height: '1px', width: '100%' }} ref={originObserveRef}></div>
     </>
   )
 }
@@ -161,6 +198,15 @@ const FlexCenter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+
+const Nodata = styled(FlexCenter)`
+  width: 100%;
+
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  color: #dddddd;
+  /* background-color: red; */
 `
 
 const CardContainer = styled(FlexCenter)`
@@ -204,11 +250,11 @@ const UserImageLayout = styled.div`
 `
 
 // 성별에 따른 색상 변경
-const GenderMarker = styled.div<{ sex: string }>`
+const GenderMarker = styled.div<{ gender: string }>`
   position: absolute;
   width: 2rem;
   height: 2rem;
-  background-color: ${({ sex }) => (sex === 'male' ? '#4bb3ff' : '#ff8090')};
+  background-color: ${({ gender }) => (gender === 'MALE' ? '#4bb3ff' : '#ff8090')};
   /* background-color: #4bb3ff; */ // 남자
   /* background-color: #ff8090; */ // 여자
   border-radius: 50%;

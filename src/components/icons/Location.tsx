@@ -1,7 +1,8 @@
 import { CSSProp, styled } from 'styled-components'
 
 interface LocationProps {
-  style: CSSProp
+  $width?: string
+  $height?: string
 }
 
 const Location = ({ ...props }: LocationProps) => {
@@ -26,5 +27,6 @@ const Location = ({ ...props }: LocationProps) => {
 export default Location
 
 const LocationStyle = styled.svg<LocationProps>`
-  ${(props) => props.style}
+  width: ${({ $width }) => $width};
+  height: ${({ $height }) => $height};
 `
