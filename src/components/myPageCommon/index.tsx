@@ -38,7 +38,6 @@ const MyPage = () => {
     avatar: '',
     gender: '',
   })
-  console.log('userInformation: ', userInformation)
 
   useEffect(() => {
     const fetchUserInfo = async () => {
