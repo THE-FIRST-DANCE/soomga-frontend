@@ -55,7 +55,7 @@ const PageNation = () => {
             {records.map((post) => (
               <tr key={post.id}>
                 <Td>{post.id}</Td>
-                <Td onClick={() => navigate(`/recommendations/${post.region} /${post.id}`)}>{post.title}</Td>
+                <Td onClick={() => navigate(`/recommendations/${post.region}/${post.id}`)}>{post.title}</Td>
                 <Td>{post.author}</Td>
                 <Td>{post.date}</Td>
                 <Td>{post.views}</Td>
