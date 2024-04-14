@@ -30,8 +30,8 @@ const Router = () => {
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
   const [isAccessToken, setIsAccessToken] = useState<boolean>()
 
-  const [first, setfirst] = useState()
-  console.log('first: ', first)
+  const [userInfo, setuserInfo] = useState()
+  console.log('userInfo: ', userInfo)
 
   /* 🟡🟡🟡 기본적으로 토큰이 들어있는지 토큰 상태를 브라우저에서 가져와서 확인 🟡🟡🟡 */
   useEffect(() => {
@@ -39,7 +39,7 @@ const Router = () => {
     setIsAccessToken(!!accessToken) //! 토큰 상태를 저장
     // console.log('🌙🌙🌙🌙accessToken: ', accessToken)
     setRecoilToken({ ...recoilToken, token: !!accessToken }) //! 엑세스 토큰 여부에 따라서 리코일에 토큰값 저장
-    setfirst(JSON.parse(localStorage.getItem('userInfo') ?? ''))
+    setuserInfo(JSON.parse(localStorage.getItem('userInfo') ?? ''))
   }, [recoilToken.token])
 
   return (
@@ -60,7 +60,7 @@ const Router = () => {
         {isAccessToken && (
           <>
             {/* 4. 여행일정 */}
-            <Route path="/itinerary" element={<ItineraryPage />} />
+            {/* <Route path="/itinerary" element={<ItineraryPage />} /> */}
             <Route path="/schedule" element={<SchedulePage />} />
           </>
         )}
