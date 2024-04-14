@@ -1,7 +1,8 @@
-import React from 'react'
-import styled, { CSSProp } from 'styled-components'
+import styled from 'styled-components'
 interface FollowIconProps {
-  style: CSSProp
+  $width?: string
+  $height?: string
+  $fill?: string
 }
 const FollowIcon = ({ ...props }: FollowIconProps) => {
   return (
@@ -9,7 +10,7 @@ const FollowIcon = ({ ...props }: FollowIconProps) => {
       width="20"
       height="20"
       viewBox="0 0 20 20"
-      fill="none"
+      // fill="none"
       xmlns="http://www.w3.org/2000/FollowStyled"
       {...props}
     >
@@ -33,8 +34,9 @@ const FollowIcon = ({ ...props }: FollowIconProps) => {
 export default FollowIcon
 
 const FollowStyled = styled.svg<FollowIconProps>`
-  ${(props) => props.style}
   cursor: pointer;
-  fill: white;
+  width: ${({ $width }) => $width};
+  height: ${({ $height }) => $height};
+  fill: ${({ $fill }) => $fill};
   stroke-width: 0px;
 `
