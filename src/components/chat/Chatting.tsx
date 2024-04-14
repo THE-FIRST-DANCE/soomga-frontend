@@ -256,7 +256,7 @@ const ChatLayout = styled.div`
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 3;
+  z-index: 6;
   border: 3px;
 `
 const Content = styled.div`
