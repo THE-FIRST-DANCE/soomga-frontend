@@ -34,4 +34,5 @@ const ImageIconStyle = styled.svg<ImageIconProps>`
     fill: ${(props) => props.hoverColor || 'gray'};
   }
   cursor: pointer;
+  padding-top: 5px;
 `
