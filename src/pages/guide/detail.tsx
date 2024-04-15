@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import guideImg from 'assets/guideImg.png'
+import userImage from 'assets/userImage.svg'
 import XIcon from 'components/icons/XIcon'
 import InstagramIcon from 'components/icons/InstagramIcon'
 import AuthIcon from 'components/icons/AuthIcon'
@@ -7,27 +7,24 @@ import ChatIcon from 'components/icons/ChatIcon'
 import FollowIcon from 'components/icons/FollowIcon'
 import CautionIcon from 'components/icons/CautionIcon'
 import { useEffect, useRef, useState } from 'react'
-
 import seoul from '../../assets/seoul.png'
 import busan from '../../assets/busan.png'
 import ulsan from '../../assets/ulsan.png'
 import Time from 'components/icons/Time'
 import Arrow from 'components/icons/Arrow'
 import CarIcon from 'components/icons/CarIcon'
-
-import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
-import moment from 'moment'
 import CircleCheck from 'components/icons/CircleCheck'
 import Comunication from 'components/icons/Comunication'
 import Location from 'components/icons/Location'
 import Star from 'components/icons/Star'
 import CalendarComponent from 'components/itineraryCalendar/Calendar'
-
-type ValuePiece = Date | null
-
-type Value = ValuePiece | [ValuePiece, ValuePiece]
-
+import { useParams } from 'react-router-dom'
+import { getReviews, getSelectedGuide } from 'api/GuidePageAPI'
+import moment from 'moment'
+import Chatting from 'components/chat/Chatting'
+import { toast } from 'react-toastify'
+import guideImg from '../../assets/guideImg.png'
 const plans = [
   {
     seoul: [],
@@ -39,97 +36,103 @@ const plans = [
   },
 ]
 
-const comments = [
-  {
-    id: 1,
-    user: 'Oba honoka',
-    country: 'japan',
-    star: 4,
-    comment: '風に戸惑う弱気な僕は通りすがるあの日の幻影本当は見た目以上涙もろい過去がある',
-  },
-  {
-    id: 2,
-    user: 'Yamatsu asuka',
-    country: 'japan',
-    star: 2,
-    comment: '止めど流る清か水よ消せど燃ゆる魔性の火よあんなに好きな女性に出逢う夏は二度とない',
-  },
-  {
-    id: 3,
-    user: 'Wada sayaka',
-    country: 'japan',
-    star: 5,
-    comment: '人は誰も愛求めて 闇に彷徨う運命 そして風まかせ oh, my destiny 涙枯れるまで',
-  },
-  {
-    id: 4,
-    user: 'Tsuki saeko',
-    country: 'japan',
-    star: 1,
-    comment:
-      '見つめ合うと素直にお喋り出来ない 津波のような侘しさに I know... 怯えてる めぐり逢えた瞬間から 魔法が解けない 鏡のような夢の中で 思い出はいつの日も雨',
-  },
-  {
-    id: 5,
-    user: 'Hasegawa ryo',
-    country: 'japan',
-    star: 4,
-    comment: '夢が終わり目覚める時深い闇に夜明けが来る本当は見た目以上打たれ強い僕がいる',
-  },
-  {
-    id: 6,
-    user: 'Simizu reina',
-    country: 'japan',
-    star: 5,
-    comment: '泣き出しそうな空眺めて 波に漂うカモメ きっと世は情け oh, sweet memory 旅立ちを胸に',
-  },
-  {
-    id: 7,
-    user: 'Katou yuu',
-    country: 'japan',
-    star: 4,
-    comment: '人は涙見せずに大人になれない ガラスのような恋だとは I know... 気付いてる',
-  },
-  {
-    id: 8,
-    user: 'Suzuki ichiro',
-    country: 'japan',
-    star: 4,
-    comment: '身も心も愛しい女性しか見えない張り裂けそうな胸の奥で悲しみに耐えるのは何故',
-  },
-  {
-    id: 9,
-    user: 'Abe kazuki',
-    country: 'japan',
-    star: 3,
-    comment: '見つめ合うと素直に お喋り出来ない 津波のような侘しさに I know... 怯えてる',
-  },
-  {
-    id: 10,
-    user: 'Akutagawa saburo',
-    country: 'japan',
-    star: 4,
-    comment:
-      'めぐり逢えた瞬間から死ぬまで好きと言って 鏡のような夢の中で 微笑をくれたのは誰 好きなのに泣いたのは何故 思い出はいつの日も... 雨',
-  },
-]
-
 const GuideDetailPage = () => {
+  // 가이드 id 값
+  const { id } = useParams()
+
+  // 점수 평균
+  const [averageCommunicationScore, setAverageCommunicationScore] = useState(0)
+  const [averageKindnessScore, setAverageKindnessScore] = useState(0)
+  const [averageLocationScore, setAverageLocationScore] = useState(0)
+
+  // 🟡 각각의 전체 평점 🟡
+  const [reviewCounts, setReviewCounts] = useState([0, 0, 0, 0, 0])
+  console.log('reviewCounts: ', reviewCounts)
+
+  // 플랜 여닫이 상태
   const [isPlanOpen, setIsPlanOpen] = useState<boolean[]>([])
 
+  // 채팅창
+  const [isOpenChat, setIsOpenChat] = useState<boolean>(false)
+  const openChatHandler = () => {
+    setIsOpenChat((prev) => !prev)
+  }
+
+  /* 가이드 정보 */
+  const [guideInfos, setguideInfos] = useState({
+    gender: '',
+    avatar: '',
+    guideProfile: {
+      temperature: '',
+    },
+    tags: [],
+  })
+  console.log('⭐️guideInfos: ', guideInfos)
+
+  /* 가이드 리뷰 */
+  const [reviews, setReviews] = useState([])
+
+  // 플랜 드롭다운 함수
   const onClickDropdownBtn = (index: number) => {
     setIsPlanOpen((prev) => {
       const newState = [...prev]
       newState[index] = !newState[index]
-
       return newState
     })
   }
 
+  // 플랜 개수 만큼 여닫이 생태 관리
   const initPlanStates = () => {
     setIsPlanOpen(Array(3).fill(false))
   }
 
+  useEffect(() => {
+    // 1. 가이드 정보
+    const fetchGetSelectedGuide = async () => {
+      const data = await getSelectedGuide(Number(id))
+      // console.log('data: ', data)
+      setguideInfos(data)
+    }
+    fetchGetSelectedGuide()
+
+    // 2. 리뷰 정보
+    const fetchGetReviews = async () => {
+      const data = await getReviews(Number(id))
+      console.log('🟡 가이드 리뷰 데이터: ', data)
+
+      // 리뷰별 각각의 점수들의 총합
+      let totalCommunication = 0,
+        totalKindness = 0,
+        totalLocation = 0
+
+      // 점수별 리뷰 카운트를 저장할 새 배열
+      let newReviewCounts = [0, 0, 0, 0, 0]
+
+      data.forEach((review: any) => {
+        totalCommunication += review.communicationScore
+        totalKindness += review.kindnessScore
+        totalLocation += review.locationScore
+
+        const averageScore = Math.round((review.communicationScore + review.kindnessScore + review.locationScore) / 3)
+        if (averageScore >= 1 && averageScore <= 5) {
+          newReviewCounts[averageScore - 1]++
+        }
+      })
+      setReviewCounts(newReviewCounts) // 한 번의 업데이트로 모든 카운트 적용
+
+      // 리뷰 정보 평균을 계산
+      const numReviews = data.length
+      if (numReviews > 0) {
+        setAverageCommunicationScore(Number((totalCommunication / numReviews).toFixed(1)))
+        setAverageKindnessScore(Number((totalKindness / numReviews).toFixed(1)))
+        setAverageLocationScore(Number((totalLocation / numReviews).toFixed(1)))
+      }
+      setReviews(data)
+    }
+    fetchGetReviews()
+  }, [id])
+
+  // 플랜 개수 변경시 개수 적용
   useEffect(() => {
     initPlanStates()
   }, [plans.length])
@@ -139,43 +142,24 @@ const GuideDetailPage = () => {
   const serviceContent =
     '韓国在住約10年になります。代行のご依頼500件以上、ご不満だったという評価は受けたことがありません♡日本・韓国でネットショップ経営中です。購入代行、仕入れ代行、予約代行、サイン会・ヨントン応募、K-pop、ショッピング、カフェ、観光、どれも得意です！韓国ソウル・ソウル郊外の現地人向けカフェやグルメ店を訪れるのが趣味です。旅行者向けよりは現地で人気のホットプレイスを探して回っています。オンラインショップを運営しているので、商品購入代行など、お任せください！特技は最低価格を探すことです^^ ドライブが趣味ですので、送迎などもお任せください。'
 
-  useEffect(() => {
-    const handleScroll = () => {
-      console.log(window.scrollY)
-      // 스크롤 변화에 대한 추가적인 처리를 수행할 수 있습니다.
-    }
-
-    window.addEventListener('scroll', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
-
+  // 최상단 이동 버튼
   const MoveTopClick = () => {
-    const { scrollY } = window
-    console.log('현재 scrollY: ', scrollY)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const [value, onChange] = useState<Value>(new Date())
+  // 코멘트
+  const [visibleComments, setvisibleComments] = useState(3)
+  const ADDCOMMENT = 3
 
-  // 특정 날짜
-  const targetDates = [new Date(2024, 1, 5), new Date(2024, 1, 10), new Date(2024, 1, 15), new Date(2024, 2, 2)]
-
-  // tileContent 함수 정의
-  const tileContent = ({ date, view }: { date: Date; view: string }) => {
-    if (view === 'month' && targetDates.some((targetDate) => date.getTime() === targetDate.getTime())) {
-      return <CustomDot />
-    }
-    return null
-  }
-
-  const [visibleComments, setvisibleComments] = useState(5)
-  const ADDCOMMENT = 5
-
+  // 코멘트 더보기
   const showMoreComments = () => {
-    setvisibleComments(visibleComments + ADDCOMMENT)
+    const newVisibleCount = visibleComments + ADDCOMMENT
+    if (newVisibleCount < reviews.length) {
+      setvisibleComments(newVisibleCount)
+    } else {
+      // 모든 리뷰를 보여주고 있을 때 추가로 더 불러올 리뷰가 없으면 최대 리뷰 개수로 설정
+      setvisibleComments(reviews.length)
+    }
   }
 
   /* 우측 이동 메뉴 */
@@ -188,6 +172,19 @@ const GuideDetailPage = () => {
     }
   }
 
+  // 온도 퍼센트 계산
+  const calculateTemperatureHeight = () => {
+    const temp = Number(guideInfos.guideProfile.temperature)
+    const maxTemp = 70
+    const minTemp = -10
+    const normalizedTemp = Math.min(Math.max(temp, minTemp), maxTemp) // 범위 내로 제한
+    return ((normalizedTemp - minTemp) / (maxTemp - minTemp)) * 100 + '%' // 퍼센트로 변환
+  }
+
+  // 나이계산
+  const calculateAge = (birthdate: string) => {
+    return moment().diff(moment(birthdate), 'years')
+  }
   return (
     <>
       <Layout>
@@ -199,16 +196,16 @@ const GuideDetailPage = () => {
               {/* 이미지 */}
               <GuideImageWrapper>
                 <UserImageLayout>
-                  <GenderMarker />
-                  <img src={guideImg} alt="Img" />
+                  <GenderMarker $gender={guideInfos.gender} />
+                  <img src={guideInfos.avatar ? guideInfos.avatar : userImage} alt="Img" />
                 </UserImageLayout>
               </GuideImageWrapper>
               {/* 온도 */}
               <TemperatureContainer>
-                {`36.5`}C
+                {guideInfos.guideProfile.temperature}C
                 <TemperatureWrapper>
                   <TemperatureBar>
-                    <Temperature height="60%" />
+                    <Temperature $height={calculateTemperatureHeight()} />
                   </TemperatureBar>
                 </TemperatureWrapper>
               </TemperatureContainer>
@@ -216,8 +213,8 @@ const GuideDetailPage = () => {
 
             {/* 이름 */}
             <NameAgeWapper>
-              <UserName>{`최소라`}</UserName>
-              <UserAge>{`31세`}</UserAge>
+              <UserName>{guideInfos.nickname}</UserName>
+              <UserAge>{`${calculateAge(guideInfos.birthdate)}세`}</UserAge>
             </NameAgeWapper>
             {/* SNS */}
             <SnsWrapper>
@@ -230,29 +227,40 @@ const GuideDetailPage = () => {
             </SnsWrapper>
             {/* 인증 */}
             <AutentificationWrapper>
-              <Autentification>
-                <Method>{`휴대폰`}</Method>
-                <AuthIcon $width="0.3rem" $height="0.3rem" />
-              </Autentification>
-              <Autentification>
-                <Method>{`신분증`}</Method>
-                <AuthIcon $width="0.3rem" $height="0.3rem" />
-              </Autentification>
-              <Autentification>
-                <Method>{`계좌`}</Method>
-                <AuthIcon $width="0.3rem" $height="0.3rem" />
-              </Autentification>
+              {/* 휴대폰 인증 */}
+              {guideInfos.guideProfile.phoneNumber && (
+                <Autentification>
+                  <Method>{`휴대폰`}</Method>
+                  <AuthIcon $width="0.3rem" $height="0.3rem" />
+                </Autentification>
+              )}
+
+              {/* 신분증 인증 */}
+              {guideInfos.guideProfile.verifiedID && (
+                <Autentification>
+                  <Method>{`신분증`}</Method>
+                  <AuthIcon $width="0.3rem" $height="0.3rem" />
+                </Autentification>
+              )}
+              {/* 계좌 인증 */}
+              {guideInfos.guideProfile.verifiedBankAccount && (
+                <Autentification>
+                  <Method>{`계좌`}</Method>
+                  <AuthIcon $width="0.3rem" $height="0.3rem" />
+                </Autentification>
+              )}
             </AutentificationWrapper>
 
             {/* 성별, 가이드 횟수 , 사용언어 */}
             <InfoContainer>
               <InfoWrapper>
                 <InfoTitle>{`성별`}</InfoTitle>
-                <InfoValue>여{}</InfoValue>
+                <InfoValue>{guideInfos.gender === 'MALE' ? '남' : '여'}</InfoValue>
               </InfoWrapper>
               <InfoWrapper>
+                {/* FIXME: 가이드 횟수 없음 */}
                 <InfoTitle>{`가이드 횟수`}</InfoTitle>
-                <InfoValue>25{}회</InfoValue>
+                <InfoValue>없음{}회</InfoValue>
               </InfoWrapper>
               <InfoWrapper>
                 <InfoTitle>{`사용 언어`}</InfoTitle>
@@ -262,20 +270,27 @@ const GuideDetailPage = () => {
 
             {/* 채팅 버튼 */}
             <ChatBtnWrapper>
-              <ChatButton>
+              <ChatButton onClick={openChatHandler}>
                 <ChatIcon width={'1.5rem'} heigth={'1.5rem'} fill={'white'} />
                 채팅하기
               </ChatButton>
             </ChatBtnWrapper>
+            {/* FIXME:  {isOpenChat && <Chatting onClick={openChatHandler} />} */}
 
             {/* 팔로우 신고하기 */}
             <FollowReportWrapper>
-              <Follow>
-                <FollowIcon width={'30px'} heigth={'30px'} />
-                팔로우
+              <Follow
+                onClick={() => {
+                  true
+                    ? toast.success(`${guideInfos.nickname}님을 팔로우 했습니다!`)
+                    : toast.success(`${guideInfos.nickname}님을 팔로우 취소 했습니다!`)
+                }}
+              >
+                <FollowIcon $width="20px" $height="20px" $fill="blue" />
+                {true ? '찜하기' : '내 가이드'}
               </Follow>
-              <Report>
-                <CautionIcon width={'20px'} heigth={'20px'} />
+              <Report onClick={() => toast.error(`${guideInfos.nickname}님을 신고 했습니다!`, { icon: false })}>
+                <CautionIcon $width={'20px'} $height={'20px'} />
                 신고
               </Report>
             </FollowReportWrapper>
@@ -285,7 +300,10 @@ const GuideDetailPage = () => {
 
             {/* 태그 */}
             <TagWrapper>
-              <Tag>#{`dsc`}</Tag>
+              {guideInfos.tags.map((tag) => (
+                <Tag>#{tag}</Tag>
+              ))}
+              {/* <Tag>#{`dsc`}</Tag>
               <Tag>#{`dsc`}</Tag>
               <Tag>#{`dsc`}</Tag>
               <Tag>#{`dsc`}</Tag>
@@ -296,30 +314,61 @@ const GuideDetailPage = () => {
               <Tag>#{`dsc`}</Tag>
               <Tag>#{`dsc`}</Tag>
               <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
+              <Tag>#{`dsc`}</Tag> */}
             </TagWrapper>
           </GuideInfoCard>
         </LeftSection>
 
         {/* ------------------------------------------　中 ------------------------------------------　*/}
+        {isOpenChat && <Chatting onClick={openChatHandler} />}
         <MiddleSection>
           <BlankTop10Rem />
           {/* 1. 서비스 */}
+          <IntroLayout>
+            <Title>소개</Title>
+            <ImageContainer>
+              <IntroImageWrapper>
+                <img src={seoul} />
+              </IntroImageWrapper>
+              <IntroImageWrapper>
+                <img src={busan} />
+              </IntroImageWrapper>
+              <IntroImageWrapper>
+                <img src={ulsan} />
+              </IntroImageWrapper>
+            </ImageContainer>
+            <IntroContent>{serviceContent}</IntroContent>
+          </IntroLayout>
+
+          <Partition>
+            <Line />
+          </Partition>
+
+          {/* 🟢 서비스 */}
           <ServiceLayout ref={serviceRef}>
             <Title>서비스</Title>
-            <ImageContainer>
-              <ServiceImageWrapper>
-                <img src={seoul} />
-              </ServiceImageWrapper>
-              <ServiceImageWrapper>
-                <img src={busan} />
-              </ServiceImageWrapper>
-              <ServiceImageWrapper>
-                <img src={ulsan} />
-              </ServiceImageWrapper>
-            </ImageContainer>
-            <ServiceContent>{serviceContent}</ServiceContent>
+            <ServiceContainer>
+              {[1, 2, 3].map((item) => (
+                <Service>
+                  <LeftImg>
+                    <img src={guideImg} alt="" />
+                  </LeftImg>
+                  <RightContentWrap>
+                    <RightTitle>{`제목`}</RightTitle>
+                    <RightPricingWrap>
+                      요금: <RightPricing>{70000}</RightPricing>
+                    </RightPricingWrap>
+                    <RightContent>
+                      그대 보내고 멀리 가을새와 작별하듯 그대 떠나 보내고 돌아와 술잔 앞에 앉으면 눈물 나누나 그대
+                      보내고 아주 지는 별빛 바라볼 때 눈에 흘러 내리는 못다한 말들 그 아픈 사랑 지울 수 있을까 어느 하루
+                      비라도 추억처럼 흩날리는 거리에서 쓸쓸한 사랑 되어 고개 숙이면 그대 목소리
+                    </RightContent>
+                  </RightContentWrap>
+                </Service>
+              ))}
+            </ServiceContainer>
           </ServiceLayout>
+
           <Partition ref={travelPlanRef}>
             <Line />
           </Partition>
@@ -408,41 +457,51 @@ const GuideDetailPage = () => {
             <ReviewScoreContainer>
               {/* 🟠 왼쪽 */}
               <ReviewScoreLeft>
-                <AverageScore>4.3</AverageScore>
+                <AverageScore>
+                  {((averageCommunicationScore + averageKindnessScore + averageLocationScore) / 3).toFixed()}
+                </AverageScore>
                 <ScoreListContainer>
                   <ListContainer>
                     <Comunication $width=" 2rem" $height=" 2rem" />
                     <CheckPoint>의사소통</CheckPoint>
-                    <CheckScore>4.3</CheckScore>
+                    <CheckScore>{averageCommunicationScore}</CheckScore>
                   </ListContainer>
                   <ListContainer>
                     <CircleCheck $width=" 2rem" $height=" 2rem" />
-                    <CheckPoint>정확도</CheckPoint>
-                    <CheckScore>4.3</CheckScore>
+                    <CheckPoint>친절함</CheckPoint>
+                    <CheckScore>{averageKindnessScore}</CheckScore>
                   </ListContainer>
                   <ListContainer>
                     <Location $width=" 2rem" $height=" 2rem" />
                     <CheckPoint>위치</CheckPoint>
-                    <CheckScore>4.3</CheckScore>
+                    <CheckScore>{averageLocationScore}</CheckScore>
                   </ListContainer>
                 </ScoreListContainer>
               </ReviewScoreLeft>
-              {/* 🟠 🟠오른쪽 */}
+
+              {/* FIXME: 오른쪽 */}
               <ReviewScoreRight>
                 <ReviewTitleContainer>
-                  <ReviewTitle>전체평점</ReviewTitle>
-                  <TotalReviewCount>리뷰수 {10} 개</TotalReviewCount>
+                  <ReviewTitle>전체 평점</ReviewTitle>
+                  <TotalReviewCount>리뷰수 {reviews.length} 개</TotalReviewCount>
                 </ReviewTitleContainer>
                 <ScoreBarContainer>
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <ScoreBarWrapper key={index}>
-                      <Rank>{index + 1}</Rank>
-                      <BarWrapper>
-                        <Bar percent={40} />
-                      </BarWrapper>
-                      <Count>200</Count>
-                    </ScoreBarWrapper>
-                  )).reverse()}
+                  {reviewCounts
+                    .map((count, index) => {
+                      // 전체 리뷰 수 대비 현재 점수의 리뷰 수 비율을 퍼센트로 계산
+                      const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0
+
+                      return (
+                        <ScoreBarWrapper key={index}>
+                          <Rank>{index + 1}점</Rank>
+                          <BarWrapper>
+                            <Bar percent={percentage} />
+                          </BarWrapper>
+                          {/* <Count>{count}</Count> */}
+                        </ScoreBarWrapper>
+                      )
+                    })
+                    .reverse()}
                 </ScoreBarContainer>
               </ReviewScoreRight>
             </ReviewScoreContainer>
@@ -450,36 +509,58 @@ const GuideDetailPage = () => {
               <CommentLine />
             </CommentPartition>
 
-            {/* コメント */}
-            {comments.slice(0, visibleComments).map((comment) => {
+            {/* 리뷰 */}
+            {reviews.slice(0, visibleComments).map((review) => {
+              let totalAverage = Number(
+                ((review.communicationScore + review.kindnessScore + review.locationScore) / 3).toFixed(),
+              )
+
               return (
                 <CommentLayout>
                   {/* 이름 + 국정 + 별 + 일자 */}
                   <CommentContainer>
                     <CommentUserWrapper>
-                      <CommentUserName>{comment.user}</CommentUserName>
-                      <Country>{comment.country}</Country>
+                      {/* <CommentUserName>{review.guide.member.}</CommentUserName> */}
+                      {/* FIXME: 누가 썼느지 이름 없음 */}
+                      <CommentUserName>{'누가 코멘트를 썻는지 이름이 없음'}</CommentUserName>
+                      {/* FIXME: 날짜 다 동일한게 찍히네? */}
+                      <Created>{moment(review.createdAt).format('YYYY-MM-DD')}</Created>
                     </CommentUserWrapper>
                     <CommentUserWrapper>
-                      <CommentUserName>
-                        {Array.from({ length: comment.star }, (_, index) => (
-                          <Star key={index} $width="20px" $height="20px" $fill="var(--color-primary)" />
+                      <ScoresContainer>
+                        <Score>{`전체 평점: ${totalAverage}`}</Score>
+                      </ScoresContainer>
+                      <ScoresContainer>
+                        <Score>{`의사소통: `}</Score>
+                        {Array.from({ length: review.communicationScore }, (_, index) => (
+                          <Star key={index} $width="20px" $height="20px" $color="var(--color-primary)" />
                         ))}
-                      </CommentUserName>
-                      <Country>{new Date().toLocaleDateString()}</Country>
+                      </ScoresContainer>
+                      <ScoresContainer>
+                        <Score>{`친절함: `}</Score>
+                        {Array.from({ length: review.kindnessScore }, (_, index) => (
+                          <Star key={index} $width="20px" $height="20px" $color="var(--color-primary)" />
+                        ))}
+                      </ScoresContainer>
+                      <ScoresContainer>
+                        <Score>{`위치: `}</Score>
+                        {Array.from({ length: review.locationScore }, (_, index) => (
+                          <Star key={index} $width="20px" $height="20px" $color="var(--color-primary)" />
+                        ))}
+                      </ScoresContainer>
                     </CommentUserWrapper>
                   </CommentContainer>
-                  <Comment>{comment.comment}</Comment>
+                  <Comment>{review.content}</Comment>
                 </CommentLayout>
               )
             })}
+
             <ButtonWrapper>
-              {visibleComments !== comments.length && (
-                <ShowMoreButton onClick={showMoreComments}>더보기</ShowMoreButton>
-              )}
+              {visibleComments < reviews.length && <ShowMoreButton onClick={showMoreComments}>더보기</ShowMoreButton>}
             </ButtonWrapper>
           </ReviewLayout>
         </MiddleSection>
+
         {/*　------------------------------------------ 右 ------------------------------------------　*/}
         <RightSection>
           <MenuBanner>
@@ -576,14 +657,12 @@ const UserImageLayout = styled.div`
   }
 `
 
-// const GenderMarker = styled.div<{ sex: string }>`
-const GenderMarker = styled.div`
+// const GenderMarker = styled.div`
+const GenderMarker = styled.div<{ $gender: string }>`
   position: absolute;
   width: 2rem;
   height: 2rem;
-  /* background-color: ${({ sex }) => (sex === 'male' ? '#4bb3ff' : '#ff8090')}; */
-  /* background-color: #4bb3ff; */ // 남자
-  background-color: #ff8090; // 여자
+  background-color: ${({ $gender }) => ($gender === 'MALE' ? '#4bb3ff' : '#ff8090')};
   border-radius: 50%;
   top: -15px;
   left: -15px;
@@ -617,9 +696,9 @@ const TemperatureBar = styled.div`
   /* background-color: #ff6048; */
 `
 
-const Temperature = styled.div<{ height: string }>`
+const Temperature = styled.div<{ $height: string }>`
   width: 100%;
-  height: ${({ height }) => height};
+  height: ${({ $height }) => $height};
   background-color: var(--color-original);
 `
 
@@ -704,6 +783,7 @@ const InfoValue = styled.div`
 const ChatBtnWrapper = styled(FlexCenterd)`
   width: 100%;
   margin-top: 1.5rem;
+  cursor: pointer;
 `
 const ChatButton = styled(FlexCenterd)`
   width: 100%;
@@ -722,6 +802,7 @@ const FollowReportWrapper = styled(FlexCenterd)`
   margin-top: 1.5rem;
   /* background-color: blue; */
   justify-content: space-between;
+  cursor: pointer;
 `
 
 const FollowReport = styled(FlexCenterd)`
@@ -790,7 +871,7 @@ const MiddleLayout = styled.div`
 `
 
 // 1. 서비스
-const ServiceLayout = styled(MiddleLayout)`
+const IntroLayout = styled(MiddleLayout)`
   margin: auto;
   width: 100%;
 `
@@ -810,7 +891,7 @@ const ImageContainer = styled(FlexCenterd)`
   justify-content: space-between;
   margin-bottom: 1rem;
 `
-const ServiceImageWrapper = styled(FlexCenterd)`
+const IntroImageWrapper = styled(FlexCenterd)`
   width: 13rem;
   height: 13rem;
   border-radius: 20px;
@@ -824,10 +905,103 @@ const ServiceImageWrapper = styled(FlexCenterd)`
   }
 `
 
-const ServiceContent = styled.div`
+const IntroContent = styled.div`
   width: 100%;
   font-size: 1rem;
   line-height: 2rem;
+`
+
+// 서비스
+const ServiceLayout = styled(MiddleLayout)``
+
+const ServiceContainer = styled(FlexCenterd)`
+  /* background-color: #6bf37f; */
+  gap: 2rem;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  /* box-sizing: border-box; */
+  border-radius: 0.5rem;
+`
+
+const LeftImg = styled(FlexCenterd)`
+  width: 35%;
+  height: 100%;
+  border-radius: 10px 0 0 10px;
+  overflow: hidden;
+  background-color: #fff;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`
+
+const Service = styled.div`
+  /* background-color: yellow; */
+  width: 47%;
+  height: 10rem;
+  border-radius: 10px 0 0 10px;
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
+  border: 2px solid #a2a1a1;
+
+  &:hover {
+    transition: box-shadow 0.3s ease;
+    box-shadow: 4px 4px 4px #a2a1a1;
+
+    ${LeftImg} img {
+      transform: scale(1.1); /* 10% 크게 */
+      transition: all 0.5s ease;
+    }
+  }
+`
+
+const RightContentWrap = styled.div`
+  width: 70%; /* 부모 컴포넌트와 동일한 너비를 가짐 */
+  max-width: 100%; /* 최대 너비 설정 */
+  padding: 0.5rem;
+  box-sizing: border-box; /* 패딩과 보더가 너비에 포함되도록 설정 */
+  overflow-x: hidden; /* 가로 방향으로 넘치는 내용은 잘라냄 */
+  overflow-y: auto;
+
+  /* 스크롤바 디자인 */
+  &::-webkit-scrollbar {
+    width: 5px; /* 스크롤바의 너비 설정 */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 스크롤바 트랙의 배경색 설정 */
+    border-radius: 30px; /* 트랙의 모서리 둥글게 처리 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ffa43a; /* 스크롤바 핸들(썸)의 색상 설정 */
+    border-radius: 30px; /* 핸들의 모서리 둥글게 처리 */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 핸들을 호버했을 때의 색상 변경 */
+  }
+`
+const RightTitle = styled.div`
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+`
+const RightPricingWrap = styled.div`
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+`
+
+const RightPricing = styled.span`
+  color: #ffa43a;
+`
+const RightContent = styled.div`
+  width: 100%;
+  font-size: 0.8rem;
+  line-height: 1.2rem;
+  overflow-wrap: break-word;
 `
 
 // 2. 여행 플랜
@@ -1088,7 +1262,7 @@ const ReviewTitleContainer = styled(FlexCenterd)`
 `
 
 const ReviewTitle = styled(Title)`
-  width: 30%;
+  width: 20%;
   font-size: 1.2rem;
   /* background-color: #fcaa45; */
   margin-bottom: 0;
@@ -1101,7 +1275,7 @@ const TotalReviewCount = styled(Title)`
 
 const ScoreBarContainer = styled(FlexCenterd)`
   /* background-color: #f9fe5e; */
-  width: 100%;
+  width: 70%;
   /* min-height: 20rem; */
   /* padding: 1rem; */
   box-sizing: border-box;
@@ -1134,10 +1308,6 @@ const Bar = styled.div<{ percent: number }>`
   min-height: 0.5rem;
   width: ${({ percent }) => `${percent}%`};
   background-color: var(--color-original);
-`
-const Count = styled(FlexCenterd)`
-  flex: 1;
-  /* background-color: #0044ff; */
 `
 
 const CommentPartition = styled(FlexCenterd)`
@@ -1178,9 +1348,22 @@ const CommentUserName = styled.div`
   font-size: 1rem;
   margin-right: 1rem;
 `
-const Country = styled.div`
+const ScoresContainer = styled(FlexCenterd)`
+  justify-content: flex-start;
+  /* gap: 1.5rem; */
+  margin: 0.5rem 2rem 0.5rem 0;
+`
+const Score = styled.span`
+  font-size: 1rem;
+  /* color: var(--color-original); */
+`
+
+const Created = styled.div`
   font-size: 0.7rem;
 `
+// const Country = styled.div`
+//   font-size: 0.7rem;
+// `
 const Comment = styled.div`
   margin-top: -30px;
   padding: 1rem;
