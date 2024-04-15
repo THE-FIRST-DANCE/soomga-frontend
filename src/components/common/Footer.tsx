@@ -22,6 +22,7 @@ const FooterContainer_div = styled.div`
   align-items: center;
   width: 100%;
   height: auto;
+  border-radius: 40px 40px 0 0;
   background-color: var(--color-original);
 `
 

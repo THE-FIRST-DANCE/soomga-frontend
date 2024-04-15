@@ -21,19 +21,26 @@ import PostCreate from 'components/recommendations/PostCreate'
 import PostEdit from 'components/recommendations/PostEdit'
 import MyPage from 'components/myPageCommon'
 import RequestGuide from 'components/myPageCommon/RequestGuide'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { getCookie } from 'utils/cookie'
 
 const Router = () => {
   // 토큰 관리
   // const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+  const [isAccessToken, setIsAccessToken] = useState<boolean>()
+
+  const [first, setfirst] = useState()
+  console.log('first: ', first)
 
   /* 🟡🟡🟡 기본적으로 토큰이 들어있는지 토큰 상태를 브라우저에서 가져와서 확인 🟡🟡🟡 */
   useEffect(() => {
-    const accessToken = getCookie('accessToken')
-    setRecoilToken({ ...recoilToken, token: !!accessToken })
-  }, [])
+    const accessToken = getCookie('accessToken') //! 쿠키에서 엑세스 토근 가져오기
+    setIsAccessToken(!!accessToken) //! 토큰 상태를 저장
+    // console.log('🌙🌙🌙🌙accessToken: ', accessToken)
+    setRecoilToken({ ...recoilToken, token: !!accessToken }) //! 엑세스 토큰 여부에 따라서 리코일에 토큰값 저장
+    setfirst(JSON.parse(localStorage.getItem('userInfo') ?? ''))
+  }, [recoilToken.token])
 
   return (
     <>
@@ -49,7 +56,8 @@ const Router = () => {
         <Route path="/guides" element={<GuidePage />} />
         <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
-        {recoilToken.token && (
+        {/* {recoilToken.token && ( */}
+        {isAccessToken && (
           <>
             {/* 4. 여행일정 */}
             <Route path="/itinerary" element={<ItineraryPage />} />
@@ -65,7 +73,8 @@ const Router = () => {
         <Route path="/post/create" element={<PostCreate />} />
         <Route path="/post/edit/:post_Id" element={<PostEdit />} />
 
-        {recoilToken.token && (
+        {/* {recoilToken.token && ( */}
+        {isAccessToken && (
           <>
             {/* 6. 여행 플래너 생성 */}
             <Route path="/planner" element={<PlanPage />} />
@@ -88,7 +97,8 @@ const Router = () => {
         )}
         <Route path="redirect" element={<RedirectPage />} />
         {/* 예외 발생 시 -> 로그인 시 OR 비로그인시 */}
-        {recoilToken ? (
+        {/* {recoilToken ? ( */}
+        {isAccessToken ? (
           <Route path="*" element={<Navigate replace to="/" />} />
         ) : (
           <Route path="*" element={<Navigate replace to="/user/login" />} />
