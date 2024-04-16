@@ -100,12 +100,16 @@ const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
         checked: false,
       }))
 
-      const response = await getPlaceRouteEdit({
-        planList: { [period]: periodData },
-        transport: transport,
-      })
+      try {
+        const response = await getPlaceRouteEdit({
+          planList: { [period]: periodData },
+          transport: transport,
+        })
 
-      updatedData[period] = response[period]
+        updatedData[period] = response[period]
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     setIsLoading(false)
@@ -115,6 +119,7 @@ const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
       transport: transport,
       info: info,
     })
+
     handleEdit()
   }
 
@@ -124,7 +129,7 @@ const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
 
   return (
     <Container>
-      <PlanLeftTab period={Object.keys(data).length} onNext={onNext} onPrev={onPrev} nextText="저장" prevText="취소" />
+      <PlanLeftTab period={Object.keys(data).length} onNext={onNext} onPrev={onPrev} nextText="수정" prevText="취소" />
       <DragDropContext onDragEnd={onDragEnd}>
         <PlaceAddSection $editMode={placeAddMode}>
           <Title>여행지 박스</Title>
@@ -233,7 +238,7 @@ const PlanListDiv = styled.div`
 `
 
 const PlanItem = styled.div`
-  width: 80%;
+  width: 8 0%;
 `
 const Line = styled.div`
   width: 1px;
