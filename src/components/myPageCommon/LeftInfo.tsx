@@ -4,15 +4,16 @@ import { useSetRecoilState } from 'recoil'
 import { RequestGuide } from 'state/store/RequestGuide'
 
 export interface userInfoProps {
-  name: string
-  mail: string
-  nickName: string
-  phonNum: string
-  password: string
+  name?: string
+  email?: string
+  nickname?: string
+  phonNum?: string
+  avatar?: string
+  gender?: string
+  password?: string
 }
 
-const LeftInfo = ({ name, mail, nickName, phonNum, password }: userInfoProps) => {
-  // const setRequestOpend = useSetRecoilState<RequestGuideType>(RequestGuide)
+const LeftInfo = ({ name, email, nickname, phonNum, avatar, gender }: userInfoProps) => {
   const setRequestOpend = useSetRecoilState(RequestGuide)
   let userInfo = JSON.parse(localStorage.getItem('userInfo') ?? '')
   console.log('🩷[myPageCommon.LeftInfo] 현재 로그인 유저 정보 :', userInfo)
@@ -22,25 +23,24 @@ const LeftInfo = ({ name, mail, nickName, phonNum, password }: userInfoProps) =>
       <InfoContainer>
         <GuideImageWrapper>
           <UserImageLayout>
-            <GenderMarker />
+            <GenderMarker gender={gender} />
             <img src={guideImg} alt="Img" />
+            {/* <img src={avatar} alt="Img" /> */}
           </UserImageLayout>
         </GuideImageWrapper>
         <Name>{name}</Name>
-        <InfoMail>{userInfo.email}</InfoMail>
+        <InfoMail>{email}</InfoMail>
 
         <InfoBox>
           <InfoName>닉네임</InfoName>
-          <Info>{nickName}</Info>
+          <Info>{nickname}</Info>
         </InfoBox>
         <InfoBox>
           <InfoName>연락처</InfoName>
-          <Info>{phonNum}</Info>
+          {/* <Info>{phonNum}</Info> */}
+          <Info>010-1234-1234</Info>
         </InfoBox>
-        <InfoBox>
-          <InfoName>비밀번호</InfoName>
-          <Info>{password}</Info>
-        </InfoBox>
+
         <Application onClick={() => setRequestOpend((prev) => ({ ...prev, isClick: !prev.isClick }))}>
           가이드 신청
         </Application>
@@ -87,13 +87,11 @@ const UserImageLayout = styled.div`
   }
 `
 
-const GenderMarker = styled.div`
+const GenderMarker = styled.div<{ gender?: string }>`
   position: absolute;
   width: 2rem;
   height: 2rem;
-  /* background-color: ${({ sex }) => (sex === 'male' ? '#4bb3ff' : '#ff8090')}; */
-  /* background-color: #4bb3ff; */ // 남자
-  background-color: #ff8090; // 여자
+  background-color: ${({ gender }) => (gender === 'male' ? '#4bb3ff' : '#ff8090')};
   border-radius: 50%;
   top: -15px;
   left: -15px;
@@ -113,9 +111,7 @@ const InfoBox = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
-  /* background-color: red; */
-  /* gap: 1rem; */
-  /* margin-bottom: 0.5rem; */
+
   margin-bottom: 2rem;
 `
 const InfoName = styled.div``
