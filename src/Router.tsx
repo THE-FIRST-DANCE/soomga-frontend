@@ -7,7 +7,7 @@ import PlanPage from 'pages/PlanPage'
 import GuideDetailPage from 'pages/guide/detail'
 import MainPage from 'pages/home'
 import LoginSignupPage from 'pages/login'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
@@ -23,6 +23,15 @@ import MyPage from 'components/myPageCommon'
 import RequestGuide from 'components/myPageCommon/RequestGuide'
 import { useEffect } from 'react'
 import { getCookie } from 'utils/cookie'
+import Layout from 'components/Layout'
+
+function LayoutWithRouter() {
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
+  )
+}
 
 const Router = () => {
   // 토큰 관리
@@ -38,41 +47,42 @@ const Router = () => {
   return (
     <>
       <Routes>
-        {/* 1. 메인  */}
+        <Route element={<LayoutWithRouter />}>
+          {/* 1. 메인  */}
+          <Route path="/" element={<MainPage />} />
 
-        <Route path="/" element={<MainPage />} />
+          {/* 2. 로그인 && 회원가입  */}
+          <Route path="/user/:id" element={<LoginSignupPage />} />
 
-        {/* 2. 로그인 && 회원가입  */}
-        <Route path="/user/:id" element={<LoginSignupPage />} />
+          {/* 3. 가이드 */}
+          <Route path="/guides" element={<GuidePage />} />
+          <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
-        {/* 3. 가이드 */}
-        <Route path="/guides" element={<GuidePage />} />
-        <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
+          {recoilToken.token && (
+            <>
+              {/* 4. 여행일정 */}
+              <Route path="/itinerary" element={<ItineraryPage />} />
+              <Route path="/schedule" element={<SchedulePage />} />
+            </>
+          )}
+          {/* 5. 여행장소 추천 */}
+          <Route path="/recommendations" element={<RecommendatedPostPage />} />
+          <Route path="/recommendations/:region_Id" element={<RegionsList />} />
+          <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
+          {/* FIXME: 라우팅만 처리 */}
+          <Route path="/post/create" element={<PostCreate />} />
+          <Route path="/post/edit/:post_Id" element={<PostEdit />} />
+
+          {/* 6. 여행 플래너 생성 */}
+          <Route path="/planner" element={<PlanPage />} />
+        </Route>
+
+        <Route path="/planner/create" element={<PlanCreatePage />} />
+        <Route path="/planner/confirm" element={<PlanConfirm />} />
+        <Route path="/planner/confirm/:planId" element={<PlanConfirm />} />
 
         {recoilToken.token && (
           <>
-            {/* 4. 여행일정 */}
-            <Route path="/itinerary" element={<ItineraryPage />} />
-            <Route path="/schedule" element={<SchedulePage />} />
-          </>
-        )}
-
-        {/* 5. 여행장소 추천 */}
-        <Route path="/recommendations" element={<RecommendatedPostPage />} />
-        <Route path="/recommendations/:region_Id" element={<RegionsList />} />
-        <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
-        {/* FIXME: 라우팅만 처리 */}
-        <Route path="/post/create" element={<PostCreate />} />
-        <Route path="/post/edit/:post_Id" element={<PostEdit />} />
-
-        {recoilToken.token && (
-          <>
-            {/* 6. 여행 플래너 생성 */}
-            <Route path="/planner" element={<PlanPage />} />
-            <Route path="/planner/create" element={<PlanCreatePage />} />
-            <Route path="/planner/confirm" element={<PlanConfirm />} />
-            <Route path="/planner/confirm/:planId" element={<PlanConfirm />} />
-
             {/* 7. 채팅 페이지 */}
             <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
 
