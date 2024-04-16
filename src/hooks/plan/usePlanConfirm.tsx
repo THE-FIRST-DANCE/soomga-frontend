@@ -5,19 +5,12 @@ import { PlanConfirmListItem, Plans } from 'interfaces/plan'
 import { useRecoilValue } from 'recoil'
 import { PlanConfirm, PlanConfirmList } from 'state/store/PlanList'
 import { provinces } from 'data/region'
-import { CurrentPeriod } from 'state/store/PlanInfo'
+import { useParams } from 'react-router-dom'
 
-export const usePlanConfirm = (planId: string | null) => {
+export const usePlanConfirm = () => {
+  const { planId } = useParams<{ planId: string }>()
   const planConfirmList = useRecoilValue(PlanConfirmList)
-  const [confirmList, setConfirmList] = useState<PlanConfirm | null>(null)
-  const currentPeriod = useRecoilValue(CurrentPeriod)
-  const [planList, setPlanList] = useState<PlanConfirmListItem[]>([] as PlanConfirmListItem[])
-
-  useEffect(() => {
-    if (confirmList) {
-      setPlanList(confirmList.periodPlan[currentPeriod])
-    }
-  }, [confirmList, currentPeriod])
+  const [planConfirm, setPlanConfirm] = useState<PlanConfirm>(planConfirmList)
 
   const { mutate } = useMutation({
     mutationFn: () => getPlanById(Number(planId)),
@@ -31,7 +24,7 @@ export const usePlanConfirm = (planId: string | null) => {
         periodPlan[item.day] = item.schedules
       })
 
-      setConfirmList({
+      setPlanConfirm({
         periodPlan,
         transport: data.transport,
         info: {
@@ -48,10 +41,14 @@ export const usePlanConfirm = (planId: string | null) => {
   useEffect(() => {
     if (planId) {
       mutate()
-    } else {
-      setConfirmList(planConfirmList)
     }
-  }, [])
+  }, [planId, mutate])
 
-  return { confirmList, planList }
+  useEffect(() => {
+    setPlanConfirm(planConfirmList)
+  }, [planConfirmList])
+
+  return {
+    planConfirm,
+  }
 }

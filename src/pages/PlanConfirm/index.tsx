@@ -1,24 +1,31 @@
 import { useMutation } from '@tanstack/react-query'
-import { savePlan } from 'api/PlanAPI'
+import { deletePlan, savePlan } from 'api/PlanAPI'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import PlanConfirmItem from 'components/planner/PlanConfirmItem'
 import PlanEdit from 'components/planner/PlanEdit'
 import PlanLeftTab from 'components/planner/PlanLeftTab'
-import FullLoading from 'components/shared/FullLoading'
 import { motion } from 'framer-motion'
 import { usePlanConfirm } from 'hooks/plan/usePlanConfirm'
-import { useState } from 'react'
+import { PlanConfirmListItem } from 'interfaces/plan'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { PlanConfirmList } from 'state/store/PlanList'
+import { CurrentPeriod } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import { svgToDataUrl } from 'utils/svgToDataUrl'
 
 const PlanConfirmPage = () => {
-  const planConfirmList = useRecoilValue(PlanConfirmList)
-
+  const { planConfirm } = usePlanConfirm()
+  const currentPeriod = useRecoilValue(CurrentPeriod)
+  const [planList, setPlanList] = useState<PlanConfirmListItem[]>([])
   const { planId } = useParams<{ planId: string }>()
-  const { confirmList, planList } = usePlanConfirm(planId ? planId : null)
+  const memberId = 2
+
+  useEffect(() => {
+    if (planConfirm.periodPlan[currentPeriod]) {
+      setPlanList(planConfirm.periodPlan[currentPeriod])
+    }
+  }, [planConfirm, currentPeriod])
 
   const [editMode, setEditMode] = useState<boolean>(false)
 
@@ -31,14 +38,22 @@ const PlanConfirmPage = () => {
     },
   })
 
+  const { mutate: deletePlanMutate } = useMutation({
+    mutationFn: deletePlan,
+    onSuccess: () => {
+      navigate('/planner')
+    },
+  })
+
   const onNext = async () => {
     const data = {
-      planId: 1,
-      title: planConfirmList.info.title,
-      period: planConfirmList.info.period,
-      region: planConfirmList.info.province,
-      list: planConfirmList.periodPlan,
-      transport: planConfirmList.transport,
+      memberId,
+      planId: planId ? Number(planId) : null,
+      title: planConfirm.info.title,
+      period: planConfirm.info.period,
+      region: planConfirm.info.province,
+      list: planConfirm.periodPlan,
+      transport: planConfirm.transport,
     }
 
     savePlanMutate(data)
@@ -50,6 +65,14 @@ const PlanConfirmPage = () => {
 
   const handleEdit = () => {
     setEditMode(false)
+  }
+
+  const onDel = () => {
+    if (!planId) return
+
+    if (window.confirm('정말 삭제하시겠습니까?') === false) return
+
+    deletePlanMutate(Number(planId))
   }
 
   const markers =
@@ -72,19 +95,15 @@ const PlanConfirmPage = () => {
       }
     })
 
-  if (!confirmList) {
-    return <FullLoading isLoading />
-  }
-
   return (
     <Container>
       <LeftSection initial={{ x: -100 }} animate={{ x: 0 }} transition={{ duration: 1 }}>
         {editMode ? (
           <PlanEdit
-            data={confirmList.periodPlan}
+            data={planConfirm.periodPlan}
             handleEdit={handleEdit}
-            info={confirmList.info}
-            transport={confirmList.transport}
+            info={planConfirm.info}
+            transport={planConfirm.transport}
           />
         ) : (
           <>
@@ -92,13 +111,15 @@ const PlanConfirmPage = () => {
               onNext={onNext}
               onEdit={onEdit}
               nextText="저장"
-              editText="편집"
-              period={confirmList.info.period}
+              editText="수정"
+              period={planConfirm.info.period}
+              onDel={onDel}
+              planMember={1}
             />
             <LeftItem>
               <Header>
-                <Title>{confirmList.info.title}</Title>
-                <Region>{confirmList.info.province}</Region>
+                <Title>{planConfirm.info.title}</Title>
+                <Region>{planConfirm.info.province}</Region>
               </Header>
               <PlanListDiv>
                 {planList.length > 0 &&
@@ -113,8 +134,8 @@ const PlanConfirmPage = () => {
         <GoogleMapLoad
           mapContainerStyle={{ width: '100%', height: '100%' }}
           center={{
-            lat: confirmList.info.lat,
-            lng: confirmList.info.lng,
+            lat: planConfirm.info.lat,
+            lng: planConfirm.info.lng,
           }}
           customMarker={editMode ? [] : markers}
         />
@@ -131,7 +152,7 @@ const Container = styled.div`
 
 const LeftSection = styled(motion.div)`
   display: flex;
-  flex: 1.5;
+  flex: 2;
   height: 100vh;
 `
 
