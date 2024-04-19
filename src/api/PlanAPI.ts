@@ -136,3 +136,21 @@ export const deletePlan = async (planId: number) => {
 
   return response.data
 }
+
+export const getPlanComments = async (planId: number) => {
+  const response = await api.get(`plans/${planId}/comments`)
+
+  return response.data
+}
+
+export const addPlanComment = async (planCommentDto: { planId: number; content: string; memberId: number }) => {
+  const response = await api.post('plans/comment', planCommentDto)
+
+  return response.data
+}
+
+export const deletePlanComment = async (commentId: number) => {
+  const response = await api.delete(`plans/comment/${commentId}`)
+
+  return response.data
+}
