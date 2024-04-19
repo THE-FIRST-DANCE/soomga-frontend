@@ -13,7 +13,7 @@ const PlanItem = ({ data }: PlanListProp) => {
 
   // 여행 일정 컨펌 리스트로 이동 (리코일 상태 업데이트)
   const onClick = () => {
-    navigate(`/planner/confirm/${data.id}`)
+    navigate(`/planner/detail/${data.id}`)
   }
 
   return (
