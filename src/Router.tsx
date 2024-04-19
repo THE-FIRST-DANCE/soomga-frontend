@@ -24,6 +24,7 @@ import RequestGuide from 'components/myPageCommon/RequestGuide'
 import { useEffect, useState } from 'react'
 import { getCookie } from 'utils/cookie'
 import Layout from 'components/Layout'
+import PlanDetailPage from 'pages/PlanDetailPage'
 
 function LayoutWithRouter() {
   return (
@@ -48,7 +49,6 @@ const Router = () => {
     setIsAccessToken(!!accessToken) //! 토큰 상태를 저장
     // console.log('🌙🌙🌙🌙accessToken: ', accessToken)
     setRecoilToken({ ...recoilToken, token: !!accessToken }) //! 엑세스 토큰 여부에 따라서 리코일에 토큰값 저장
-    setfirst(JSON.parse(localStorage.getItem('userInfo') ?? ''))
   }, [recoilToken.token])
 
   return (
@@ -73,15 +73,15 @@ const Router = () => {
               <Route path="/schedule" element={<SchedulePage />} />
             </>
           )}
+          {/* 5. 여행장소 추천 */}
+          <Route path="/recommendations" element={<RecommendatedPostPage />} />
+          <Route path="/recommendations/:region_Id" element={<RegionsList />} />
+          <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
+          {/* FIXME: 라우팅만 처리 */}
+          <Route path="/post/create" element={<PostCreate />} />
+          <Route path="/post/edit/:post_Id" element={<PostEdit />} />
+          <Route path="/planner/detail/:planId" element={<PlanDetailPage />} />
         </Route>
-
-        {/* 5. 여행장소 추천 */}
-        <Route path="/recommendations" element={<RecommendatedPostPage />} />
-        <Route path="/recommendations/:region_Id" element={<RegionsList />} />
-        <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
-        {/* FIXME: 라우팅만 처리 */}
-        <Route path="/post/create" element={<PostCreate />} />
-        <Route path="/post/edit/:post_Id" element={<PostEdit />} />
 
         {/* 6. 여행 플래너 생성 */}
         <Route path="/planner" element={<PlanPage />} />
