@@ -60,6 +60,7 @@ const PlanConfirmPage = () => {
   }
 
   const onEdit = () => {
+    if (window.confirm('수정을 하게 되면 작성한 설명들이 초기화됩니다. 수정하시겠습니까?') === false) return
     setEditMode(true)
   }
 
