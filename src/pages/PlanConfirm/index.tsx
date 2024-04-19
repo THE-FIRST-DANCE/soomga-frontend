@@ -56,6 +56,8 @@ const PlanConfirmPage = () => {
       transport: planConfirm.transport,
     }
 
+    if (window.confirm(planId ? '수정하시겠습니까?' : '저장하시겠습니까?') === false) return
+
     savePlanMutate(data)
   }
 
