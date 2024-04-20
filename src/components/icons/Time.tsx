@@ -4,6 +4,7 @@ interface TimeProps {
   $width?: string
   $height?: string
   $color?: string
+  $marginLeft?: string
 }
 
 const Time = ({ ...props }: TimeProps) => {
@@ -27,4 +28,5 @@ const TimeStyle = styled.svg<TimeProps>`
   height: ${(props) => props.$height};
   fill: ${(props) => props.$color};
   margin-right: 3px;
+  margin-left: ${(props) => props.$marginLeft};
 `
