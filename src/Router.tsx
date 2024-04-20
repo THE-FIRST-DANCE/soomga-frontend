@@ -36,10 +36,10 @@ const Router = () => {
   /* 🟡🟡🟡 기본적으로 토큰이 들어있는지 토큰 상태를 브라우저에서 가져와서 확인 🟡🟡🟡 */
   useEffect(() => {
     const accessToken = getCookie('accessToken') //! 쿠키에서 엑세스 토근 가져오기
+    console.log('🌙🌙🌙🌙accessToken: ', accessToken)
     setIsAccessToken(!!accessToken) //! 토큰 상태를 저장
-    // console.log('🌙🌙🌙🌙accessToken: ', accessToken)
     setRecoilToken({ ...recoilToken, token: !!accessToken }) //! 엑세스 토큰 여부에 따라서 리코일에 토큰값 저장
-    setuserInfo(JSON.parse(localStorage.getItem('userInfo') ?? ''))
+    setuserInfo(JSON.parse(localStorage.getItem('userInfo') ?? '{}'))
   }, [recoilToken.token])
 
   return (
