@@ -354,6 +354,7 @@ const GuideDetailPage = () => {
                     <img src={guideImg} alt="" />
                   </LeftImg>
                   <RightContentWrap>
+                    <RightHover>&#62;</RightHover>
                     <RightTitle>{`제목`}</RightTitle>
                     <RightPricingWrap>
                       요금: <RightPricing>{70000}</RightPricing>
@@ -870,7 +871,7 @@ const MiddleLayout = styled.div`
   position: relative;
 `
 
-// 1. 서비스
+// 1. 소개
 const IntroLayout = styled(MiddleLayout)`
   margin: auto;
   width: 100%;
@@ -920,13 +921,11 @@ const ServiceContainer = styled(FlexCenterd)`
   width: 100%;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  /* box-sizing: border-box; */
   border-radius: 0.5rem;
 `
 
 const LeftImg = styled(FlexCenterd)`
-  width: 35%;
+  width: 20%;
   height: 100%;
   border-radius: 10px 0 0 10px;
   overflow: hidden;
@@ -937,52 +936,75 @@ const LeftImg = styled(FlexCenterd)`
   }
 `
 
+const RightHover = styled(FlexCenterd)`
+  width: 3%;
+  height: 100%;
+  position: absolute;
+  background-color: var(--color-original);
+  color: white;
+  top: 0;
+  right: -50px;
+  border-radius: 0 10px 10px 0;
+  /* opacity: 0; */
+  transition: 0.5s ease;
+`
+
 const Service = styled.div`
+  position: relative;
   /* background-color: yellow; */
-  width: 47%;
+  width: 80%;
   height: 10rem;
-  border-radius: 10px 0 0 10px;
+  border-radius: 10px;
   display: flex;
   justify-content: flex-start;
   cursor: pointer;
-  border: 2px solid #a2a1a1;
+  border: 1px solid #e2e1e1;
+  box-shadow: 1px 1px 4px #bfbebe;
+  overflow: hidden;
 
   &:hover {
-    transition: box-shadow 0.3s ease;
-    box-shadow: 4px 4px 4px #a2a1a1;
+    transition: box-shadow 0.5s ease;
+    box-shadow: 5px 5px 4px #a2a1a1;
 
     ${LeftImg} img {
       transform: scale(1.1); /* 10% 크게 */
-      transition: all 0.5s ease;
+      transition: transform 0.5s ease;
+    }
+
+    ${RightHover} {
+      right: 0;
+      opacity: 1;
     }
   }
 `
 
 const RightContentWrap = styled.div`
-  width: 70%; /* 부모 컴포넌트와 동일한 너비를 가짐 */
-  max-width: 100%; /* 최대 너비 설정 */
-  padding: 0.5rem;
-  box-sizing: border-box; /* 패딩과 보더가 너비에 포함되도록 설정 */
-  overflow-x: hidden; /* 가로 방향으로 넘치는 내용은 잘라냄 */
+  /* width: 75%; */
+  width: 75%;
+  padding: 1rem 0.7rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
   overflow-y: auto;
 
-  /* 스크롤바 디자인 */
+  /* 스크롤바 넓이 */
   &::-webkit-scrollbar {
-    width: 5px; /* 스크롤바의 너비 설정 */
+    width: 5px;
   }
 
+  /* 스크롤바 트랙 */
   &::-webkit-scrollbar-track {
-    background: #f1f1f1; /* 스크롤바 트랙의 배경색 설정 */
-    border-radius: 30px; /* 트랙의 모서리 둥글게 처리 */
+    background: #f1f1f1;
+    border-radius: 30px;
   }
 
+  /* 스크롤바 */
   &::-webkit-scrollbar-thumb {
-    background: #ffa43a; /* 스크롤바 핸들(썸)의 색상 설정 */
-    border-radius: 30px; /* 핸들의 모서리 둥글게 처리 */
+    background: #ffa43a;
+    border-radius: 30px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #555; /* 핸들을 호버했을 때의 색상 변경 */
+    background: #555;
   }
 `
 const RightTitle = styled.div`
