@@ -7,14 +7,27 @@ interface PlanLeftTabProps {
   onNext: () => void
   onPrev?: () => void
   onEdit?: () => void
+  onDel?: () => void
   prevText?: string
   nextText: string
   editText?: string
   period: number
+  planMember?: number
 }
 
-const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText, period }: PlanLeftTabProps) => {
+const PlanLeftTab = ({
+  onNext,
+  onPrev,
+  onEdit,
+  prevText,
+  nextText,
+  editText,
+  onDel,
+  period,
+  planMember,
+}: PlanLeftTabProps) => {
   const [currentPeriod, setCurrentPeriod] = useRecoilState(CurrentPeriod)
+  const memberId = 2
 
   return (
     <LeftTab>
@@ -40,6 +53,15 @@ const PlanLeftTab = ({ onNext, onPrev, onEdit, prevText, nextText, editText, per
 
       {/* 이전, 다음 */}
       <TabBox>
+        {onDel && planMember == memberId && (
+          <DelPage
+            onClick={() => {
+              onDel()
+            }}
+          >
+            삭제
+          </DelPage>
+        )}
         {onPrev && (
           <PrevPage
             onClick={() => {
@@ -186,5 +208,21 @@ const EditPage = styled.div`
 
   &:hover {
     background-color: var(--bs-gray-500);
+  }
+`
+
+const DelPage = styled.div`
+  width: 80%;
+  padding: 1rem 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: var(--bs-danger);
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-original);
   }
 `

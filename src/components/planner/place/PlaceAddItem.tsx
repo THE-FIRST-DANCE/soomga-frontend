@@ -49,7 +49,13 @@ const PlaceAddItem = ({ item, changeCenter, region }: PlaceAddItemProps) => {
         <Plus style={{ width: '1rem', height: '1rem', fill: 'var(--bs-gray-500)' }} />
       </CheckContainer>
 
-      <PlaceAddModal region={region} isOpen={isOpen} onRequestClose={() => setIsOpen(false)} place={item} />
+      <PlaceAddModal
+        region={region}
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        place={item}
+        image={image}
+      />
     </Container>
   )
 }
