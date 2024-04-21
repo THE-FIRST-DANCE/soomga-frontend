@@ -71,6 +71,7 @@ const PlanEdit = ({ data, info, handleEdit, transport }: PlanEditProps) => {
         nextPlaceGoogleId: '',
         nextTime: '',
         stayTime: '1시간 0분',
+        description: '',
       })
 
       updatePlanList(destItems)
@@ -238,7 +239,7 @@ const PlanListDiv = styled.div`
 `
 
 const PlanItem = styled.div`
-  width: 8 0%;
+  width: 80%;
 `
 const Line = styled.div`
   width: 1px;
