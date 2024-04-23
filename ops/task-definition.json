@@ -1,8 +1,8 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:953647671570:task-definition/soomga-frontend:1",
+    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:953647671570:task-definition/soomga-frontend:2",
     "containerDefinitions": [
         {
-            "name": "soomga-frontend",
+            "name": "soomga-frontend-container",
             "image": "953647671570.dkr.ecr.ap-northeast-2.amazonaws.com/soomga-frontend:627f1fea5847af1c18865aafb1923ef95a146242",
             "cpu": 0,
             "portMappings": [
@@ -37,7 +37,7 @@
     "taskRoleArn": "arn:aws:iam::953647671570:role/role-nestjs",
     "executionRoleArn": "arn:aws:iam::953647671570:role/role-nestjs",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 2,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -83,7 +83,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-04-23T17:08:24.717Z",
+    "registeredAt": "2024-04-23T17:18:13.035Z",
     "registeredBy": "arn:aws:iam::953647671570:root",
     "tags": []
 }
