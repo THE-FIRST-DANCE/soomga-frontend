@@ -66,14 +66,14 @@ const SelectTransportation = ({ isOpen, onRequestClose }: SelectTransportationPr
               className={transportation === 'transit' ? 'active' : ''}
               onClick={() => setTransportation('transit')}
             >
-              <SubwayIcon style={{ width: '2rem', height: '2rem' }} />
+              <SubwayIcon width="2rem" height="2rem" />
               <div>대중교통</div>
             </SelectTransportationItem>
             <SelectTransportationItem
               className={transportation === 'driving' ? 'active' : ''}
               onClick={() => setTransportation('driving')}
             >
-              <CarIcon style={{ width: '2rem', height: '2rem' }} />
+              <CarIcon width="2rem" height="2rem" />
               <div>승용차</div>
             </SelectTransportationItem>
           </Select>
@@ -153,7 +153,11 @@ const FooterText = styled.div<{ style?: CSSProp }>`
 `
 
 interface IconProps {
-  style: CSSProp
+  // style: CSSProp
+  // style: React.CSSProperties
+  width?: string
+  height?: string
+  marginRight?: string
 }
 
 export const SubwayIcon = ({ ...props }: IconProps) => {
@@ -199,5 +203,7 @@ export const CarIcon = ({ ...props }: IconProps) => {
 }
 
 const IconStyle = styled.svg<IconProps>`
-  ${(props) => props.style}
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
+  margin-right: ${(props) => props.marginRight};
 `

@@ -13,37 +13,37 @@ interface Comment {
 //   comments: Comment
 // }
 
-const CommentForm = ({ comment }: Comment) => {
-  // 댓글 더보기
-  const [visibleComments, setvisibleComments] = useState(5)
-  const ADDCOMMENT = 5
-  const showMoreComments = () => {
-    setvisibleComments(visibleComments + ADDCOMMENT)
-  }
+// const CommentForm = ({ comment }: Comment) => {
+//   // 댓글 더보기
+//   const [visibleComments, setvisibleComments] = useState(5)
+//   const ADDCOMMENT = 5
+//   const showMoreComments = () => {
+//     setvisibleComments(visibleComments + ADDCOMMENT)
+//   }
 
-  return (
-    <CommentLayout>
-      {/* 이름 + 국정 + 별 + 일자 */}
-      <CommentContainer>
-        <CommentUserWrapper>
-          <CommentUserName>{comment.user}</CommentUserName>
-          <Country>{comment.country}</Country>
-        </CommentUserWrapper>
-        <CommentUserWrapper>
-          <CommentUserName>
-            {Array.from({ length: comment.star }, (_, index) => (
-              <Star key={index} width="20px" height="20px" fill="var(--color-primary)" />
-            ))}
-          </CommentUserName>
-          {/* <Country>{new Date().toLocaleDateString()}</Country> */}
-        </CommentUserWrapper>
-      </CommentContainer>
-      <Comment>{comment.comment}</Comment>
-    </CommentLayout>
-  )
-}
+//   return (
+//     <CommentLayout>
+//       {/* 이름 + 국정 + 별 + 일자 */}
+//       <CommentContainer>
+//         <CommentUserWrapper>
+//           <CommentUserName>{comment.user}</CommentUserName>
+//           <Country>{comment.country}</Country>
+//         </CommentUserWrapper>
+//         <CommentUserWrapper>
+//           <CommentUserName>
+//             {Array.from({ length: comment.star }, (_, index) => (
+//               <Star key={index} width="20px" height="20px" fill="var(--color-primary)" />
+//             ))}
+//           </CommentUserName>
+//           {/* <Country>{new Date().toLocaleDateString()}</Country> */}
+//         </CommentUserWrapper>
+//       </CommentContainer>
+//       <Comment>{comment.comment}</Comment>
+//     </CommentLayout>
+//   )
+// }
 
-export default CommentForm
+// export default CommentForm
 /* 코멘트 */
 const FlexCenterd = styled.div`
   display: flex;

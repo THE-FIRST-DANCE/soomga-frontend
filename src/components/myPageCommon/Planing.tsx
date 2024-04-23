@@ -110,6 +110,8 @@ const Planing = () => {
   )
 }
 
+const a = () => <CarIcon width="30px" height="30px" marginRight="10px" />
+
 export default Planing
 
 const FlexCenterd = styled.div`
