@@ -1,17 +1,27 @@
 import axios from 'axios'
-import { GooglePlaceResponse, PlaceData, Plans } from 'interfaces/plan'
+// import { GLOBAL_CONFIG } from 'global.config'
+import { GooglePlaceResponse, PlaceData, PlanConfirmPeriodList, Plans } from 'interfaces/plan'
 import { PeriodList } from 'state/store/PlanList'
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3000/',
+  baseURL: 'http://localhost:3000/api/',
   withCredentials: true,
 })
 
-export const getSearchPlaceGoogle = async (query: string, location: string): Promise<GooglePlaceResponse> => {
+export const getSearchPlaceGoogle = async ({
+  query,
+  location,
+  pagetoken,
+}: {
+  query: string
+  location: string
+  pagetoken: string | null
+}) => {
   const response = await api.get('places/search', {
     params: {
       query,
       location,
+      pagetoken,
     },
   })
 
@@ -24,11 +34,13 @@ export const addPlaceApi = async (data: PlaceData) => {
   return response.data
 }
 
-export const getPlaceApi = async (category: string, region: string) => {
+export const getPlaceApi = async (category: string, region: string, cursor: number | null, search: string) => {
   const response = await api.get('places', {
     params: {
       category,
       region,
+      cursor,
+      search,
     },
   })
 
@@ -62,7 +74,17 @@ export const getPlaceRouteEdit = async ({ planList, transport }: PlanListConfirm
   return response.data
 }
 
-export const savePlan = async (data: any) => {
+interface PlanSaveData {
+  memberId: number
+  planId: number | null
+  title: string
+  period: number
+  region: string
+  list: PlanConfirmPeriodList
+  transport: string
+}
+
+export const savePlan = async (data: PlanSaveData) => {
   const response = await api.post('plans/save', data)
 
   return response.data
@@ -105,6 +127,30 @@ export const getPlanById = async (planId: number) => {
 
 export const getPlanByUserId = async (userId: number): Promise<Plans> => {
   const response = await api.get(`plans/user/${userId}`)
+
+  return response.data
+}
+
+export const deletePlan = async (planId: number) => {
+  const response = await api.delete(`plans/${planId}`)
+
+  return response.data
+}
+
+export const getPlanComments = async (planId: number) => {
+  const response = await api.get(`plans/${planId}/comments`)
+
+  return response.data
+}
+
+export const addPlanComment = async (planCommentDto: { planId: number; content: string; memberId: number }) => {
+  const response = await api.post('plans/comment', planCommentDto)
+
+  return response.data
+}
+
+export const deletePlanComment = async (commentId: number) => {
+  const response = await api.delete(`plans/comment/${commentId}`)
 
   return response.data
 }

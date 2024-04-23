@@ -7,6 +7,7 @@ import { styled } from 'styled-components'
 import seoul from '../../assets/seoul.png'
 import busan from '../../assets/busan.png'
 import ulsan from '../../assets/ulsan.png'
+import React from 'react'
 const plans = [
   {
     seoul: [],
@@ -68,7 +69,7 @@ const Planing = () => {
                   <PlanContent isPlanOpen={isPlanOpen[index]}>
                     {plan.locations.map((location, index) => {
                       return (
-                        <>
+                        <React.Fragment key={index}>
                           <ContentFrame>
                             <LocationImage>
                               <img src={ulsan} alt="Noimage" />
@@ -94,7 +95,7 @@ const Planing = () => {
                               {`${30} 분  `}
                             </TravelTime>
                           )}
-                        </>
+                        </React.Fragment>
                       )
                     })}
                     {/* --------------------------------------------------------- */}
@@ -108,6 +109,8 @@ const Planing = () => {
     </Layout>
   )
 }
+
+const a = () => <CarIcon width="30px" height="30px" marginRight="10px" />
 
 export default Planing
 

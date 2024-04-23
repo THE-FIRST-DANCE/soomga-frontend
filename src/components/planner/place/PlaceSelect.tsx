@@ -3,10 +3,12 @@ import styled from 'styled-components'
 import PlaceItem from './PlaceItem'
 import Input from 'components/shared/Input'
 import SearchIcon from 'components/icons/Search'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { getPlaceApi } from 'api/PlanAPI'
 import { PlaceData } from 'interfaces/plan'
 import Spinner from 'components/shared/Spinner'
+import { useDebounce } from 'hooks/useDebounce'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 export const categories = [
   { label: '추천', value: 'all' },
@@ -29,24 +31,32 @@ const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean 
     }
   }
 
-  const getPlace = () => {
-    return getPlaceApi(selectedCategory, region)
-  }
+  const debounceSearch = useDebounce(search, 1000)
 
-  const { isLoading, data } = useQuery({
-    queryKey: ['places'],
-    queryFn: getPlace,
+  const { data, isLoading, isFetching, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['places', selectedCategory, region, search],
+    queryFn: ({ pageParam = 0 }) => {
+      return getPlaceApi(selectedCategory, region, pageParam, debounceSearch)
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.nextCursor) {
+        return lastPage.nextCursor
+      }
+    },
+    refetchOnWindowFocus: false,
   })
+
+  const loadmore = () => {
+    fetchNextPage()
+  }
 
   useEffect(() => {
     if (data) {
-      setPlaces(data)
+      const newPlaces = data.pages.map((page) => page.items).flat()
+      setPlaces(newPlaces)
     }
   }, [data])
-
-  const filteredPlaces = places.filter((item) => {
-    return item.name.includes(search)
-  })
 
   return (
     <>
@@ -86,19 +96,26 @@ const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean 
 
       {/* 아이템 */}
       <ItemList>
-        {isLoading ? (
-          <Spinner type="ClipLoader" loading={isLoading} />
-        ) : places.length > 0 ? (
-          filteredPlaces.map((item) => <PlaceItem key={item.id} data={item} editMode={editMode} />)
-        ) : (
-          <div
-            style={{
-              marginTop: '1rem',
-            }}
-          >
-            장소가 없습니다
-          </div>
-        )}
+        <InfiniteScroll
+          dataLength={places.length}
+          next={loadmore}
+          hasMore={hasNextPage}
+          loader={<Spinner type="ClipLoader" loading={isFetching} />}
+        >
+          {isLoading ? (
+            <Spinner type="ClipLoader" loading={isLoading} />
+          ) : places.length > 0 ? (
+            places.map((place) => <PlaceItem key={place.id} data={place} editMode={editMode} />)
+          ) : (
+            <div
+              style={{
+                marginTop: '1rem',
+              }}
+            >
+              장소가 없습니다
+            </div>
+          )}
+        </InfiniteScroll>
       </ItemList>
     </>
   )
@@ -141,8 +158,7 @@ const ItemList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
-  box-sizing: border-box;
   width: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 `

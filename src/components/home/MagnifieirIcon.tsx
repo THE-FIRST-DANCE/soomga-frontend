@@ -1,7 +1,9 @@
 import styled, { CSSProp } from 'styled-components'
 
 interface MagnifieirProps {
-  style: CSSProp
+  $width?: string
+  $height?: string
+  $fill?: string
 }
 const MagnifieirIcon = ({ ...props }: MagnifieirProps) => {
   return (
@@ -26,5 +28,7 @@ const MagnifieirIcon = ({ ...props }: MagnifieirProps) => {
 export default MagnifieirIcon
 
 const MagnifieirStyle = styled.svg<MagnifieirProps>`
-  ${(props) => props.style};
+  $width: ${({ $width }) => $width};
+  $height: ${({ $height }) => $height};
+  $fill: ${({ $fill }) => $fill};
 `

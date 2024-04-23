@@ -30,9 +30,15 @@ const RangeComponent: React.FC<RangeComponentProps> = ({
       <LangeTitle>{title}</LangeTitle>
       <Wrapper>
         <LangeTextWrapper>
-          <LangeText>{rangeValues[0]}</LangeText>
-          <div>~</div>
-          <LangeText>{rangeValues[1]}</LangeText>
+          {value != 0 ? (
+            <>
+              <LangeText>{rangeValues[0]}</LangeText>
+              <div>~</div>
+              <LangeText>{rangeValues[1]}</LangeText>
+            </>
+          ) : (
+            <LangeText>범위를 정해주세요</LangeText>
+          )}
         </LangeTextWrapper>
         <InputLange type="range" value={value} name={name} max={max} min={min} step={step} onChange={onChange} />
       </Wrapper>
@@ -45,7 +51,8 @@ export default RangeComponent
 // 횟수
 const LangeTextWrapper = styled.div`
   display: flex;
-  width: 40%;
+  /* width: 40%; */
+  width: 80%;
   justify-content: space-around;
   /* background-color: #6e51e3; */
 `

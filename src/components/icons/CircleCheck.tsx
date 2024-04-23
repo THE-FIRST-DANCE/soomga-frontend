@@ -1,7 +1,8 @@
 import { CSSProp, styled } from 'styled-components'
 
 interface CircleCheckProps {
-  style: CSSProp
+  $width?: string
+  $height?: string
 }
 
 const CircleCheck = ({ ...props }: CircleCheckProps) => {
@@ -25,5 +26,6 @@ const CircleCheck = ({ ...props }: CircleCheckProps) => {
 export default CircleCheck
 
 const CircleCheckStyle = styled.svg<CircleCheckProps>`
-  ${(props) => props.style}
+  width: ${({ $width }) => $width};
+  height: ${({ $height }) => $height};
 `

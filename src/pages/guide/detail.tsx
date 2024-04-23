@@ -222,25 +222,25 @@ const GuideDetailPage = () => {
             {/* SNS */}
             <SnsWrapper>
               <IconWrapper>
-                <XIcon width="0.7rem" height="0.7rem" />
+                <XIcon $width="0.7rem" $height="0.7rem" />
               </IconWrapper>
               <IconWrapper>
-                <InstagramIcon width="0.7rem" height="0.7rem" />
+                <InstagramIcon $width="0.7rem" $height="0.7rem" />
               </IconWrapper>
             </SnsWrapper>
             {/* 인증 */}
             <AutentificationWrapper>
               <Autentification>
                 <Method>{`휴대폰`}</Method>
-                <AuthIcon width="1rem" height="1rem" />
+                <AuthIcon $width="0.3rem" $height="0.3rem" />
               </Autentification>
               <Autentification>
                 <Method>{`신분증`}</Method>
-                <AuthIcon width="1rem" height="1rem" />
+                <AuthIcon $width="0.3rem" $height="0.3rem" />
               </Autentification>
               <Autentification>
                 <Method>{`계좌`}</Method>
-                <AuthIcon width="1rem" height="1rem" />
+                <AuthIcon $width="0.3rem" $height="0.3rem" />
               </Autentification>
             </AutentificationWrapper>
 
@@ -263,7 +263,13 @@ const GuideDetailPage = () => {
             {/* 채팅 버튼 */}
             <ChatBtnWrapper>
               <ChatButton>
-                <ChatIcon width={'1.5rem'} heigth={'1.5rem'} fill={'white'} />
+                <ChatIcon
+                  style={{
+                    width: '1.5rem',
+                    heigth: '1.5rem',
+                    fill: 'white',
+                  }}
+                />
                 채팅하기
               </ChatButton>
             </ChatBtnWrapper>
@@ -271,11 +277,11 @@ const GuideDetailPage = () => {
             {/* 팔로우 신고하기 */}
             <FollowReportWrapper>
               <Follow>
-                <FollowIcon width={'30px'} heigth={'30px'} />
+                <FollowIcon style={{ width: '30px', height: '30px' }} />
                 팔로우
               </Follow>
               <Report>
-                <CautionIcon width={'20px'} heigth={'20px'} />
+                <CautionIcon style={{ width: '20px', height: '20px' }} />
                 신고
               </Report>
             </FollowReportWrapper>
@@ -352,7 +358,7 @@ const GuideDetailPage = () => {
                         {plan.locations.map((location, index) => {
                           return (
                             <>
-                              <ContentFrame>
+                              <ContentFrame key={location}>
                                 <LocationImage>
                                   <img src={ulsan} alt="Noimage" />
                                 </LocationImage>
@@ -373,7 +379,13 @@ const GuideDetailPage = () => {
 
                               {index !== plan.locations.length - 1 && (
                                 <TravelTime>
-                                  <CarIcon width="30px" height="30px" marginRight="10px" />
+                                  <CarIcon
+                                    style={{
+                                      width: '30px',
+                                      height: '30px',
+                                      marginRight: '10px',
+                                    }}
+                                  />
                                   {`${30} 분  `}
                                 </TravelTime>
                               )}
@@ -411,17 +423,17 @@ const GuideDetailPage = () => {
                 <AverageScore>4.3</AverageScore>
                 <ScoreListContainer>
                   <ListContainer>
-                    <Comunication width=" 2rem" height=" 2rem" />
+                    <Comunication $width=" 2rem" $height=" 2rem" />
                     <CheckPoint>의사소통</CheckPoint>
                     <CheckScore>4.3</CheckScore>
                   </ListContainer>
                   <ListContainer>
-                    <CircleCheck width=" 2rem" height=" 2rem" />
+                    <CircleCheck $width=" 2rem" $height=" 2rem" />
                     <CheckPoint>정확도</CheckPoint>
                     <CheckScore>4.3</CheckScore>
                   </ListContainer>
                   <ListContainer>
-                    <Location width=" 2rem" height=" 2rem" />
+                    <Location $width=" 2rem" $height=" 2rem" />
                     <CheckPoint>위치</CheckPoint>
                     <CheckScore>4.3</CheckScore>
                   </ListContainer>
@@ -463,7 +475,7 @@ const GuideDetailPage = () => {
                     <CommentUserWrapper>
                       <CommentUserName>
                         {Array.from({ length: comment.star }, (_, index) => (
-                          <Star key={index} width="20px" height="20px" fill="var(--color-primary)" />
+                          <Star key={index} $width="20px" $height="20px" $fill="var(--color-primary)" />
                         ))}
                       </CommentUserName>
                       <Country>{new Date().toLocaleDateString()}</Country>
@@ -581,8 +593,6 @@ const GenderMarker = styled.div`
   position: absolute;
   width: 2rem;
   height: 2rem;
-  /* background-color: ${({ sex }) => (sex === 'male' ? '#4bb3ff' : '#ff8090')}; */
-  /* background-color: #4bb3ff; */ // 남자
   background-color: #ff8090; // 여자
   border-radius: 50%;
   top: -15px;

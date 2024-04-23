@@ -24,6 +24,7 @@ const Header = () => {
   const [nowLang, setnowLang] = useState<string>('KO') // 현재 언어 상태 : 기본 한국어
 
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+  console.log('recoilToken: ', recoilToken)
 
   // 언어 변경 : 커스텀훅_useClickOutsideToggle
   const {
@@ -171,8 +172,10 @@ const Header = () => {
                   <UseTab_btn
                     onClick={() => {
                       getRemoveCookie('accessToken')
-                      // window.location.reload()
-                      setRecoilToken((prev) => !prev)
+                      setRecoilToken({ token: false })
+                      // setRecoilToken((prev) => !prev)
+
+                      localStorage.setItem('userInfo', JSON.stringify({}))
                       toast.success('로그아웃 되었습니다')
                       navigate('/')
                     }}

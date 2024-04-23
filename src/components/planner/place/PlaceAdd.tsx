@@ -1,26 +1,55 @@
 import { PlanInfo } from 'state/store/PlanInfo'
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Input from 'components/shared/Input'
 import SearchIcon from 'components/icons/Search'
 import { getSearchPlaceGoogle } from 'api/PlanAPI'
 import GoogleMapLoad from '../GoogleMap'
 import { GooglePlace } from 'interfaces/plan'
 import PlaceAddItem from './PlaceAddItem'
+import Spinner from 'components/shared/Spinner'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
   const [search, setSearch] = useState<string>('') // 검색어
   const [searchResult, setSearchResult] = useState<GooglePlace[]>([]) // 검색 결과
+  const [executeSearch, setExecuteSearch] = useState<boolean>(false) // 검색 실행 여부
   const [center, setCenter] = useState({ lat: plan.lat, lng: plan.lng }) // 지도 중심 좌표
 
-  // 장소 검색
-  const handleSearch = async () => {
-    const location = plan.lat + ',' + plan.lng
+  const { data, isFetching, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['places', plan.province, search],
+    queryFn: ({ pageParam = null }) => {
+      return getSearchPlaceGoogle({
+        query: search,
+        location: `${plan.lat},${plan.lng}`,
+        pagetoken: pageParam,
+      })
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.next_page_token) {
+        return lastPage.next_page_token
+      }
+    },
+    refetchOnWindowFocus: false,
+    enabled: executeSearch,
+  })
 
-    const response = await getSearchPlaceGoogle(search, location)
-
-    setSearchResult(response.results)
+  const handleSearch = () => {
+    setExecuteSearch(true)
   }
+
+  useEffect(() => {
+    setExecuteSearch(false)
+  }, [data, isFetching])
+
+  useEffect(() => {
+    if (data) {
+      const newPlaces = data.pages.map((page) => page.results).flat()
+      setSearchResult(newPlaces)
+    }
+  }, [data])
 
   // 검색 결과 마커
   const markers =
@@ -28,6 +57,12 @@ const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
 
   const changeCenter = (lat: number, lng: number) => {
     setCenter({ lat, lng })
+  }
+
+  const loadmore = () => {
+    console.log('loadmore')
+
+    fetchNextPage()
   }
 
   return (
@@ -55,17 +90,24 @@ const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
         />
       </Search>
 
-      <GoogleMapLoad mapContainerStyle={{ width: '100%', height: '15rem' }} center={center} marker={markers} />
+      <GoogleMapLoad mapContainerStyle={{ width: '100%', height: '10rem' }} center={center} marker={markers} />
 
-      {/* 검색 결과 */}
-      <PlaceList>
-        {searchResult.length > 0 ? (
-          searchResult.map((item, index) => (
-            <PlaceAddItem key={index} region={plan.province} item={item} changeCenter={changeCenter} />
-          ))
-        ) : (
-          <div>검색 결과가 없습니다</div>
-        )}
+      <PlaceList id="scrollableTarget">
+        <InfiniteScroll
+          dataLength={searchResult.length}
+          next={loadmore}
+          hasMore={hasNextPage}
+          loader={<Spinner type="ClipLoader" loading={isFetching} />}
+          scrollableTarget="scrollableTarget"
+        >
+          {searchResult.length > 0 ? (
+            searchResult.map((item, index) => (
+              <PlaceAddItem key={index} region={plan.province} item={item} changeCenter={changeCenter} />
+            ))
+          ) : (
+            <div>검색 결과가 없습니다</div>
+          )}
+        </InfiniteScroll>
       </PlaceList>
     </Container>
   )
@@ -77,11 +119,10 @@ const Container = styled.div`
   margin-top: 1rem;
   width: 100%;
   height: 100%;
-  overflow-y: auto;
-
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
 `
 
 const Search = styled.div`
@@ -93,16 +134,15 @@ const Search = styled.div`
 `
 
 const PlaceList = styled.div`
-  width: 100%;
   flex: 1;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  border-radius: 1rem;
   margin-top: 1rem;
-  margin-bottom: 1rem;
   box-sizing: border-box;
+
   overflow-y: auto;
   overflow-x: hidden;
 `

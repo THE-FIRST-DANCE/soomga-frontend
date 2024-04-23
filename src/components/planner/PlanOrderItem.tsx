@@ -22,8 +22,8 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
 
   if (!item) return null
 
-  const address = useSubstring(item.item.address, 15) // 주소 15글자로 자르기
-  const name = useSubstring(item.item.name, 5) // 이름 5글자로 자르기
+  const address = useSubstring(item.item.address, 8) // 주소 자르기
+  const name = useSubstring(item.item.name, 9) // 이름 자르기
 
   const currentPlan = periodPlan[currentPeriod] || [] // 현재 일차의 여행 리스트
 
@@ -103,7 +103,7 @@ const PlanOrderItem = ({ item, fold }: PlanOrderItemProps) => {
               }}
               onClick={deleteItem}
             >
-              <Cancel $width="1.5rem" $height="1.5rem" $color="var(--bs-gray-100)" />
+              <Cancel $width="1rem" $height="1rem" $color="var(--bs-gray-100)" />
             </div>
           </>
         )}
@@ -133,12 +133,13 @@ const Order = styled.div<{ $fold?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ $fold }) => ($fold ? '2rem' : '1.5rem')};
-  height: ${({ $fold }) => ($fold ? '2rem' : '1.5rem')};
+  width: ${({ $fold }) => ($fold ? '2rem' : '1.2rem')};
+  height: ${({ $fold }) => ($fold ? '2rem' : '1.2rem')};
   box-sizing: border-box;
   border-radius: 50%;
   background-color: var(--bs-gray-600);
   color: var(--bs-white);
+  font-size: 0.8rem;
 `
 
 const Item = styled.div`
@@ -154,8 +155,8 @@ const Item = styled.div`
 `
 
 const ItemImage = styled.div`
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
 
   img {
     width: 100%;
@@ -171,27 +172,30 @@ const ItemInfo = styled.div`
   flex-direction: column;
   margin-left: 10px;
   cursor: pointer;
+  gap: 0.5rem;
 `
 
 const ItemName = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
+  margin-top: 4px;
 `
 
 const ItemAddress = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   color: var(--bs-gray-500);
-  margin-top: 0.5rem;
 `
 
 const SetTime = styled.div`
   color: var(--bs-info);
+  font-size: 14px;
   margin: 4px 0.5rem 0 0;
   cursor: pointer;
 `
 
 const TimeMod = styled.div`
   width: 100%;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -212,7 +216,7 @@ const TimeInput = styled.input`
 const TimeButton = styled.button`
   height: 2rem;
   border: none;
-  font-size: 1rem;
+  font-size: 12px;
   cursor: pointer;
   outline: none;
   color: var(--bs-info);

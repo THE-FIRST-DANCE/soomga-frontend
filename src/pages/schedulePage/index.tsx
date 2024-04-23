@@ -183,7 +183,7 @@ const CalendarContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 0 10rem;
+  padding: 0 6rem;
 
   .rbc-header {
     padding: 0.5rem 0;
@@ -196,7 +196,7 @@ const CalendarContainer = styled.div`
   }
 
   .rbc-month-view {
-    min-height: 80rem;
+    min-height: 70rem;
     min-width: 20rem;
     border: 1px solid var(--bs-gray-200);
 

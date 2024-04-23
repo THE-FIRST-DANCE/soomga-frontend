@@ -131,7 +131,7 @@ const Chatting = ({ onClick }: ChatButtonProps) => {
               <SearchWrapper>
                 <TopSearchWrap>
                   <Input placeholder="가이드 검색" />
-                  <SearchIcon width="30px" height="30px" />
+                  <SearchIcon style={{ width: '30px', height: '30px' }} />
                 </TopSearchWrap>
               </SearchWrapper>
               {/* 현재 대화중인 사람들 */}

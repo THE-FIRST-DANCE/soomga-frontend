@@ -18,9 +18,9 @@ import {
   Inputwrap,
 } from './loginSignup.style'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { getLogin, getSignup } from 'api/LoginSignUp'
+import { getLogin, getSignup, getUserInfo } from 'api/LoginSignUp'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { getCookie } from 'utils/cookie'
@@ -43,7 +43,6 @@ const LoginSignupPage = () => {
   const [password, setPassword] = useState<string>('')
   const [checkPassword, setCheckPassword] = useState<string>('')
   const [errorMsg, setErrorMsg] = useState<string>('')
-
   const navigate = useNavigate()
 
   // 로그인 유효성 검사 스키마 :
@@ -61,17 +60,42 @@ const LoginSignupPage = () => {
   /* 리코일 코드  */
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
 
+  const fetchUserInfo = async () => {
+    try {
+      const userInfos = await getUserInfo()
+
+      // ⭐️⭐️현재 유저 정보 넣기
+      localStorage.setItem(
+        'userInfo',
+        JSON.stringify({
+          id: userInfos.id,
+          email: userInfos.email,
+          nickname: userInfos.nickname,
+          avatar: userInfos.avatar,
+        }),
+      )
+      console.log('⭐️로컬 유저 정보 :  ', JSON.parse(localStorage.getItem('userInfo') ?? ''))
+    } catch (error) {
+      console.error('유저 정보를 가져오는 중 에러가 발생했습니다.', error)
+    }
+  }
+
   // FIXME:Post 요청할 때 보내기
   const onSubmitForLogin = async (data: LoginForm) => {
     console.log(data)
+
     try {
       const loginResult = await getLogin(data.email, data.password)
-      console.log(loginResult.message)
-      const result = await getCookie('accessToken')
-      setRecoilToken({ ...recoilToken, token: !!result })
-      console.log('리코일 내부 토큰: ', recoilToken)
+
+      const token = await getCookie('accessToken')
+      setRecoilToken({ ...recoilToken, token: !!token })
+
+      fetchUserInfo() // 유저 정보 가져오기
+
       navigate('/')
       toast.success('로그인 되었습니다!')
+
+      return loginResult
     } catch (error: any) {
       console.error('Error during login:', error.response.data.message)
       setErrorMsg(error.response.data.message)

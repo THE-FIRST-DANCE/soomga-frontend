@@ -5,15 +5,17 @@ import { GooglePlace, PlaceData } from 'interfaces/plan'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import styled from 'styled-components'
+import FullLoading from 'components/shared/FullLoading'
 
 interface IPlaceAddModal {
   isOpen: boolean
   onRequestClose: () => void
   place: GooglePlace
   region: string
+  image: string
 }
 
-const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal) => {
+const PlaceAddModal = ({ isOpen, onRequestClose, place, region, image }: IPlaceAddModal) => {
   const [category, setCategory] = useState('tourist_attraction') // 카테고리
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -21,9 +23,10 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
   }
 
   // 장소 추가 query
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: addPlaceApi,
     onSuccess: () => {
+      alert('장소가 추가되었습니다.')
       onRequestClose()
     },
   })
@@ -35,12 +38,14 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
       placeId: place.place_id,
       rating: place.rating ? place.rating : 0.0,
       address: place.vicinity,
-      photo: place.icon,
+      photo: image,
       category,
       latitude: place.geometry.location.lat,
       longitude: place.geometry.location.lng,
       region,
     }
+
+    if (window.confirm('이 장소를 등록하시겠습니까?') === false) return
 
     mutate(data)
   }
@@ -89,6 +94,8 @@ const PlaceAddModal = ({ isOpen, onRequestClose, place, region }: IPlaceAddModal
         >
           등록하기
         </PlaceButton>
+
+        {isPending && <FullLoading isLoading={isPending} />}
       </PlaceModal>
     </Modal>
   )

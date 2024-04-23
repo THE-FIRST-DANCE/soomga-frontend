@@ -189,7 +189,9 @@ const Review = () => {
   // 태그 선택시 스크롤 상단 올리기
   const reviewWrapperRef = useRef<HTMLDivElement>(null)
   const scrollToTop = () => {
-    reviewWrapperRef.current.scrollTop = 0
+    if (reviewWrapperRef.current) {
+      reviewWrapperRef.current.scrollTop = 0
+    }
   }
 
   // 정렬 옵션 상태 추가 : 디폴트는 최신순
@@ -234,7 +236,7 @@ const Review = () => {
         {/* 검색  */}
         <SearchWrapper>
           <TopSearchWrap>
-            <SearchIcon width="30px" height="30px" />
+            <SearchIcon style={{ width: '30px', height: '30px' }} />
             <Input placeholder="리뷰 검색" />
           </TopSearchWrap>
           <SendBtn>검색</SendBtn>
@@ -242,10 +244,10 @@ const Review = () => {
 
         {/* 가이드 리뷰 OR 여행지 리뷰 */}
         <ReviewTopicsWrapper>
-          <ReviewGuide id="guide" onClick={changeReviewHandler} whatsReview={whatsReview.guide}>
+          <ReviewGuide id="guide" onClick={changeReviewHandler} $whatsReview={whatsReview.guide}>
             가이드
           </ReviewGuide>
-          <ReviewUser id="user" onClick={changeReviewHandler} whatsReview={whatsReview.user}>
+          <ReviewUser id="user" onClick={changeReviewHandler} $whatsReview={whatsReview.user}>
             여행지
           </ReviewUser>
         </ReviewTopicsWrapper>
@@ -273,7 +275,7 @@ const Review = () => {
                   <CommentUserWrapper>
                     <CommentUserName>
                       {Array.from({ length: review.star }, (_, index) => (
-                        <Star key={index} width="20px" height="20px" fill="var(--color-primary)" />
+                        <Star key={index} $width="20px" $height="20px" $color="var(--color-primary)" />
                       ))}
                     </CommentUserName>
                     <Country>{new Date().toLocaleDateString()}</Country>
@@ -348,18 +350,18 @@ const ReviewTopicsWrapper = styled(FlexCenterd)`
   /* background-color: mediumspringgreen; */
   margin-bottom: 2rem;
 `
-const ReviewGuide = styled(FlexCenterd)<{ whatsReview: boolean }>`
+const ReviewGuide = styled(FlexCenterd)<{ $whatsReview: boolean }>`
   cursor: pointer;
   font-size: 1.3rem;
   margin: 0 1rem;
-  color: ${({ whatsReview }) => (whatsReview ? 'var(--color-original);' : 'black')};
+  color: ${({ $whatsReview }) => ($whatsReview ? 'var(--color-original);' : 'black')};
   transition: all 0.3s;
 `
-const ReviewUser = styled(FlexCenterd)<{ whatsReview: boolean }>`
+const ReviewUser = styled(FlexCenterd)<{ $whatsReview: boolean }>`
   cursor: pointer;
   font-size: 1.3rem;
   margin: 0 1rem;
-  color: ${({ whatsReview }) => (whatsReview ? 'var(--color-original);' : 'black')};
+  color: ${({ $whatsReview }) => ($whatsReview ? 'var(--color-original);' : 'black')};
   transition: all 0.3s;
 `
 

@@ -10,8 +10,10 @@ import { styled } from 'styled-components'
 export const targetDates: { id: number; name: string; date: Date }[] = [
   { id: 1, name: '와다 사야카', date: new Date(2024, 3 - 1, 2) },
   { id: 2, name: '오바 호노카', date: new Date(2024, 3 - 1, 5) },
+  { id: 3, name: '와다 사야카', date: new Date(2024, 4 - 1, 20) },
   { id: 2, name: '야마츠 아스카', date: new Date(2024, 3 - 1, 10) },
-  { id: 2, name: '이재일', date: new Date(2024, 4 - 1, 10) },
+  // { id: 2, name: '이재일', date: new Date(2024, 4 - 1, 10) },
+  { id: 4, name: '이재일', date: new Date('2024-04-10 00:00') },
 ]
 
 const ItineraryPage = () => {
@@ -31,6 +33,7 @@ const ItineraryPage = () => {
   return (
     <>
       <Blank />
+      ``
       {/* 좌측 : 달력 */}
       <Layout>
         <LeftSection>

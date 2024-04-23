@@ -2,7 +2,12 @@ import { styled } from 'styled-components'
 
 import LeftInfo from './LeftInfo'
 import MainContainer from './MainContainer'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { RequestGuide } from 'state/store/RequestGuide'
+import { getUserInfo } from 'api/LoginSignUp'
+import { ModalAtom } from 'state/store/ModalAtom'
+import EmailModal from './emailModal/EmailModal'
 const MyPage = () => {
   // 태그별 열림 상태
   const [basicInfo, setBasicInfo] = useState<boolean>(true)
@@ -15,7 +20,60 @@ const MyPage = () => {
   // 선택된 태그 순번관리
   const [selectedTag, setSelectedTag] = useState<number>(0)
 
-  const changeTagHandler = (index: number, e: { target: any }) => {
+  // 🟡 가이드 신청하기 리코일 🟡
+  const [guideRequest, setGuideRequest] = useRecoilState(RequestGuide)
+
+  const isOpenModal = useRecoilValue(ModalAtom).isOpen
+
+  /* ⭐️⭐️ 로그인 유저 정보 가져오기 ⭐️⭐️ */
+  let userInfo = JSON.parse(localStorage.getItem('userInfo') ?? '')
+  console.log('💛[myPageCommon.index] 현재 로그인 유저 정보 :', userInfo)
+
+  /* ⭐️⭐️ 유저 정보 가져오기 ⭐️⭐️ */
+  const [userInformation, setuserInformation] = useState({
+    name: '',
+    email: '',
+    nickname: '',
+    phonNum: '',
+    avatar: '',
+    gender: '',
+  })
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const result = await getUserInfo()
+        setuserInformation(result)
+        console.log('🌙🌙🌙🌙🌙🌙🌙 API 요청 정보', result)
+      } catch (error) {
+        console.error('유저 정보를 가져오는 중 에러가 발생했습니다.', error)
+      }
+    }
+
+    fetchUserInfo()
+  }, [])
+
+  useEffect(() => {
+    console.log('useCallback 실행')
+    setBasicInfo(false)
+    setReview(false)
+    setPosting(false)
+    setFollowing(false)
+    setPlaning(false)
+    setGuide(false)
+    changeTagHandler(6)
+  }, [guideRequest])
+
+  useEffect(() => {
+    setBasicInfo(true)
+    setSelectedTag(0)
+  }, [])
+
+  const changeTagHandler = (index: number, e: { target: any } = { target: '' }) => {
+    if (guideRequest.isClick) {
+      setGuideRequest((prev) => ({ ...prev, isClick: false }))
+    }
+
     setSelectedTag(index)
 
     const target = e.target.textContent
@@ -27,6 +85,7 @@ const MyPage = () => {
         setFollowing(false)
         setPlaning(false)
         setGuide(false)
+
         break
       case '리뷰':
         setBasicInfo(false)
@@ -75,16 +134,18 @@ const MyPage = () => {
 
   return (
     <>
+      {isOpenModal && <EmailModal />}
       <Blank />
       <OverallLayout>
         <RedOuterFrame>
           {/* 🟡 왼쪽 : 사용자 Info */}
           <LeftInfo
             name={'이다슬'}
-            mail={'suhyon0527@naver.com'}
-            nickName={'젤이'}
-            phonNum={'010-1234-1234'}
-            password={'12312312'}
+            email={userInformation.email}
+            nickname={userInformation.nickname}
+            phonNum={userInformation.phonNum}
+            avatar={userInformation.avatar}
+            gender={userInformation.gender}
           />
 
           {/* 🟡 중앙 : 태그별 내용 */}
@@ -95,6 +156,8 @@ const MyPage = () => {
             following={following}
             planing={planing}
             guide={guide}
+            requetGuide={!!guideRequest.isClick}
+            userInformation={userInformation}
           />
 
           {/* 🟡 오른쪽 : 태그 */}
@@ -148,10 +211,12 @@ const OverallLayout = styled(FlexCenterd)`
 
 /* 전체 빨간 프레임 */
 const RedOuterFrame = styled(FlexCenterd)`
+  /* background-color: blue; */
+  /* width: 83%; */
+  width: 70rem;
+  height: 38rem;
   border: 0.3rem solid var(--color-original);
   border-radius: 0.5rem;
-  width: 83%;
-  height: 38rem;
   gap: 0.3rem;
   padding: 1rem;
   box-sizing: border-box;

@@ -12,7 +12,7 @@ const PostCard = ({ ...props }) => {
           <PostSubTitle>{props.postInfo.subtitle}</PostSubTitle>
           <TagContainer>
             {props.postInfo.tag.map((tag: string) => (
-              <Tag>{`#${tag}`}</Tag>
+              <Tag key={tag}>{`#${tag}`}</Tag>
             ))}
           </TagContainer>
           <UserContainer>

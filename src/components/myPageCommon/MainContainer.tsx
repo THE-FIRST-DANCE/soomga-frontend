@@ -5,6 +5,8 @@ import Posting from './Posting'
 import Following from './Following'
 import Planing from './Planing'
 import Guide from './Guide'
+import RequestGuidePage from './RequestGuide'
+import { userInfoProps } from './LeftInfo'
 
 interface TagOpenStateProps {
   basicInfo: boolean
@@ -13,17 +15,30 @@ interface TagOpenStateProps {
   following: boolean
   planing: boolean
   guide: boolean
+  requetGuide: boolean
+  userInformation: userInfoProps
 }
 
-const MainContainer = ({ basicInfo = true, review, posting, following, planing, guide }: TagOpenStateProps) => {
+const MainContainer = ({
+  basicInfo = true,
+  review,
+  posting,
+  following,
+  planing,
+  guide,
+  requetGuide,
+  userInformation,
+}: TagOpenStateProps) => {
+  console.log(requetGuide)
+
   return (
     <Layouy>
       {/* 1. 기본정보 */}
       {basicInfo && (
         <BasicInfo
           name={'이다슬'}
-          mail={'suhyon0527@naver.com'}
-          nickName={'젤이'}
+          email={userInformation.email}
+          nickname={userInformation.nickname}
           phonNum={'010-1234-1234'}
           password={'12312312'}
         />
@@ -38,6 +53,16 @@ const MainContainer = ({ basicInfo = true, review, posting, following, planing, 
       {planing && <Planing />}
       {/* 6. 가이드 FIXME: 만약 가이드로 로그인을 한 경우에만 활성화해서 보이게  */}
       {guide && <Guide />}
+      {/* 7. 가이드 신청 */}
+      {basicInfo == false &&
+      review == false &&
+      posting == false &&
+      following == false &&
+      planing == false &&
+      guide == false ? (
+        <RequestGuidePage />
+      ) : null}
+      {/* {requetGuide && <RequestGuidePage />} */}
     </Layouy>
   )
 }

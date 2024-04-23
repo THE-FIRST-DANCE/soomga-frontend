@@ -82,7 +82,7 @@ const CommentCarousel = () => {
       >
         {commentsArr.map((comment) => {
           return (
-            <SwiperSlide>
+            <SwiperSlide key={comment.user}>
               {/* 1. 코멘트 컨테이너 : 태그 + 코멘트 + 유저이름 */}
               <CommentContainer>
                 {/* 1.1 태그 */}

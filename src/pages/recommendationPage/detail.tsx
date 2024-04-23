@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { styled } from 'styled-components'
 import seoul from 'assets/regions/seoul.jpeg'
 import gyeonggi from 'assets/regions/gyeonggi.jpeg'
@@ -16,6 +16,7 @@ import Comunication from 'components/icons/Comunication'
 import CircleCheck from 'components/icons/CircleCheck'
 import Location from 'components/icons/Location'
 import CommentIcon from 'components/icons/Comment'
+import { toast } from 'react-toastify'
 
 type RegionId = '서울' | '경기' | '전북' | '전남' | '충북' | '충남' | '경북' | '경남' | '제주'
 
@@ -113,11 +114,24 @@ const RegionDetailPage = () => {
 
   // 댓글 더보기
   const [visibleComments, setvisibleComments] = useState(5)
-  const ADDCOMMENT = 5
+  const ADDCOMMENT = 5 // 기본 갯수
   const showMoreComments = () => {
     setvisibleComments(visibleComments + ADDCOMMENT)
   }
 
+  //  댓글 추가 하기
+  const [comment, setComment] = useState('')
+  const commentRef = useRef<HTMLTextAreaElement>(null)
+  const addComment = () => {
+    if (comment === '') {
+      return // 아무 글도 없으면 빠꾸
+    }
+    setComment('')
+    commentRef?.current?.focus()
+    toast.success('댓글등록 완료')
+  }
+
+  // 테스트 데이터
   const regionImages = {
     서울: seoul,
     경기: gyeonggi,
@@ -133,7 +147,7 @@ const RegionDetailPage = () => {
   return (
     <>
       <RegionImg>
-        <img src={regionImages[region_Id]} alt="" />
+        <img src={regionImages[region_Id as RegionId]} alt="" />
         {/* <img src={regionImages[`${region_Id}`]} alt="" /> */}
       </RegionImg>
       <Container>
@@ -184,26 +198,26 @@ const RegionDetailPage = () => {
         {/* 의사소통 , 정확도, 위치 */}
         <RatingBox>
           <RatingTitle>의사소통</RatingTitle>
-          <Comunication width=" 2rem" height=" 2rem" />
+          <Comunication $width=" 2rem" $height=" 2rem" />
           <RatingNum>4.3</RatingNum>
         </RatingBox>
         <RatingBox>
           <RatingTitle>의사소통</RatingTitle>
-          <CircleCheck width=" 2rem" height=" 2rem" />
+          <CircleCheck $width=" 2rem" $height=" 2rem" />
           <RatingNum>4.3</RatingNum>
         </RatingBox>
         <RatingBox>
           <RatingTitle>의사소통</RatingTitle>
-          <Location width=" 2rem" height=" 2rem" />
+          <Location $width=" 2rem" $height=" 2rem" />
           <RatingNum>4.3</RatingNum>
         </RatingBox>
       </RatingContainer>
 
       {/* 댓글 */}
       <InputContainer>
-        <InputComment />
-        <SubmitBtn>
-          <CommentIcon $width="4rem" $height="4rem" $hoverColor={`var(--color-original)`} />
+        <InputComment value={comment} onChange={(e) => setComment(e.target.value)} ref={commentRef} />
+        <SubmitBtn onClick={() => addComment()}>
+          <CommentIcon $width="2rem" $height="2rem" $hoverColor={`var(--color-original)`} />
         </SubmitBtn>
       </InputContainer>
 
@@ -211,26 +225,24 @@ const RegionDetailPage = () => {
         {/* コメント */}
         {comments.slice(0, visibleComments).map((comment) => {
           return (
-            <MiddleLine>
-              <CommentLayout>
-                {/* 이름 + 국정 + 별 + 일자 */}
-                <CommentContainer>
-                  <CommentUserWrapper>
-                    <CommentUserName>{comment.user}</CommentUserName>
-                    <Country>{comment.country}</Country>
-                  </CommentUserWrapper>
-                  <CommentUserWrapper>
-                    <CommentUserName>
-                      {Array.from({ length: comment.star }, (_, index) => (
-                        <Star key={index} width="20px" height="20px" fill="var(--color-primary)" />
-                      ))}
-                    </CommentUserName>
-                    {/* <Country>{new Date().toLocaleDateString()}</Country> */}
-                  </CommentUserWrapper>
-                </CommentContainer>
-                <Comment>{comment.comment}</Comment>
-              </CommentLayout>
-            </MiddleLine>
+            <CommentLayout>
+              {/* 이름 + 국정 + 별 + 일자 */}
+              <CommentContainer>
+                <CommentUserWrapper>
+                  <CommentUserName>{comment.user}</CommentUserName>
+                  <Country>{comment.country}</Country>
+                </CommentUserWrapper>
+                <CommentUserWrapper>
+                  {/* <CommentUserName>
+                    {Array.from({ length: comment.star }, (_, index) => (
+                      <Star key={index} width="20px" height="20px" fill="var(--color-primary)" />
+                    ))}
+                  </CommentUserName> */}
+                  {/* <Country>{new Date().toLocaleDateString()}</Country> */}
+                </CommentUserWrapper>
+              </CommentContainer>
+              <Comment>{comment.comment}</Comment>
+            </CommentLayout>
           )
         })}
       </CommentWrapper>
@@ -437,7 +449,7 @@ const RatingNum = styled(FlexCenterd)`
 const InputContainer = styled(FlexCenterd)`
   /* background-color: #972bf5; */
   width: 40rem;
-  height: 4rem;
+  height: 3rem;
   min-height: 3rem;
   margin: 0 auto;
   gap: 0.5rem;
@@ -445,15 +457,20 @@ const InputContainer = styled(FlexCenterd)`
   border-radius: 0.2rem;
   box-shadow: 3px 3px gray;
   border: 1px solid #ddd;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.355);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.355);
 `
 const InputComment = styled.textarea`
   width: 35.5rem;
-  height: 3rem;
-  border: 0;
-  /* border-radius: 0.5rem; */
+  /* height: 2rem; */
+  height: 2rem;
+  line-height: 1.5;
+  border: none;
+  /* background-color: red; */
+  display: flex; // Flexbox를 사용하여
+  align-items: center; // 아이템들을 중앙 정렬
+  justify-content: center;
   resize: none;
-  /* padding: 0.5rem; */
+  padding: 0 0.5rem;
   /* padding: 0.8rem; */
   box-sizing: border-box;
   font-size: 1.3rem;
@@ -480,36 +497,38 @@ const SubmitBtn = styled(FlexCenterd)`
 `
 
 /* 코멘트 */
-const CommentWrapper = styled(FlexCenterd)`
+// const CommentWrapper = styled(FlexCenterd)`
+const CommentWrapper = styled.div`
   /* background-color: mediumaquamarine; */
-  width: 67rem;
+  width: 45rem;
   /* width: 100%; */
-  flex-wrap: wrap;
-  align-items: start;
-  justify-content: flex-start;
-  gap: 1rem;
+  /* align-items: start; */
+  /* flex-wrap: wrap; */
+  margin: auto;
+
   margin: 3rem auto 0rem;
 `
-const MiddleLine = styled.div`
-  position: relative;
-  /* left: 50%; */
-  transform: translateX(10%);
-  /* margin: 0 auto; */
-  display: flex;
-  /* justify-content: flex-start; */
-`
+// const MiddleLine = styled.div`
+//   position: relative;
+//   /* left: 50%; */
+//   transform: translateX(10%);
+//   /* margin: 0 auto; */
+//   display: flex;
+//   /* justify-content: flex-start; */
+//   /* background-color: #f9fe5e; */
+// `
 
 const CommentLayout = styled.div`
-  width: 30rem;
-  height: 9rem;
-  /* width: 100%; */
-  /* background-color: #f9fe5e; */
-  /* padding: 1rem; */
+  /* width: 30rem; */
+  width: 100%;
+  height: 7rem;
+  /* background-color: #f9fe5e;
+  padding: 1.5rem; */
   box-sizing: border-box;
   /* gap: 1rem; */
   /* margin: 0 auto; */
-  display: flex;
-  flex-direction: column;
+  /* display: flex; */
+  /* flex-direction: column; */
 `
 const CommentContainer = styled.div`
   width: 100%;

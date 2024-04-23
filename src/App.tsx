@@ -50,11 +50,11 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   return (
-    <Layout>
+    <>
       <GlobalStyle />
       <ToastContainer />
       <Router />
-    </Layout>
+    </>
   )
 }
 

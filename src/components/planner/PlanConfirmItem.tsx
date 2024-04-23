@@ -4,6 +4,10 @@ import { CarIcon } from './SelectTransportation'
 import Arrow from 'components/icons/Arrow'
 import { getTransCoord } from 'api/PlanAPI'
 import { PlanConfirmListItem } from 'interfaces/plan'
+import { useEffect, useState } from 'react'
+import { PlanConfirmList } from 'state/store/PlanList'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { CurrentPeriod } from 'state/store/PlanInfo'
 
 interface PlanConfirmItemProps {
   index: number
@@ -12,6 +16,9 @@ interface PlanConfirmItemProps {
 
 const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
   const category = categories.find((category) => category.value === data.item.category)
+  const [planConfirmList, setPlanConfirmList] = useRecoilState(PlanConfirmList)
+  const currentPeriod = useRecoilValue(CurrentPeriod)
+  const [descript, setDescript] = useState<string>(data.description || '')
 
   // 카카오 지도 연결
   const onClick = async () => {
@@ -28,6 +35,32 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
     window.open(`https://map.kakao.com/?map_type=${mapType}&target=${target}&rt=${rt}&rt1=${rt1}&rt2=${rt2}`)
   }
 
+  // 설명 작성
+  const onDescript = () => {
+    const list = planConfirmList.periodPlan[currentPeriod]
+    const newList = list.map((item, idx) => {
+      if (idx === index) {
+        return {
+          ...item,
+          description: descript,
+        }
+      }
+      return item
+    })
+
+    setPlanConfirmList({
+      ...planConfirmList,
+      periodPlan: {
+        ...planConfirmList.periodPlan,
+        [currentPeriod]: newList,
+      },
+    })
+  }
+
+  useEffect(() => {
+    setDescript(data.description || '')
+  }, [data.item])
+
   return (
     <Container>
       <TimeLine>
@@ -35,7 +68,7 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
         <Line />
 
         <Duration>
-          <CarIcon style={{ width: '24px', height: '24px' }} />
+          <CarIcon width="24px" height="24px" />
         </Duration>
 
         {data.nextTime && (
@@ -59,6 +92,16 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
           </TimeBox>
         )}
       </Info>
+
+      <Description
+        placeholder="설명을 입력해주세요"
+        value={descript}
+        onChange={(e) => {
+          setDescript(e.target.value)
+          onDescript()
+        }}
+      />
+
       <Image>
         <img src={data.item.photo} alt={data.item.name} />
       </Image>
@@ -159,4 +202,19 @@ const Image = styled.div`
     object-fit: cover;
     border-radius: 10px;
   }
+`
+
+const Description = styled.textarea`
+  flex: 0.5;
+  height: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: var(--bs-gray-200);
+  color: var(--bs-gray-600);
+  border-radius: 0.5rem;
+  margin: 0 1rem;
 `
