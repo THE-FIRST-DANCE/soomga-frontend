@@ -64,7 +64,7 @@ const Guide = () => {
                   onClick={() => {
                     {
                       selectedRegions.includes(region.id)
-                        ? setSelectedRegions((prev) => prev.filter((item) => item.id !== region.id)) //  있으면 제거
+                        ? setSelectedRegions((prev) => prev.filter((item) => item !== region.id)) //  있으면 제거
                         : setSelectedRegions((prev) => [...prev, region.id]) // 없으면 추가
                     }
                   }}

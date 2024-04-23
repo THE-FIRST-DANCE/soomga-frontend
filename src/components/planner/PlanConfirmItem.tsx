@@ -68,7 +68,7 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
         <Line />
 
         <Duration>
-          <CarIcon style={{ width: '24px', height: '24px' }} />
+          <CarIcon width="24px" height="24px" />
         </Duration>
 
         {data.nextTime && (
