@@ -50,3 +50,9 @@ export const getAreaDatas = async () => {
   const response = await api.get('areas')
   return response.data
 }
+
+/* 5. 가이드 리뷰 댓글 */
+export const getReviews = async (id: number) => {
+  const response = await api.get(`guides/${id}/reviews`)
+  return response.data.items
+}

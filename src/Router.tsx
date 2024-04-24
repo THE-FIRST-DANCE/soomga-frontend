@@ -40,15 +40,16 @@ const Router = () => {
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
   const [isAccessToken, setIsAccessToken] = useState<boolean>()
 
-  const [first, setfirst] = useState()
-  console.log('first: ', first)
+  const [userInfo, setuserInfo] = useState()
+  console.log('userInfo: ', userInfo)
 
   /* 🟡🟡🟡 기본적으로 토큰이 들어있는지 토큰 상태를 브라우저에서 가져와서 확인 🟡🟡🟡 */
   useEffect(() => {
     const accessToken = getCookie('accessToken') //! 쿠키에서 엑세스 토근 가져오기
+    console.log('🌙🌙🌙🌙accessToken: ', accessToken)
     setIsAccessToken(!!accessToken) //! 토큰 상태를 저장
-    // console.log('🌙🌙🌙🌙accessToken: ', accessToken)
-    setRecoilToken({ ...recoilToken, token: !!accessToken }) //! 엑세스 토큰 여부에 따라서 리코일에 토큰값 저장
+    setRecoilToken({ ...recoilToken, token: !!accessToken, name: accessToken }) //! 엑세스 토큰 여부에 따라서 리코일에 토큰값 저장
+    setuserInfo(JSON.parse(localStorage.getItem('userInfo') ?? '{}'))
   }, [recoilToken.token])
 
   return (
@@ -65,23 +66,22 @@ const Router = () => {
           <Route path="/guides" element={<GuidePage />} />
           <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
-          {/* {recoilToken.token && ( */}
-          {isAccessToken && (
-            <>
-              {/* 4. 여행일정 */}
-              <Route path="/itinerary" element={<ItineraryPage />} />
-              <Route path="/schedule" element={<SchedulePage />} />
-            </>
-          )}
-          {/* 5. 여행장소 추천 */}
-          <Route path="/recommendations" element={<RecommendatedPostPage />} />
-          <Route path="/recommendations/:region_Id" element={<RegionsList />} />
-          <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
-          {/* FIXME: 라우팅만 처리 */}
-          <Route path="/post/create" element={<PostCreate />} />
-          <Route path="/post/edit/:post_Id" element={<PostEdit />} />
-          <Route path="/planner/detail/:planId" element={<PlanDetailPage />} />
-        </Route>
+        {/* {recoilToken.token && ( */}
+        {isAccessToken && (
+          <>
+            {/* 4. 여행일정 */}
+            {/* <Route path="/itinerary" element={<ItineraryPage />} /> */}
+            <Route path="/schedule" element={<SchedulePage />} />
+          </>
+        )}
+
+        {/* 5. 여행장소 추천 */}
+        <Route path="/recommendations" element={<RecommendatedPostPage />} />
+        <Route path="/recommendations/:region_Id" element={<RegionsList />} />
+        <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
+        {/* FIXME: 라우팅만 처리 */}
+        <Route path="/post/create" element={<PostCreate />} />
+        <Route path="/post/edit/:post_Id" element={<PostEdit />} />
 
         {/* 6. 여행 플래너 생성 */}
         <Route path="/planner" element={<PlanPage />} />

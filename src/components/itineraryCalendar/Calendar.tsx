@@ -41,8 +41,12 @@ const CalendarComponent = () => {
   const [month, setMonth] = useRecoilState(MonthAtom)
 
   useEffect(() => {
-    console.log('month 레코일: ', month)
-  }, [month])
+    const selectedDate = value as Date
+    const selectedMonth = moment(selectedDate).format('M')
+    if (month.month !== selectedMonth) {
+      setMonth({ month: selectedMonth })
+    }
+  }, [value, month.month, setMonth]) // value가 변경될 때마다 실행
 
   return (
     <BookingCheckLayout>
@@ -55,30 +59,15 @@ const CalendarComponent = () => {
             }}
             className="react-calendar"
             onChange={(date) => {
-              onChange(date)
-              const selectedMonth = moment(new Date(value as Date)).format('M')
-              if (month.month !== selectedMonth) {
-                setMonth({ month: selectedMonth })
-              }
-
-              console.log('month 레코일: ', month)
+              onChange(date) // 상태 업데이트
             }}
             value={value}
             calendarType="gregory"
             formatDay={(locale, date: Date) => moment(date).format('D')}
-            formatMonthYear={(locale, date: Date) => {
-              console.log(moment(date).format('M'))
-              const selectedMonth = moment(new Date(value as Date)).format('M')
-              if (month.month !== selectedMonth) {
-                setMonth({ month: selectedMonth })
-              }
-              return moment(date).format('YYYY년 M월')
-            }}
+            formatMonthYear={(locale, date: Date) => moment(date).format('YYYY년 M월')}
             tileContent={tileContent} // tileContent 적용
             next2Label={null}
             prev2Label={null}
-            // locale="en-EN"
-            // locale="ja-JP"
             showNeighboringMonth={false}
           />
         </CalendarWrapper>

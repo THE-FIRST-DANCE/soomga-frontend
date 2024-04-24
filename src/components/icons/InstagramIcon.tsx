@@ -18,7 +18,7 @@ const InstagramIcon = ({ ...props }: InstagramProps) => {
       x="0px"
       y="0px"
       viewBox="0 0 56.7 56.7"
-      enable-background="new 0 0 56.7 56.7"
+      enableBackground="new 0 0 56.7 56.7"
     >
       <g>
         <path
