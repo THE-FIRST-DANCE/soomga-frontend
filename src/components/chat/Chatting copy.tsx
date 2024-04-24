@@ -15,66 +15,79 @@ import { ko } from 'date-fns/locale'
 import FromToIcon from 'components/icons/FromToIcon'
 import TimeIcon from 'components/icons/Time'
 import { useChat } from 'hooks/Chat/useChat'
-import { Message, MouseAxis, Room, ServiceProps } from '../../interfaces/chat'
-import { useRecoilState } from 'recoil'
-import { ChatList } from 'state/store/ChatList'
-import { Content } from '../../interfaces/chat'
-import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
-import useObserveSingle from 'hooks/Chat/useObserveSingle'
-import PlanChat from './PlanChat'
-import ServiceChat from './ServiceChat'
-import { deleteRoom } from 'api/ChatAPI'
+import { MouseAxis, SelectedGuide, ServiceProps } from '../../interfaces/chat'
+import { getRooms } from 'api/ChatAPI'
 
-const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfos?: any; onClick?: () => void }) => {
-  // console.log('🌈🌈🌈🌈🌈🌈전달 받은 가이드 정보들입니다. ', guideInfos)
-  console.log('유저 정보', userInfo)
+let data = [
+  {
+    name: '최희지',
+    img: userImg,
+    content: '가나다라마바weiddhfergergergergdadwddgrgergergef',
+    time: 1,
+  },
+  {
+    name: '이다슬',
+    img: userImg,
+    content: 'dsasdjnv.jknasdkvjnalksdhnvkljashvlasdlvhsiudhvliusf ',
+    time: 1,
+  },
+  {
+    name: '박은영',
+    img: userImg,
+    content: '가나다라마바 ',
+    time: 1,
+  },
+  {
+    name: '김지수',
+    img: userImg,
+    content: '가나다라마바 ',
+    time: 1,
+  },
+  {
+    name: '정유미',
+    img: userImg,
+    content: '가나다라마바 ',
+    time: 1,
+  },
+  {
+    name: '신예림',
+    img: userImg,
+    content: '가나다라마바 ',
+    time: 1,
+  },
+  {
+    name: '서수희',
+    img: userImg,
+    content: '가나다라마바 ',
+    time: 1,
+  },
+  {
+    name: '임세림',
+    img: userImg,
+    content: '가나다라마바 ',
+    time: 1,
+  },
+]
 
-  // 📍 클릭한 roomnumber 저장
-  const [roomInfo, setRoomInfo] = useState('')
-  console.log('방금 클린한 roomInfo: ', roomInfo)
+const Chatting = ({ chatLists, guideId, onClick }: { chatLists: any; guideId?: string; onClick: () => void }) => {
+  console.log('🩷Chatting 컴포넌트 채팅리스트 ', chatLists)
+  // console.log('🌈 guideId 🌈 : ', guideId)
 
-  // ❌ 삭제하려는 roomnumber 저장
-  const [delRoomId, setDelRoomId] = useState('')
+  // const { isConnected, messages, sendMessage, fetchMessages, justRemoveMessage } = useChat(roomInfo?.id)
 
-  // 리코일
-  const [chatLists, setChatLists] = useRecoilState(ChatList)
-  console.log('chatList: ', chatLists)
-
-  const [roomOwner, setRoomOwner] = useState('')
-
-  // FIXME: 클릭한 룸id값 가져오느것 까지 완료함
-  useEffect(() => {
-    chatLists.map((list) => {
-      if (list.name === guideInfos?.nickname) {
-        setRoomInfo(list.id)
-      }
-    })
-  }, [])
-
-  const { isConnected, messages, sendMessage, fetchMessages, justRemoveMessage } = useChat(roomInfo)
-  console.log('messages: ', messages)
-
-  let messageEndRef = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    setMessageLists(messages)
-  }, [roomInfo, messages])
-
-  // 메세지 리스트
-  const [messageLists, setMessageLists] = useState<Message[]>([])
-  useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: 'auto' })
-  }, [messageLists])
-
-  // 옵저버
-  const observeRef = useObserveSingle(fetchMessages)
-
-  //! 🌈🌈🌈 엑세스 토큰 가져오기 🌈🌈🌈
-  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+  // useEffect(() => {
+  //   //! 방정보 가져오기
+  //   const fetchGetRooms = async () => {
+  //     const result = await getRooms()
+  //     return result
+  //     // console.log('data: ', data)
+  //   }
+  //   fetchGetRooms()
+  // }, [])
 
   // 채팅글
   const [inputVal, setInputVal] = useState('')
-  // console.log('Sending message: ', inputVal)
+  console.log('Sending message: ', inputVal)
 
   // 인풋 ref
   const inputTag = useRef<HTMLInputElement>(null)
@@ -86,7 +99,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
 
   // 플랜 선택 내용
   const [selectePlanInfo, setSelectePlanInfo] = useState({ id: 0, title: '', time: '' })
-  // console.log('selectePlanInfo: ', selectePlanInfo)
+  console.log('selectePlanInfo: ', selectePlanInfo)
 
   // 서비스 제안
   const [serviceSuggestion, setserviceSuggestion] = useState<ServiceProps>({
@@ -95,7 +108,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
     startDate: new Date(),
     endDate: new Date(),
   })
-  // console.log('serviceSuggestion: ', serviceSuggestion)
+  console.log('serviceSuggestion: ', serviceSuggestion)
 
   // 시작일
   const [startDate, setStartDate] = useState<Date>(new Date())
@@ -103,19 +116,14 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
 
   // 가이드 검색 입력 값
   const [searchedGuide, setSearchedGuide] = useState('') // 입력 받은 가이드 이름
-  const [selectedGuides, setSelectedGuides] = useState<Room[]>([]) // 필터링된 가이드 배열
+  const [selectedGuides, setSelectedGuides] = useState<SelectedGuide[]>([]) // 필터링된 가이드 배열
 
   // 채팅 엔터치면 글 비우기
-  const handleKeyPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyPress = (e: any) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      e.stopPropagation()
-      if (inputVal.trim() && e.nativeEvent.isComposing === false) {
-        await sendMessage({ message: inputVal }, recoilToken.name)
+      if (inputVal.trim()) {
         setInputVal('')
-        if (e.nativeEvent.isComposing) {
-          setInputVal('')
-        }
       }
     }
   }
@@ -218,7 +226,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                       // e.stopPropagation() // 이벤트 버블링 중지
                       setserviceSuggestion((prev) => ({
                         ...prev,
-                        serviceName: (e.target as Element).textContent ?? '', // serviceName을 업데이트
+                        serviceName: e.target.textContent, // serviceName을 업데이트
                       }))
                     }}
                   >{`${item}타이틀 제목 `}</Title>
@@ -310,7 +318,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
 
       {/* 채팅 레이아웃 */}
       <ChatLayout>
-        <ItemContent>
+        <Content>
           <CancleWrapper>
             {/* <CancleBtn onClick={onClick}>✖</CancleBtn> */}
             <ChatContent>
@@ -322,45 +330,27 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                     <Input
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setSearchedGuide(e.target.value)
-                        setSelectedGuides(chatLists.filter((data: any) => data.name.includes(e.target.value)))
+                        setSelectedGuides(data.filter((data) => data.name.includes(e.target.value)))
                       }}
                       placeholder="가이드 검색"
                     />
                     <SearchIcon width="30px" height="30px" />
                   </TopSearchWrap>
                 </SearchWrapper>
-                {/* 🟡🟡🟡🟡🟡🟡🟡현재 대화중인 사람들 🟡🟡🟡🟡🟡🟡🟡🟡 */}
+                {/* 현재 대화중인 사람들 */}
                 <ChatListWrapper>
-                  {(searchedGuide === '' ? chatLists : selectedGuides).map((chatList: any, index: Number) => (
+                  {(searchedGuide === '' ? data : selectedGuides).map((data, index) => (
                     // {data.map((data, index) => (
-                    <GuideWrapper
-                      data-roomId={chatList.id}
-                      key={index.toString()}
-                      onContextMenu={handleContextMenu}
-                      onClick={(e: any) => {
-                        // 여기서 roomId를 출력할 수 잇도록
-                        setRoomInfo(e.currentTarget.dataset.roomid)
-                      }}
-                    >
+                    <GuideWrapper key={index} onContextMenu={handleContextMenu}>
                       {/* 만약 우측 버튼을 누른다면 ContextMenu를 보여줘라 */}
                       {isContextOpen && (
-                        <ContextMenu data-liroom={chatList.id} ref={refForLangToggle} {...mousePosition}>
+                        <ContextMenu ref={refForLangToggle} {...mousePosition}>
                           <ul>
                             <li>채팅방 열기</li>
-                            {/* <li style={{ borderTop: '1px solid #93939363', borderBottom: '1px solid #93939363' }}>
+                            <li style={{ borderTop: '1px solid #93939363', borderBottom: '1px solid #93939363' }}>
                               즐겨 찾기
-                            </li> */}
-                            <li
-                              data-liroomid={chatList.id}
-                              onClick={(e) => {
-                                console.log('🟡', e.currentTarget.dataset.liroomid)
-
-                                // deleteRoom(e.currentTarget.dataset.roomid)
-                                console.log()
-                              }}
-                            >
-                              채팅방 나가기
                             </li>
+                            <li>채팅방 나가기</li>
                           </ul>
                         </ContextMenu>
                       )}
@@ -372,25 +362,17 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                       </Left>
                       {/* 오른쪽 대화 내용 이름 */}
                       <Right>
-                        <ChatCard
-                          data-guide-name={chatList.name}
-                          onClick={(e) => {
-                            let result = e.currentTarget.getAttribute('data-guide-name')
-                            if (result !== null) {
-                              setRoomOwner(result)
-                            }
-                          }}
-                        >
+                        <ChatCard>
                           <ContentWrapper>
-                            <GuideName>{chatList.name}</GuideName>
+                            <GuideName>{data.name}</GuideName>
                             {false && <Star $width="30px" $height="30px" $color="yellow" />}
                           </ContentWrapper>
                           <ContentWrapper>
                             <PreviewContent>
-                              {chatList.id?.length > 14 && (
-                                <PreviewContent>{chatList.id.substring(0, 13) + '...'}</PreviewContent>
+                              {data.content.length > 14 && (
+                                <PreviewContent>{data.content.substring(0, 13) + '...'}</PreviewContent>
                               )}
-                              {chatList.id?.length <= 14 && <PreviewContent>{chatList.id}</PreviewContent>}
+                              {data.content.length <= 14 && <PreviewContent>{data.content}</PreviewContent>}
                             </PreviewContent>
                             ・<Time>{`${2} 시간전`}</Time>
                           </ContentWrapper>
@@ -400,15 +382,6 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                   ))}
                 </ChatListWrapper>
               </LeftSection>
-              <div
-                style={{
-                  width: '2px',
-                  height: '40rem',
-                  marginLeft: '1.5rem',
-                  backgroundColor: 'white',
-                  borderRadius: '50%',
-                }}
-              ></div>
               {/* 오른쪽 색션 */}
               <RightSection>
                 <RightWrapper>
@@ -417,54 +390,77 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                       <Image>
                         <img src={userImg} alt="NoImg" />
                       </Image>
-                      🟡🟡🟡🟡🟡
-                      <GuideName>{roomOwner}</GuideName>
+                      <GuideName>최희지</GuideName>
                     </TopWrapper>
                   </Top>
                   <Middle>
                     <ConversationWrapper>
-                      <>
-                        {[...messageLists].reverse().map((messageInfo) => {
-                          return (
-                            // userInfo
+                      {/* 대화 내용 */}
+                      <Conversation $whose="guide">
+                        <Speech $whose="guide">가이드의 톡 내용</Speech>
+                      </Conversation>
+                      <Conversation $whose="guide">
+                        <Speech $whose="guide">가이드의 톡 내용</Speech>
+                      </Conversation>
+                      <Conversation $whose="me">
+                        <Speech $whose="me">내가 지금 작성하고 있는 글이야</Speech>
+                      </Conversation>
+                      <Conversation $whose="me">
+                        <Speech $whose="me">내가 지금 작성하고 있는 글이야</Speech>
+                      </Conversation>
+                      <Conversation $whose="me">
+                        <Speech $whose="me">내가 지금 작성하고 있는 글이야</Speech>
+                      </Conversation>
+                      <Conversation $whose="me">
+                        <Speech $whose="me">내가 지금 작성하고 있는 글이야</Speech>
+                      </Conversation>
+                      <Conversation $whose="guide">
+                        <Speech $whose="guide">가이드의 톡 내용</Speech>
+                      </Conversation>
+                      <Conversation $whose="me">
+                        <Speech $whose="me">내가 지금 작성하고 있는 글이야</Speech>
+                      </Conversation>
 
-                            <Conversation
-                              key={messageInfo.id}
-                              $whose={userInfo.nickname === messageInfo.sender.nickname}
-                            >
-                              <Speech $whose={userInfo.nickname === messageInfo.sender.nickname}>
-                                {messageInfo.content.message}
-                              </Speech>
-                            </Conversation>
-                          )
-                        })}
-                      </>
                       {/* 🟡  플랜 올릴 때 */}
-                      {/* <PlanChat
-                        who={'me'}
-                        imgUrl={userImg}
-                        location={'울산'}
-                        title={'플랜 제목'}
-                        start={'4월 17, 2024 2:23 오후'}
-                        end={'4월 17, 2024 2:23 오후'}
-                        content={
-                          '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
-                        }
-                      />
+                      <Conversation $whose="me">
+                        <Speech $whose="me">
+                          <img src={userImg} />
+                          <SpeechContents>
+                            <SpeechTitle>{`플랜 제목 ${''}`}</SpeechTitle>
+                            <SpeechLocation>지역이름</SpeechLocation>
+                            <SpeechStartEnd>4월 17, 2024 2:23 오후</SpeechStartEnd>
+                            <SpeechStartEnd>4월 17, 2024 2:23 오후</SpeechStartEnd>
+                            <Speechcontent>
+                              내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을
+                              불러주었을 때 그는 나에게로 와서 꽃이 되었다.
+                            </Speechcontent>
+                            <SpeechBtnWrap>
+                              <SpeechBtn>별로</SpeechBtn>
+                              <SpeechBtn>신청</SpeechBtn>
+                            </SpeechBtnWrap>
+                          </SpeechContents>
+                        </Speech>
+                      </Conversation>
 
-                      <ServiceChat
-                        who={'me'}
-                        imgUrl={userImg}
-                        title={'서비스 제목'}
-                        start={'4월 17, 2024 2:23 오후'}
-                        end={'4월 17, 2024 2:23 오후'}
-                        content={
-                          '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
-                        }
-                      /> */}
-
-                      <div style={{ width: '100%', height: '1rem' }} ref={observeRef} />
-                      <div style={{ width: '100%', height: '1px' }} ref={messageEndRef} />
+                      {/* 🟡  서비스 올릴 때 */}
+                      <Conversation $whose="me">
+                        <Speech $whose="me">
+                          <img src={userImg} />
+                          <SpeechContents>
+                            <SpeechTitle>{`서비스 제목 ${''}`}</SpeechTitle>
+                            <SpeechStartEnd>4월 17, 2024 2:23 오후</SpeechStartEnd>
+                            <SpeechStartEnd>4월 17, 2024 2:23 오후</SpeechStartEnd>
+                            <Speechcontent>
+                              내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을
+                              불러주었을 때 그는 나에게로 와서 꽃이 되었다.
+                            </Speechcontent>
+                            <SpeechBtnWrap>
+                              <SpeechBtn>별로</SpeechBtn>
+                              <SpeechBtn>신청</SpeechBtn>
+                            </SpeechBtnWrap>
+                          </SpeechContents>
+                        </Speech>
+                      </Conversation>
                     </ConversationWrapper>
                   </Middle>
                   <Bottom>
@@ -509,8 +505,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                         disabled={!inputVal.length}
                         $inputVal={inputVal.length > 0 ? true : false}
                         onClick={() => {
-                          sendMessage({ message: inputVal }, recoilToken.name)
-                          setInputVal('')
+                          setInputVal('') // FIXME: 메세지 보내면 대화창 초기화
                           inputTag.current?.focus()
                         }}
                       >
@@ -522,7 +517,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
               </RightSection>
             </ChatContent>
           </CancleWrapper>
-        </ItemContent>
+        </Content>
       </ChatLayout>
     </>
   )
@@ -550,14 +545,14 @@ const ChatLayout = styled.div`
   z-index: 6;
   border: 3px;
 `
-const ItemContent = styled.div`
+const Content = styled.div`
   width: 70rem;
   height: 40rem;
   background-color: #ffffffe9;
   background: linear-gradient(135deg, #fbdd9c 10%, #fbd2df 100%);
   /* background-color: #ffffffd7; */
   border-radius: 7px;
-  padding: 10px;
+  padding: 20px;
   position: absolute;
 `
 
@@ -565,7 +560,7 @@ const CancleWrapper = styled.div`
   /* background-color: #e5ff00; */
   top: 0;
   right: 0;
-  /* padding: 10px; */
+  padding: 10px;
 `
 const CancleBtn = styled(FlexCenter)`
   cursor: pointer;
@@ -699,15 +694,12 @@ const ImgWrapper = styled.div`
 `
 
 const Right = styled.div`
+  /* background-color: burlywood; */
   display: flex;
-  width: 100%;
   flex-direction: column;
   gap: 0.3rem;
 `
-const ChatCard = styled.div`
-  /* background-color: white; */
-  /* background-color: #fb574e; */
-`
+const ChatCard = styled.div``
 
 const GuideName = styled.div`
   font-size: 1.3rem;
@@ -734,6 +726,7 @@ const Time = styled.div`
 
 // 오른쪽
 const RightSection = styled.div`
+  /* background-color: tomato; */
   flex: 1.9;
 `
 const RightWrapper = styled.div`
@@ -741,9 +734,8 @@ const RightWrapper = styled.div`
   top: -1rem;
   width: 100%;
   height: 100%;
-  /* background-color: mediumaquamarine; */
   border-radius: 0.5rem;
-  padding: 0.5rem 0rem 0.5rem 1rem;
+  padding: 0.5rem 1rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -781,10 +773,12 @@ const Middle = styled.div`
 `
 const ConversationWrapper = styled.div`
   width: 100%;
-  height: 27rem;
-  /* 🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡 */
-  /* background-color: red; */
+  height: 28rem;
   overflow: auto;
+
+  /* background-color: #e6e2db; */
+  /* background-color: #f8efec; */
+  /* background-image: linear-gradient(to bottom, #ffffff79 0%, #f8efec 50%, #d6c1b294 100%); */
 
   /* 스크롤바 넓이 */
   &::-webkit-scrollbar {
@@ -809,19 +803,19 @@ const ConversationWrapper = styled.div`
 `
 
 // 채팅 틀
-const Conversation = styled.div<{ $whose: boolean }>`
+const Conversation = styled.div<WhoseChat>`
   /* background-color: #a6f690; */
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
   box-sizing: border-box;
   width: 100%;
   display: flex;
-  justify-content: ${({ $whose }) => ($whose == true ? 'flex-end' : 'flex-start')};
+  justify-content: ${({ $whose }) => ($whose == 'me' ? 'flex-end' : 'flex-start')};
 `
 
 // 채팅 풍선
-const Speech = styled.div<{ $whose: boolean }>`
-  background-color: ${(props) => (props.$whose == true ? 'white' : '#f6d690')};
+const Speech = styled.div<WhoseChat>`
+  background-color: ${(props) => (props.$whose == 'me' ? 'white' : '#f6d690')};
   padding: 1rem;
   border-radius: 0.5rem;
   box-sizing: border-box;
@@ -836,57 +830,57 @@ const Speech = styled.div<{ $whose: boolean }>`
     border-radius: 7px;
   }
 `
-// const SpeechContents = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   /* background-color: yellow; */
-//   width: 11.5rem;
-// `
+const SpeechContents = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* background-color: yellow; */
+  width: 11.5rem;
+`
 
-// const SpeechTitle = styled.span`
-//   font-size: 1.2rem;
-//   margin-bottom: 0.3rem;
-// `
-// const SpeechLocation = styled.span`
-//   color: #727070;
-//   font-size: 0.7rem;
-//   margin: 0.3rem 0;
-// `
-// const SpeechStartEnd = styled.span`
-//   color: #727070;
-//   font-size: 0.6rem;
-//   margin: 0.1rem 0;
-// `
-// const Speechcontent = styled.span`
-//   margin-top: 0.3rem;
-//   color: #727070;
-//   font-size: 0.8rem;
-// `
+const SpeechTitle = styled.span`
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+`
+const SpeechLocation = styled.span`
+  color: #727070;
+  font-size: 0.7rem;
+  margin: 0.3rem 0;
+`
+const SpeechStartEnd = styled.span`
+  color: #727070;
+  font-size: 0.6rem;
+  margin: 0.1rem 0;
+`
+const Speechcontent = styled.span`
+  margin-top: 0.3rem;
+  color: #727070;
+  font-size: 0.8rem;
+`
 
-// const SpeechBtnWrap = styled(FlexCenter)`
-//   justify-content: space-between;
-//   width: 100%;
-//   /* background-color: red; */
-//   margin: 0.8rem 0 0 0;
-// `
+const SpeechBtnWrap = styled(FlexCenter)`
+  justify-content: space-between;
+  width: 100%;
+  /* background-color: red; */
+  margin: 0.8rem 0 0 0;
+`
 
-// const SpeechBtn = styled.button`
-//   width: 5rem;
-//   border: none;
-//   border-radius: 7px;
-//   padding: 0.3rem 0.5rem;
-//   box-sizing: border-box;
-//   background-color: transparent;
-//   cursor: pointer;
-//   font-size: 1rem;
-//   color: #727070;
-//   background-color: var(--color-original);
-//   color: white;
-//   transition: all 0.2s ease;
-//   &:hover {
-//     background-color: #ff6021;
-//   }
-// `
+const SpeechBtn = styled.button`
+  width: 5rem;
+  border: none;
+  border-radius: 7px;
+  padding: 0.3rem 0.5rem;
+  box-sizing: border-box;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #727070;
+  background-color: var(--color-original);
+  color: white;
+  transition: all 0.2s ease;
+  &:hover {
+    background-color: #ff6021;
+  }
+`
 
 const Bottom = styled(FlexCenter)`
   width: 100%;

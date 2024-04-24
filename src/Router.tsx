@@ -38,7 +38,7 @@ const Router = () => {
     const accessToken = getCookie('accessToken') //! 쿠키에서 엑세스 토근 가져오기
     console.log('🌙🌙🌙🌙accessToken: ', accessToken)
     setIsAccessToken(!!accessToken) //! 토큰 상태를 저장
-    setRecoilToken({ ...recoilToken, token: !!accessToken }) //! 엑세스 토큰 여부에 따라서 리코일에 토큰값 저장
+    setRecoilToken({ ...recoilToken, token: !!accessToken, name: accessToken }) //! 엑세스 토큰 여부에 따라서 리코일에 토큰값 저장
     setuserInfo(JSON.parse(localStorage.getItem('userInfo') ?? '{}'))
   }, [recoilToken.token])
 

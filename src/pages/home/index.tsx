@@ -8,13 +8,41 @@ import URecommendedRegions from 'components/home/URecommendedRegions'
 import GoogleMapLoad from 'components/planner/GoogleMap'
 import { styled } from 'styled-components'
 import ReactModal from 'react-modal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import { getRooms } from 'api/ChatAPI'
+import { useRecoilState } from 'recoil'
+import { ChatList } from 'state/store/ChatList'
 ReactModal.setAppElement('#root')
 
 const MainPage = () => {
   const [isOpenChat, setIsOpenChat] = useState<boolean>(false)
+  const [userInfo, setUserInfo] = useState(null)
+  const [chatList, setChatList] = useRecoilState(ChatList)
 
-  const openChatHandler = () => {
+  useEffect(() => {
+    //! 현재 Login한 유저 id
+    const userInfo = localStorage.getItem('userInfo')
+    setUserInfo(userInfo ? JSON.parse(userInfo) : null)
+
+    //! 방정보 가져오기
+    const fetchGetRooms = async () => {
+      const data = await getRooms()
+      console.log('data: ', data)
+
+      setChatList(data) // 리코일 값
+    }
+    fetchGetRooms()
+  }, [chatList.length])
+
+  const startChatHandler = () => {
+    // 1. 로그인 안되어 있으면 로그인 해라고 알려주기
+    if (localStorage.getItem('userInfo') === '{}') {
+      toast.error('로그인이 필요한 기능입니다.')
+      return
+    }
+    console.log('❌❌❌', localStorage.getItem('userInfo'))
+    // 2. 채팅 모달창 띄우기
     setIsOpenChat((prev) => !prev)
   }
 
@@ -52,8 +80,8 @@ const MainPage = () => {
       <CommentCarousel />
 
       {/* 7. 대화 버튼 - 버튼 누르면 모달발생  FIXME: 아직 api 설계 안됨*/}
-      <ChatButton onClick={openChatHandler} />
-      {isOpenChat && <Chatting onClick={openChatHandler} />}
+      <ChatButton onClick={startChatHandler} />
+      {isOpenChat && <Chatting userInfo={userInfo} onClick={startChatHandler} />}
     </>
   )
 }
