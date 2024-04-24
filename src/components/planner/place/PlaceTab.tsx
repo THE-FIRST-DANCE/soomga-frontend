@@ -51,13 +51,12 @@ const Places = ({ plan }: { plan: PlanInfo }) => {
 export default Places
 
 const Container = styled.div`
-  width: 400px;
+  width: 350px;
   padding: 1rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f5f5f5;
   position: relative;
 `
 
@@ -72,7 +71,7 @@ const Navibar = styled.div`
   display: flex;
   position: relative;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 0.5rem;
   box-sizing: border-box;
   margin-top: 1rem;
 `
@@ -80,7 +79,7 @@ const Navibar = styled.div`
 const NavibarItem = styled.div`
   width: 100%;
   height: 100%;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   padding-bottom: 0.5rem;
   display: flex;

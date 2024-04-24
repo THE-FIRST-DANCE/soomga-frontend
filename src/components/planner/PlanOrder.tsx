@@ -68,24 +68,6 @@ const PlanOrder = () => {
                   }}
                 >
                   <div>{totalTime}</div>
-                  <div
-                    style={{
-                      margin: '0 0.5rem',
-                    }}
-                  >
-                    /
-                  </div>
-
-                  <div
-                    style={{
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => {
-                      setTimeMod(true)
-                    }}
-                  >
-                    {planTime}
-                  </div>
                 </div>
               ) : (
                 <FlexCenter>
@@ -140,9 +122,10 @@ const PlanOrder = () => {
 export default PlanOrder
 
 const Container = styled(motion.div)<{ fold: boolean }>`
-  width: ${({ fold }) => (fold ? '80px' : '350px')};
-  padding: 2rem;
+  width: ${({ fold }) => (fold ? '80px' : '300px')};
+  padding: 2rem 1rem;
   position: relative;
+  box-sizing: border-box;
 
   transition: width 0.5s;
 `
@@ -191,12 +174,9 @@ const ResetButton = styled.div`
 
 const PlanOrderList = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  overflow-y: auto;
-  margin-top: 2rem;
 `
 
 const FoldButton = styled.div`

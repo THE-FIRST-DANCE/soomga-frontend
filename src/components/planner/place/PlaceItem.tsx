@@ -78,7 +78,7 @@ const PlaceItem = ({ data, editMode }: { data: PlaceData; editMode?: boolean }) 
   return (
     <Container>
       <Image>
-        <img src="https://cdn.pixabay.com/photo/2022/10/15/16/44/night-view-7523474_1280.jpg" alt="장소 이미지" />
+        <img src={data.photo} alt="장소 이미지" />
       </Image>
 
       <Info

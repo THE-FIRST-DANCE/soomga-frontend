@@ -2,22 +2,15 @@ import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { getPlanById } from 'api/PlanAPI'
 import { PlanConfirmListItem, Plans } from 'interfaces/plan'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { PlanConfirm, PlanConfirmList } from 'state/store/PlanList'
 import { provinces } from 'data/region'
-import { CurrentPeriod } from 'state/store/PlanInfo'
+import { useParams } from 'react-router-dom'
 
-export const usePlanConfirm = (planId: string | null) => {
-  const planConfirmList = useRecoilValue(PlanConfirmList)
-  const [confirmList, setConfirmList] = useState<PlanConfirm | null>(null)
-  const currentPeriod = useRecoilValue(CurrentPeriod)
-  const [planList, setPlanList] = useState<PlanConfirmListItem[]>([] as PlanConfirmListItem[])
-
-  useEffect(() => {
-    if (confirmList) {
-      setPlanList(confirmList.periodPlan[currentPeriod])
-    }
-  }, [confirmList, currentPeriod])
+export const usePlanConfirm = () => {
+  const { planId } = useParams<{ planId: string }>()
+  const [planConfirmList, setPlanConfirmList] = useRecoilState(PlanConfirmList)
+  const [planConfirm, setPlanConfirm] = useState<PlanConfirm>(planConfirmList)
 
   const { mutate } = useMutation({
     mutationFn: () => getPlanById(Number(planId)),
@@ -31,7 +24,19 @@ export const usePlanConfirm = (planId: string | null) => {
         periodPlan[item.day] = item.schedules
       })
 
-      setConfirmList({
+      setPlanConfirm({
+        periodPlan,
+        transport: data.transport,
+        info: {
+          title: data.title,
+          province: data.region,
+          lat: lat || 0,
+          lng: lng || 0,
+          period: data.period,
+        },
+      })
+
+      setPlanConfirmList({
         periodPlan,
         transport: data.transport,
         info: {
@@ -48,10 +53,14 @@ export const usePlanConfirm = (planId: string | null) => {
   useEffect(() => {
     if (planId) {
       mutate()
-    } else {
-      setConfirmList(planConfirmList)
     }
-  }, [])
+  }, [planId, mutate])
 
-  return { confirmList, planList }
+  useEffect(() => {
+    setPlanConfirm(planConfirmList)
+  }, [planConfirmList])
+
+  return {
+    planConfirm,
+  }
 }

@@ -7,9 +7,9 @@ import PlanPage from 'pages/PlanPage'
 import GuideDetailPage from 'pages/guide/detail'
 import MainPage from 'pages/home'
 import LoginSignupPage from 'pages/login'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import RedirectPage from 'pages/redirect'
 import ItineraryPage from 'pages/itinerary'
@@ -23,6 +23,16 @@ import MyPage from 'components/myPageCommon'
 import RequestGuide from 'components/myPageCommon/RequestGuide'
 import { useEffect, useState } from 'react'
 import { getCookie } from 'utils/cookie'
+import Layout from 'components/Layout'
+import PlanDetailPage from 'pages/PlanDetailPage'
+
+function LayoutWithRouter() {
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
+  )
+}
 
 const Router = () => {
   // 토큰 관리
@@ -45,16 +55,16 @@ const Router = () => {
   return (
     <>
       <Routes>
-        {/* 1. 메인  */}
+        <Route element={<LayoutWithRouter />}>
+          {/* 1. 메인  */}
+          <Route path="/" element={<MainPage />} />
 
-        <Route path="/" element={<MainPage />} />
+          {/* 2. 로그인 && 회원가입  */}
+          <Route path="/user/:id" element={<LoginSignupPage />} />
 
-        {/* 2. 로그인 && 회원가입  */}
-        <Route path="/user/:id" element={<LoginSignupPage />} />
-
-        {/* 3. 가이드 */}
-        <Route path="/guides" element={<GuidePage />} />
-        <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
+          {/* 3. 가이드 */}
+          <Route path="/guides" element={<GuidePage />} />
+          <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
         {/* {recoilToken.token && ( */}
         {isAccessToken && (
@@ -73,15 +83,14 @@ const Router = () => {
         <Route path="/post/create" element={<PostCreate />} />
         <Route path="/post/edit/:post_Id" element={<PostEdit />} />
 
-        {/* {recoilToken.token && ( */}
-        {isAccessToken && (
-          <>
-            {/* 6. 여행 플래너 생성 */}
-            <Route path="/planner" element={<PlanPage />} />
-            <Route path="/planner/create" element={<PlanCreatePage />} />
-            <Route path="/planner/confirm" element={<PlanConfirm />} />
-            <Route path="/planner/confirm/:planId" element={<PlanConfirm />} />
+        {/* 6. 여행 플래너 생성 */}
+        <Route path="/planner" element={<PlanPage />} />
+        <Route path="/planner/create" element={<PlanCreatePage />} />
+        <Route path="/planner/confirm" element={<PlanConfirm />} />
+        <Route path="/planner/confirm/:planId" element={<PlanConfirm />} />
 
+        {recoilToken.token && (
+          <>
             {/* 7. 채팅 페이지 */}
             <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
 

@@ -22,7 +22,7 @@ export interface Member {
   email: string
   nickname: string
   password: string
-  avatar: null
+  avatar: string
   birthdate: string
   gender: string
   status: string

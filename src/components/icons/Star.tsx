@@ -5,6 +5,7 @@ interface StarProps {
   $height?: string
   $color?: string
   $hoverColor?: string
+  $fill?: string
 }
 
 const Star = ({ ...props }: StarProps) => {

@@ -81,7 +81,7 @@ const Following = () => {
       {/* 검색  */}
       <SearchWrapper>
         <TopSearchWrap>
-          <SearchIcon width="30px" height="30px" />
+          <SearchIcon style={{ width: '30px', height: '30px' }} />
           <Input placeholder="리뷰 검색" />
         </TopSearchWrap>
         <SendBtn>검색</SendBtn>
