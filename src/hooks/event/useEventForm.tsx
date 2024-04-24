@@ -59,6 +59,8 @@ export const useEventModal = ({ onRequestClose, editEvent, selectedDate }: Event
             fontSize: '0.9rem',
           },
         })
+
+      return
     }
 
     if (selectedPlan) {
