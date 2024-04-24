@@ -1,7 +1,9 @@
-import styled, { CSSProp } from 'styled-components'
+import styled from 'styled-components'
 
 interface CautionProps {
-  style: CSSProp
+  $width?: string
+  $height?: string
+  $fill?: string
 }
 const CautionIcon = ({ ...props }: CautionProps) => {
   return (
@@ -17,5 +19,8 @@ const CautionIcon = ({ ...props }: CautionProps) => {
 export default CautionIcon
 
 const CautionStyled = styled.svg<CautionProps>`
-  ${(props) => props.style};
+  cursor: pointer;
+  width: ${({ $width }) => $width};
+  height: ${({ $height }) => $height};
+  fill: ${({ $fill }) => $fill};
 `

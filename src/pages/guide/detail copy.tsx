@@ -28,11 +28,6 @@ import guideImg from '../../assets/guideImg.png'
 import React from 'react'
 import { Review } from '../../interfaces/review'
 import { createRoom, getRooms } from 'api/ChatAPI'
-import { Member, Room } from 'interfaces/chat'
-
-import { useRecoilState } from 'recoil'
-import { ChatList } from 'state/store/ChatList'
-
 const plans = [
   {
     seoul: [],
@@ -47,54 +42,28 @@ const plans = [
 const GuideDetailPage = () => {
   // 🌈 가이드 id 값
   const { id } = useParams()
-  console.log('guideId : ', Number(id))
+  console.log('🌈 guideId 🌈 : ', id)
 
   // 🌈 유저 id 값
   const [userId, setUserId] = useState(null)
-  const [userInfo, setUserInfo] = useState(null)
-  console.log('userId: ', userId)
+  console.log('🌈userId🌈: ', userId)
 
-  // 🌈 채팅 리스트
-  // const [chatLists, setChatLists] = useState<Room[]>([])
-  // console.log('🩷채팅 리스트🩷 : ', chatLists)
-
-  // 🌈 채팅 목록 리스트 Reocil값
-  const [chatList, setChatList] = useRecoilState(ChatList)
-  console.log('chatList: ', chatList)
+  const [ChatLists, setChatLists] = useState<string[]>([])
+  console.log('🟠🟠🟠🟠🟠🟠🟠디테일 페이지에서 가져온 방정보🟠🟠🟠🟠🟠🟠🟠🟠🟠', ChatLists)
 
   const createRoomHandler = async () => {
-    let roomExists = false
+    // 내 id, 가이드 id 가져오기
+    // 가져온 id 값 들을 createRoom()에 넣기
 
-    // 채팅 리스트를 순회하면서 같은 이름의 방이 있는지 확인
-    // chatLists.forEach((room) => {
-    chatList.forEach((room) => {
-      if (room.name === guideInfos.nickname) {
-        roomExists = true
-        console.log('이미 존재하는 방입니다:', room.name)
-      }
-    })
+    // 🟡만약 기존의 대화창에 해당 유저가 없으면 새롭게 방을 하나 만들기
+    const post_createRoom = await createRoom({ me: Number(userId), counterpart: Number(id) })
 
-    // 같은 이름의 방이 없을 경우 새로운 방을 생성
-    if (!roomExists) {
-      console.log('새로운 가이드와의 대화 시작!')
-      const newRoom = await createRoom({ me: Number(userId), counterpart: Number(id) })
-      console.log('🌝🌝새방 만듬:: ', newRoom)
-
-      // 새로운 채팅방 정보를 상태에 추가
-      if (newRoom) {
-        // setChatLists((prevRooms) => [...prevRooms, newRoom])
-        setChatList((prev) => [...prev, newRoom])
-        console.log('새 방 추가됨:', newRoom)
-      }
-
-      return newRoom
-    }
+    return post_createRoom
   }
 
   useEffect(() => {
     //! 현재 Login한 유저 id
     const userInfo = localStorage.getItem('userInfo')
-    setUserInfo(userInfo ? JSON.parse(userInfo) : null)
     setUserId(userInfo ? JSON.parse(userInfo).id : null)
 
     //! 방정보 가져오기
@@ -102,12 +71,24 @@ const GuideDetailPage = () => {
       const data = await getRooms()
       console.log('data: ', data)
 
-      setChatList(data) // 리코일 값
+      data.map((room) => {
+        room.members?.map((member) => {
+          if (!ChatLists.includes(member.member.id)) {
+            console.log(member.member.id)
+
+            setChatLists((prev) => [...prev, member.member.id])
+          }
+        })
+      })
+
+      // const roomNames = new Set(ChatLists) // 현재 상태를 Set으로 변환하여 중복 제거 준비
+      // data.forEach((room) => {
+      //   roomNames.add(room.name)
+      // })
+      // setChatLists([...roomNames])
     }
     fetchGetRooms()
-  }, [chatList.length])
-
-  // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  }, [id])
 
   // 점수 평균
   const [averageCommunicationScore, setAverageCommunicationScore] = useState(0)
@@ -116,7 +97,7 @@ const GuideDetailPage = () => {
 
   // 🟡 각각의 전체 평점 🟡
   const [reviewCounts, setReviewCounts] = useState([0, 0, 0, 0, 0])
-  // console.log('reviewCounts: ', reviewCounts)
+  console.log('reviewCounts: ', reviewCounts)
 
   // 플랜 여닫이 상태
   const [isPlanOpen, setIsPlanOpen] = useState<boolean[]>([])
@@ -149,7 +130,7 @@ const GuideDetailPage = () => {
     },
     tags: [],
   })
-  // console.log('⭐️guideInfos: ', guideInfos)
+  console.log('⭐️guideInfos: ', guideInfos)
 
   /* 가이드 리뷰 */
   const [reviews, setReviews] = useState<Review[]>([])
@@ -180,7 +161,7 @@ const GuideDetailPage = () => {
     // 2. 리뷰 정보
     const fetchGetReviews = async () => {
       const data = await getReviews(Number(id))
-      // console.log('🟡 가이드 리뷰 데이터: ', data)
+      console.log('🟡 가이드 리뷰 데이터: ', data)
 
       // 리뷰별 각각의 점수들의 총합
       let totalCommunication = 0,
@@ -406,7 +387,7 @@ const GuideDetailPage = () => {
         </LeftSection>
 
         {/* ------------------------------------------　中 ------------------------------------------　*/}
-        {isOpenChat && <Chatting userInfo={userInfo} guideInfos={guideInfos} onClick={startChatHandler} />}
+        {isOpenChat && <Chatting guideId={id} onClick={startChatHandler} />}
         <MiddleSection>
           <BlankTop10Rem />
           {/* 1. 서비스 */}
