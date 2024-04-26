@@ -29,7 +29,7 @@ const PlanDetailItem = ({ item, isLast }: { item: PlanConfirmListItem; isLast: b
 
           {!isLast && (
             <Route>
-              <CarIcon style={{ width: '1.5rem', height: '1.5rem' }} />
+              <CarIcon className="car-icon" style={{ width: '1.5rem', height: '1.5rem' }} />
               <RouteTime
                 onClick={() => {
                   onClick()
@@ -137,7 +137,7 @@ const Route = styled.div`
     height: 40%;
   }
 
-  svg {
+  .car-icon {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -149,7 +149,7 @@ const RouteTime = styled.div`
   position: absolute;
   display: flex;
   align-items: center;
-  width: 5rem;
+  width: 6rem;
   top: 50%;
   left: 1.5rem;
   transform: translate(0, -30%);

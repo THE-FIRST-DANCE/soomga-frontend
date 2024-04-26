@@ -2,6 +2,7 @@ import { useRecoilState } from 'recoil'
 import { CurrentPeriod } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import logo from 'assets/logo.svg'
+import { useNavigate } from 'react-router-dom'
 
 interface PlanLeftTabProps {
   onNext: () => void
@@ -28,11 +29,16 @@ const PlanLeftTab = ({
 }: PlanLeftTabProps) => {
   const [currentPeriod, setCurrentPeriod] = useRecoilState(CurrentPeriod)
   const memberId = 2
+  const navigate = useNavigate()
 
   return (
     <LeftTab>
       {/* 로고 */}
-      <Logo>
+      <Logo
+        onClick={() => {
+          navigate('/')
+        }}
+      >
         <img src={logo} alt="logo" />
       </Logo>
 
@@ -110,6 +116,7 @@ const Logo = styled.div`
   width: 80%;
   height: 4em;
   box-sizing: border-box;
+  cursor: pointer;
 
   img {
     width: 100%;

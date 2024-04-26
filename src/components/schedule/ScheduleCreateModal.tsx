@@ -157,7 +157,7 @@ const CreateEventModal = ({ isOpen, onRequestClose, editEvent, selectedDate }: E
             ) : (
               <ClickItem
                 onClick={() => {
-                  onPlanAddHandler(1) // TODO: 로그인 정보로 대체
+                  onPlanAddHandler(2) // TODO: 로그인 정보로 대체
                 }}
               >
                 플랜

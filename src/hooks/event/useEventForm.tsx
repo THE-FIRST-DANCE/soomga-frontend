@@ -95,7 +95,7 @@ export const useEventModal = ({ onRequestClose, editEvent, selectedDate }: Event
     const formatEnd = format(endDate, 'yyyy-MM-dd') + 'T' + endTime
 
     const data = {
-      memberId: 1, // TODO: 로그인 정보로 대체
+      memberId: 2, // TODO: 로그인 정보로 대체
       title,
       start: formatStart,
       end: formatEnd,

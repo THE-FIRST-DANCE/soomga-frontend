@@ -29,30 +29,19 @@ import React from 'react'
 import { Review } from '../../interfaces/review'
 import { createRoom, getRooms } from 'api/ChatAPI'
 import { Member, Room } from 'interfaces/chat'
+import { Plans } from 'interfaces/plan'
 
 import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
-
-const plans = [
-  {
-    seoul: [],
-    locations: [1, 2, 3],
-  },
-  {
-    seoul: [],
-    locations: [1, 2, 3, 4],
-  },
-]
+import PlanItem from 'components/planner/PlanItem'
 
 const GuideDetailPage = () => {
   // 🌈 가이드 id 값
   const { id } = useParams()
-  console.log('guideId : ', Number(id))
 
   // 🌈 유저 id 값
   const [userId, setUserId] = useState(null)
   const [userInfo, setUserInfo] = useState(null)
-  console.log('userId: ', userId)
 
   // 🌈 채팅 리스트
   // const [chatLists, setChatLists] = useState<Room[]>([])
@@ -60,7 +49,6 @@ const GuideDetailPage = () => {
 
   // 🌈 채팅 목록 리스트 Reocil값
   const [chatList, setChatList] = useRecoilState(ChatList)
-  console.log('chatList: ', chatList)
 
   const createRoomHandler = async () => {
     let roomExists = false
@@ -100,7 +88,6 @@ const GuideDetailPage = () => {
     //! 방정보 가져오기
     const fetchGetRooms = async () => {
       const data = await getRooms()
-      console.log('data: ', data)
 
       setChatList(data) // 리코일 값
     }
@@ -148,8 +135,9 @@ const GuideDetailPage = () => {
       verifiedBankAccount: false,
     },
     tags: [],
+    plans: [],
   })
-  // console.log('⭐️guideInfos: ', guideInfos)
+  console.log('⭐️guideInfos: ', guideInfos)
 
   /* 가이드 리뷰 */
   const [reviews, setReviews] = useState<Review[]>([])
@@ -213,11 +201,6 @@ const GuideDetailPage = () => {
     }
     fetchGetReviews()
   }, [id])
-
-  // 플랜 개수 변경시 개수 적용
-  useEffect(() => {
-    initPlanStates()
-  }, [plans.length])
 
   // 테스트
   const myDivRef = useRef<HTMLDivElement | null>(null)
@@ -434,25 +417,19 @@ const GuideDetailPage = () => {
           <ServiceLayout ref={serviceRef}>
             <Title>서비스</Title>
             <ServiceContainer>
-              {[1, 2, 3].map((item) => (
-                <Service key={item}>
-                  <LeftImg>
-                    <img src={guideImg} alt="" />
-                  </LeftImg>
-                  <RightContentWrap>
-                    <RightHover>&#62;</RightHover>
-                    <RightTitle>{`제목`}</RightTitle>
-                    <RightPricingWrap>
-                      요금: <RightPricing>{70000}</RightPricing>
-                    </RightPricingWrap>
-                    <RightContent>
-                      그대 보내고 멀리 가을새와 작별하듯 그대 떠나 보내고 돌아와 술잔 앞에 앉으면 눈물 나누나 그대
-                      보내고 아주 지는 별빛 바라볼 때 눈에 흘러 내리는 못다한 말들 그 아픈 사랑 지울 수 있을까 어느 하루
-                      비라도 추억처럼 흩날리는 거리에서 쓸쓸한 사랑 되어 고개 숙이면 그대 목소리
-                    </RightContent>
-                  </RightContentWrap>
-                </Service>
-              ))}
+              <Service>
+                <LeftImg>
+                  <img src={guideImg} alt="" />
+                </LeftImg>
+                <RightContentWrap>
+                  <RightHover>&#62;</RightHover>
+                  <RightTitle>{`가이드`}</RightTitle>
+                  <RightPricingWrap>
+                    요금: <RightPricing>{0}</RightPricing>
+                  </RightPricingWrap>
+                  <RightContent>하루간의 여행 가이드를 제공합니다</RightContent>
+                </RightContentWrap>
+              </Service>
             </ServiceContainer>
           </ServiceLayout>
 
@@ -463,67 +440,7 @@ const GuideDetailPage = () => {
           {/* 2. 여행 플랜  */}
           <TravelPlanLayout>
             <Title>여행 플랜</Title>
-            <PlanContainer>
-              {plans.map((plan, index) => {
-                return (
-                  <React.Fragment key={`plan-${index}`}>
-                    <PlanWrapper>
-                      <Plan key={`planOfWrapper-${index}`} onClick={() => onClickDropdownBtn(index)}>
-                        <PlanTitle>{`플랜1`}</PlanTitle>
-                        <PlanInfo>{`서울에서 하는 조선시대 역사 체험`}</PlanInfo>
-                        <PlanTime>
-                          <Time $width="1.1rem" $height="1.1rem" $color="white" />
-                          {` 총 ${6} 시간`}
-                        </PlanTime>
-                        <DropdownBtn>
-                          {isPlanOpen[index] ? (
-                            <Arrow $width="3rem" $height="3rem" $color="white" $angle="90deg" />
-                          ) : (
-                            <Arrow $width="3rem" $height="3rem" $color="white" $angle="180deg" />
-                          )}
-                        </DropdownBtn>
-                      </Plan>
-                      {/* 플랜 내용 */}
-                      <PlanContent $isPlanOpen={isPlanOpen[index]}>
-                        {plan.locations.map((location, index) => {
-                          return (
-                            <React.Fragment key={`contentFrame-${index}`}>
-                              <ContentFrame>
-                                <LocationImage>
-                                  <img src={ulsan} alt="Noimage" />
-                                </LocationImage>
-                                <LocationInfoContainer>
-                                  <InfoTime>
-                                    <Time $width="1rem" $height="1rem" $color="black" />
-                                    {1} 시간
-                                  </InfoTime>
-                                  <InfoName>
-                                    <Place>장소</Place>
-                                    <PlaceName> {`83타워`}</PlaceName>
-                                  </InfoName>
-                                </LocationInfoContainer>
-                                <Description>
-                                  efiluwahwflihawlefiluwaheiuflhawflihawliefhwialuawflihawliefhwialuhefiluwaheiuflhawflihawliefhwialuhefiluwaheiuflhawflihawliefhwialuhefiluwaheiuflhaweuilfhlawiehfuiawh
-                                </Description>
-                              </ContentFrame>
-
-                              {index !== plan.locations.length - 1 && (
-                                <TravelTime>
-                                  <CarIcon style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-                                  {`${30} 분  `}
-                                </TravelTime>
-                              )}
-                            </React.Fragment>
-                          )
-                        })}
-
-                        {/* --------------------------------------------------------- */}
-                      </PlanContent>
-                    </PlanWrapper>
-                  </React.Fragment>
-                )
-              })}
-            </PlanContainer>
+            {guideInfos?.plans.map((plan: Plans) => <PlanItem key={plan.id} data={plan} />)}
           </TravelPlanLayout>
           <Partition>
             <Line />

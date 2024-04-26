@@ -1,140 +1,266 @@
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { getTouristList } from 'api/TouristAPI'
+import TouristCard from 'components/recommendations/TouristCard'
+import Spinner from 'components/shared/Spinner'
+import { provinces } from 'data/region'
+import { motion } from 'framer-motion'
+import { Tourist } from 'interfaces/tourist'
+import { useEffect, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate, useParams } from 'react-router-dom'
 import { styled } from 'styled-components'
-import { regionsArr } from './index'
-import RecommedCard from 'components/recommendations/RecommedCard'
-
-import PageNation from 'components/recommendations/PageNation'
-
-interface ThProps {
-  width: string
-}
-
-type Post = {
-  id: number
-  title: string
-  author: string
-  date: string
-  views: number
-  likes: number
-}
-
-export const posts = [
-  { id: 1, region: '서울', title: '첫 번째 게시글', author: '桑田', date: '2021-09-01', views: 100, likes: 10 },
-  { id: 2, region: '부산', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 3, region: '울산', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 4, region: '대구', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 5, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 6, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 7, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 8, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 9, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 10, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 11, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 12, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 13, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 14, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  { id: 15, region: '서울', title: '두 번째 게시글', author: '長谷川', date: '2021-09-02', views: 150, likes: 20 },
-  // 추가적인 게시글 데이터...
-]
 
 const RegionsList = () => {
+  const [view, setView] = useState<'grid' | 'list'>('grid')
+  const [touristList, setTouristList] = useState<Tourist[]>([])
+
   let { region_Id } = useParams()
-  console.log(' region_Id: ', region_Id)
+  const region = provinces.find((region) => region.id === Number(region_Id))
   const navigate = useNavigate()
+
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ['tourist', { pageParam: null }],
+    queryFn: ({ pageParam }) => {
+      return getTouristList({
+        pageParam,
+        areas: [Number(region_Id)],
+      })
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.nextCursor) {
+        return lastPage.nextCursor
+      }
+    },
+  })
+
+  useEffect(() => {
+    if (data) {
+      setTouristList(data.pages.flatMap((page) => page.items))
+    }
+  }, [data])
+
+  const fetchMore = () => {
+    if (hasNextPage && !isFetching) {
+      fetchNextPage()
+    }
+  }
+
+  const viewChangeVariants = {
+    left: view === 'grid' ? '0%' : '50%',
+  }
 
   return (
     <Layout>
-      <Title>{region_Id}</Title>
-      {/* 가이드 추천순 */}
-      <GuideContainer>
-        <SubTitle>가이드 추천순</SubTitle>
-        <Wrapper>
-          {regionsArr.map(
-            (regionInfo: { id: number; regionName: string; guideImg: string; img: string }, index) =>
-              index + 1 <= 4 && (
-                <RecommedCard
-                  regionInfo={regionInfo}
-                  navigate={navigate}
-                  guideImg={regionInfo.guideImg}
-                  regionImg={regionInfo.img}
-                />
-              ),
-          )}
-        </Wrapper>
-      </GuideContainer>
-      {/* 여행자 추천순 */}
-      <TravelerContainer>
-        <SubTitle>여행자 추천순</SubTitle>
-        <Wrapper>
-          {regionsArr.map(
-            (regionInfo: { id: number; regionName: string; guideImg: string; img: string }, index) =>
-              index + 1 <= 4 && (
-                <RecommedCard
-                  regionInfo={regionInfo}
-                  navigate={navigate}
-                  guideImg={regionInfo.guideImg}
-                  regionImg={regionInfo.img}
-                />
-              ),
-          )}
-        </Wrapper>
-      </TravelerContainer>
-      {/* 게시판 */}
-
-      {/* 페이지 네이션 */}
-      <PageNation></PageNation>
+      <RegionTitle>{region?.name}</RegionTitle>
+      <Header>
+        <Search type="text" placeholder="검색" />
+        <Views>
+          <ViewChange initial={false} animate={viewChangeVariants} transition={{ duration: 0.3 }} />
+          <IconBox
+            onClick={() => {
+              setView('grid')
+            }}
+          >
+            <GridIcon />
+          </IconBox>
+          <IconBox
+            onClick={() => {
+              setView('list')
+            }}
+          >
+            <ListsIcon />
+          </IconBox>
+        </Views>
+        <WriteButton
+          onClick={() => {
+            navigate(`/post/create`)
+          }}
+        >
+          글쓰기
+        </WriteButton>
+      </Header>
+      <InfiniteScroll
+        dataLength={touristList.length}
+        next={fetchMore}
+        hasMore={hasNextPage}
+        loader={<Spinner loading={isFetching} />}
+        style={{ overflow: 'hidden' }}
+      >
+        <RegionsContainer>
+          {touristList.map((tourist) => (
+            <TouristCard key={tourist.id} data={tourist} />
+          ))}
+        </RegionsContainer>
+      </InfiniteScroll>
     </Layout>
   )
 }
 
 export default RegionsList
 
-// 중앙 정렬
-const FlexCenter = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 const Layout = styled.div`
-  /* background-color: mediumaquamarine; */
   margin: 0 auto;
-  width: 80%;
-  /* width: 55%; */
-  margin-top: 11rem;
-  margin-bottom: 5rem;
-  padding: 0 2rem;
-  box-sizing: border-box;
+  padding-top: 8rem;
+  max-width: 1200px;
 `
 
-const Title = styled.div`
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 5rem;
-`
-const GuideContainer = styled.div`
-  /* background-color: #8741f1; */
-  width: 100%;
-  /* min-height: 60rem; */
-  margin-bottom: 5rem;
-`
-
-const SubTitle = styled.div`
+const RegionTitle = styled.div`
   font-size: 2rem;
   margin-bottom: 2rem;
-  margin-left: 3.5rem;
-`
-const Wrapper = styled(FlexCenter)`
-  /* background-color: #f1bc41; */
-  width: 100%;
-  /* min-height: 700px; */
-  gap: 3rem;
-  flex-wrap: wrap;
+  text-align: center;
 `
 
-/* Travelers */
-const TravelerContainer = styled.div`
-  /* background-color: royalblue; */
-  margin-bottom: 5rem;
-  /* min-height: 700px; */
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--bs-gray-300);
 `
+
+const Search = styled.input`
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid var(--bs-gray-300);
+  border-radius: 0.5rem;
+  outline: none;
+  font-size: 1rem;
+  margin-right: 1rem;
+`
+
+const Views = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bs-gray-200);
+  border: 1px solid var(--bs-gray-300);
+  border-radius: 0.5rem;
+  position: relative;
+`
+
+const ViewChange = styled(motion.div)`
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  border-radius: 1rem;
+  background-color: var(--bs-white);
+`
+
+const RegionsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin: 3rem 0;
+`
+
+const IconBox = styled.div`
+  flex: 1;
+  z-index: 1;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const WriteButton = styled.div`
+  background-color: var(--color-primary);
+  color: var(--bs-gray-600);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-left: 1rem;
+  cursor: pointer;
+`
+
+const GridIcon = () => {
+  return (
+    <svg width={20} height={20} viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+    </svg>
+  )
+}
+
+const ListsIcon = () => {
+  return (
+    <svg width={20} height={20} enable-background="new 0 0 32 32" viewBox="0 0 32 32">
+      <circle
+        cx="5"
+        cy="6"
+        fill="none"
+        id="XMLID_303_"
+        r="1"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="2"
+      />
+      <circle
+        cx="5"
+        cy="16"
+        fill="none"
+        id="XMLID_305_"
+        r="1"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="2"
+      />
+      <circle
+        cx="5"
+        cy="26"
+        fill="none"
+        id="XMLID_304_"
+        r="1"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="2"
+      />
+      <line
+        fill="none"
+        id="XMLID_29_"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="2"
+        x1="10"
+        x2="28"
+        y1="6"
+        y2="6"
+      />
+      <line
+        fill="none"
+        id="XMLID_30_"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="2"
+        x1="10"
+        x2="28"
+        y1="16"
+        y2="16"
+      />
+      <line
+        fill="none"
+        id="XMLID_31_"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="2"
+        x1="10"
+        x2="28"
+        y1="26"
+        y2="26"
+      />
+    </svg>
+  )
+}
