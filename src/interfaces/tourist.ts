@@ -1,10 +1,12 @@
 import { Member } from './guideInfo'
+import { CommentType } from './share'
 
 export interface Tourist {
   id: number
   title: string
   content: string
   createdAt: Date
+  areaId: number
   tags: {
     tag: tag
   }[]
@@ -14,7 +16,7 @@ export interface Tourist {
     likes: number
   }
   likes: TouristLike[]
-  comments: BoardCommentType[]
+  comments: CommentType[]
 }
 
 export interface tag {
@@ -24,11 +26,4 @@ export interface tag {
 
 export interface TouristLike {
   memberId: number
-}
-
-export interface BoardCommentType {
-  id: number
-  content: string
-  createdAt: Date
-  member: Member
 }
