@@ -81,7 +81,7 @@ const Router = () => {
           <Route path="/recommendations/detail/:detail_Id" element={<RegionDetailPage />} />
           {/* FIXME: 라우팅만 처리 */}
           <Route path="/post/create" element={<PostCreate />} />
-          <Route path="/post/edit/:post_Id" element={<PostEdit />} />
+          <Route path="/post/create/:post_Id" element={<PostCreate />} />
 
           {/* 여행 플래너 */}
           <Route path="/planner" element={<PlanPage />} />
