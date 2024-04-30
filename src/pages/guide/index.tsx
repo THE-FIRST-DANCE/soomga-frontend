@@ -45,7 +45,7 @@ const GuidePage = () => {
   const [isCredentialsClick, setIsCredentialsClick] = useState<boolean>(true) //  토굴
   const [selectedCredentials, setSelectedCredentials] = useState<number[]>([]) // 선택된 자격증
 
-  const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
+  const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState) // 리코일에 저장된 선택된 데이터들
   /* 선택된 데이터들 */
   let selectedDatasObj = {
     // isClick: !selectedDatas.isClick,
@@ -359,8 +359,10 @@ const GuidePage = () => {
             <SearchBtn
               onClick={() => {
                 setSelectedDatas((prev): any => {
-                  return { ...prev, ...selectedDatasObj }
+                  return { ...selectedDatasObj }
+                  // return { ...prev, ...selectedDatasObj } // 이전에 있었던 값을 굳이 다시 뺏다할 필요가 있나
                 })
+                console.log(selectedDatas)
               }}
             >
               검색

@@ -12,11 +12,11 @@ const GuideCard = () => {
   const navigate = useNavigate()
 
   const [guideDatas, setGuideDatas] = useState<any[]>([]) // 가이드 데이터
-  // console.log('가이드 데이터: ', guideDatas)
 
   const [noData, setNoData] = useState('')
 
   const [nowCursor, setNowCursor] = useState<number | any>() // 페이지네이션 커서
+  console.log('nowCursor: ', nowCursor)
 
   const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
 
@@ -30,9 +30,10 @@ const GuideCard = () => {
 
   /* 데이터 요청 */
 
-  // 🟡 데이터 가져오기  🟡
+  // 🟡 데이터 가져오기 ->  옵져버에 닿을때 마다 실행된다.   🟡
   const fetchOriginalGuideList = useCallback(async () => {
     try {
+      // 🟢 보낼 값 🟢
       const requestParams = {
         age: selectedDatas.age.join('-'),
         // temperature: '30-41',
@@ -45,23 +46,14 @@ const GuideCard = () => {
         guideCeritifications: selectedDatas.guideCeritifications.toString(),
         rating: selectedRatingsRating,
       }
-      console.log('🟢 보낼 값 🟢 ', requestParams)
 
-      console.log(selectedDatas.age.length, selectedDatas.temperature.length, selectedDatas.guideCount.length)
-
-      const result = await getGuideList({ cursor: nowCursor, limit: 4, requestParams })
+      const result = await getGuideList({ cursor: nowCursor, limit: 7, requestParams })
       console.log('🟠 받아온 값 🟠', result)
 
+      // next cursor 값 저장
       setNowCursor(result.nextCursor)
 
-      // if (result.items.length === 0) {
-      //   setNoData('데이터 없음')
-      //   setGuideDatas(() => [])
-      //   return
-      // }
-
       if (selectedDatas.isClick) {
-        // if (selectedDatas.isClick && result.items.length !== 0) {
         /* 검색 버튼 눌렀을 때 */
         console.log('🔶🔶🔶🔶🔶')
         if (
@@ -69,7 +61,7 @@ const GuideCard = () => {
           selectedDatas.temperature.length == 0 &&
           selectedDatas.guideCount.length == 0
         ) {
-          return setGuideDatas((prev) => [...prev, ...result.items])
+          return setGuideDatas((prev) => [...result.items])
         }
         setNowCursor(null)
         setGuideDatas(() => [])
