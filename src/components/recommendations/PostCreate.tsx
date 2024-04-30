@@ -1,15 +1,35 @@
-import { useMutation } from '@tanstack/react-query'
-import { postTourist } from 'api/TouristAPI'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { createTripDto, editTourist, getTouristDetail, postTourist } from 'api/TouristAPI'
 import QuillEditor from 'components/react-quill/QuillEditor'
 import FullLoading from 'components/shared/FullLoading'
 import { provinces } from 'data/region'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Tourist } from 'interfaces/tourist'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import styled, { keyframes } from 'styled-components'
 
 const PostCreate = () => {
+  const { post_Id } = useParams<{ post_Id: string }>()
+
+  const { data }: { data: Tourist } = useQuery({
+    queryKey: ['touristEdit', post_Id],
+    queryFn: () => getTouristDetail(Number(post_Id)),
+    enabled: !!post_Id,
+  })
+
+  useEffect(() => {
+    if (data) {
+      setTags(data.tags.map((tag) => tag.tag.name))
+      setTitle(data.title)
+      setContent(data.content)
+      setRegion(provinces.find((prov) => prov.id === data.areaId)?.name)
+      setEditMode(true)
+    }
+  }, [data])
+
+  const [editMode, setEditMode] = useState<boolean>(false)
   const [tags, setTags] = useState<string[]>([]) // 입력 받아 저장할 태그들
   const [hashTag, setHashTag] = useState<string>('') // 입력 받은 태그 임시 상태 저장
   const [openProvince, setOpenProvince] = useState<boolean>(false)
@@ -57,7 +77,7 @@ const PostCreate = () => {
     mutationFn: postTourist,
     onSuccess: () => {
       toast.success('게시글이 작성되었습니다.')
-      navigate('/recommendations')
+      navigate(`/recommendations`)
     },
     onError: (error) => {
       toast.error('게시글 작성에 실패했습니다.')
@@ -65,8 +85,31 @@ const PostCreate = () => {
     },
   })
 
+  const { mutate: editPost } = useMutation({
+    mutationFn: (data: {
+      id: number
+      title: string
+      content: string
+      tags: string[]
+      areaId: number | undefined
+      authorId: number
+    }) => editTourist(data.id, data),
+    onSuccess: () => {
+      toast.success('게시글이 수정되었습니다.')
+      navigate(`/recommendations/detail/${post_Id}`)
+    },
+    onError: (error) => {
+      toast.error('게시글 수정에 실패했습니다.')
+      console.log(error)
+    },
+  })
+
   const onSubmit = () => {
-    if (!window.confirm('작성하시겠습니까?')) return
+    if (editMode) {
+      if (!window.confirm('게시글을 수정하시겠습니까?')) return
+    } else {
+      if (!window.confirm('게시글을 작성하시겠습니까?')) return
+    }
 
     if (!region) {
       toast.error('지역을 선택해 주세요')
@@ -79,6 +122,11 @@ const PostCreate = () => {
       tags: tags,
       areaId: provinces.find((prov) => prov.name === region)?.id,
       authorId: 2,
+    }
+
+    if (editMode) {
+      editPost({ ...createTripDto, id: Number(post_Id) })
+      return
     }
 
     createPost(createTripDto)
