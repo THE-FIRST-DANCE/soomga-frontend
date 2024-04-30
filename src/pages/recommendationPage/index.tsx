@@ -1,6 +1,7 @@
 import { styled } from 'styled-components'
-import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay, EffectCoverflow } from 'swiper/modules'
+import { useEffect, useState } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -15,10 +16,10 @@ import { useQuery } from '@tanstack/react-query'
 import { getRecommendation } from 'api/TouristAPI'
 import { Tourist } from 'interfaces/tourist'
 import TouristCard from 'components/recommendations/TouristCard'
-import { useEffect, useState } from 'react'
 
 const RecommendatedPostPage = () => {
   const [recommendation, setRecommendation] = useState<Tourist[]>([])
+
   const navigate = useNavigate()
 
   const onClickRegion = (region: number) => {
@@ -41,7 +42,6 @@ const RecommendatedPostPage = () => {
       {/* 🟡 추천 포스트 🟡 */}
       <Title>추천 포스트</Title>
       <CarouselLayout>
-        {/* 1. Swiper 레이어아웃 */}
         <SwiperLayout>
           <Swiper
             // install Swiper modules
@@ -50,10 +50,10 @@ const RecommendatedPostPage = () => {
             spaceBetween={50}
             slidesPerView={2}
             slidesPerGroup={2} // 한 번에 보여지는 슬라이드 수
-            // loop={true}
+            loop={true}
             speed={400}
             mousewheel={true}
-            // autoplay={{ delay: 3000, disableOnInteraction: false }}
+            autoplay={{ delay: 3000, disableOnInteraction: false }}
             centeredSlides={false} // 현재 슬라이드를 가운데 정렬
             style={{
               padding: '0 1rem',
@@ -78,7 +78,7 @@ const RecommendatedPostPage = () => {
             }}
             key={regionInfo.id}
           >
-            <img src={regionInfo.img} alt={regionInfo.name} />
+            <img src={regionInfo.img} alt={regionInfo.name} loading="lazy" />
             <Letter>{regionInfo.name}</Letter>
           </RegionCard>
         ))}

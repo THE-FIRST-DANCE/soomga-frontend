@@ -28,6 +28,16 @@ const TouristCard = ({ data }: { data: Tourist }) => {
               ? mainImage[0].url
               : 'https://htmlcolorcodes.com/assets/images/colors/gray-color-solid-background-1920x1080.png'
           }
+          srcSet={`
+            ${
+              mainImage.length !== 0
+                ? `${mainImage[0].url.replace('.jpg, .jpeg', '.webp')} 1240w, ${mainImage[0].url} 1240w`
+                : 'https://htmlcolorcodes.com/assets/images/colors/gray-color-solid-background-1920x1080.png 1240w'
+            }
+          `}
+          sizes="(max-width: 1240px) 100vw, 1240px,
+                 (max-width: 768px) 100vw, 768px"
+          loading="lazy"
           alt="card"
         />
       </CardImg>
