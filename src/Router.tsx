@@ -1,16 +1,15 @@
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
+import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
+import { useEffect, useState } from 'react'
+import { getCookie } from 'utils/cookie'
 import GuidePage from 'pages/guide'
-
 import PlanConfirm from 'pages/PlanConfirm'
-
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
 import GuideDetailPage from 'pages/guide/detail'
 import MainPage from 'pages/home'
 import LoginSignupPage from 'pages/login'
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
-
-import { useRecoilState } from 'recoil'
-import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import RedirectPage from 'pages/redirect'
 import ItineraryPage from 'pages/itinerary'
 import RecommendatedPostPage from 'pages/recommendationPage'
@@ -21,8 +20,6 @@ import PostCreate from 'components/recommendations/PostCreate'
 import PostEdit from 'components/recommendations/PostEdit'
 import MyPage from 'components/myPageCommon'
 import RequestGuide from 'components/myPageCommon/RequestGuide'
-import { useEffect, useState } from 'react'
-import { getCookie } from 'utils/cookie'
 import Layout from 'components/Layout'
 import PlanDetailPage from 'pages/PlanDetailPage'
 
@@ -36,7 +33,6 @@ function LayoutWithRouter() {
 
 const Router = () => {
   // 토큰 관리
-  // const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
   const [isAccessToken, setIsAccessToken] = useState<boolean>()
 
@@ -66,25 +62,28 @@ const Router = () => {
           <Route path="/guides" element={<GuidePage />} />
           <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
-        {/* {recoilToken.token && ( */}
-        {isAccessToken && (
-          <>
-            {/* 4. 여행일정 */}
-            {/* <Route path="/itinerary" element={<ItineraryPage />} /> */}
-            <Route path="/schedule" element={<SchedulePage />} />
-          </>
-        )}
+          {isAccessToken && (
+            <>
+              {/* 4. 여행일정 */}
+              <Route path="/itinerary" element={<ItineraryPage />} />
+            </>
+          )}
+          <Route path="/schedule" element={<SchedulePage />} />
 
-        {/* 5. 여행장소 추천 */}
-        <Route path="/recommendations" element={<RecommendatedPostPage />} />
-        <Route path="/recommendations/:region_Id" element={<RegionsList />} />
-        <Route path="/recommendations/:region_Id/:detail_Id" element={<RegionDetailPage />} />
-        {/* FIXME: 라우팅만 처리 */}
-        <Route path="/post/create" element={<PostCreate />} />
-        <Route path="/post/edit/:post_Id" element={<PostEdit />} />
+          {/* 5. 여행장소 추천 */}
+          <Route path="/recommendations" element={<RecommendatedPostPage />} />
+          <Route path="/recommendations/:region_Id" element={<RegionsList />} />
+          <Route path="/recommendations/detail/:detail_Id" element={<RegionDetailPage />} />
+          {/* FIXME: 라우팅만 처리 */}
+          <Route path="/post/create" element={<PostCreate />} />
+          <Route path="/post/edit/:post_Id" element={<PostEdit />} />
+
+          {/* 여행 플래너 */}
+          <Route path="/planner" element={<PlanPage />} />
+          <Route path="/planner/detail/:planId" element={<PlanDetailPage />} />
+        </Route>
 
         {/* 6. 여행 플래너 생성 */}
-        <Route path="/planner" element={<PlanPage />} />
         <Route path="/planner/create" element={<PlanCreatePage />} />
         <Route path="/planner/confirm" element={<PlanConfirm />} />
         <Route path="/planner/confirm/:planId" element={<PlanConfirm />} />
