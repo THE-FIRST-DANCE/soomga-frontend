@@ -20,7 +20,7 @@ import Location from 'components/icons/Location'
 import Star from 'components/icons/Star'
 import CalendarComponent from 'components/itineraryCalendar/Calendar'
 import { useParams } from 'react-router-dom'
-import { getReviews, getSelectedGuide } from 'api/GuidePageAPI'
+import { getGuideServices, getReviews, getSelectedGuide } from 'api/GuidePageAPI'
 import moment from 'moment'
 import Chatting from 'components/chat/Chatting'
 import { toast } from 'react-toastify'
@@ -32,6 +32,7 @@ import { Member, Room } from 'interfaces/chat'
 
 import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
+import { IsClickAtMain } from 'state/store/IsClickAtMain'
 
 const plans = [
   {
@@ -44,6 +45,13 @@ const plans = [
   },
 ]
 
+interface GuideService {
+  name: string
+  photo: string
+  description: string
+  price: string
+}
+
 const GuideDetailPage = () => {
   // 🌈 가이드 id 값
   const { id } = useParams()
@@ -54,6 +62,7 @@ const GuideDetailPage = () => {
   const [userInfo, setUserInfo] = useState(null)
   console.log('userId: ', userId)
 
+  const [isClickAtChat, setIsClickAtChat] = useRecoilState(IsClickAtMain)
   // 🌈 채팅 리스트
   // const [chatLists, setChatLists] = useState<Room[]>([])
   // console.log('🩷채팅 리스트🩷 : ', chatLists)
@@ -61,6 +70,10 @@ const GuideDetailPage = () => {
   // 🌈 채팅 목록 리스트 Reocil값
   const [chatList, setChatList] = useRecoilState(ChatList)
   console.log('chatList: ', chatList)
+
+  // 가이드 서비스 값
+  const [guideServices, setGuideServices] = useState<GuideService[]>(null)
+  console.log('🔶🔶🔶services: ', guideServices)
 
   const createRoomHandler = async () => {
     let roomExists = false
@@ -105,7 +118,17 @@ const GuideDetailPage = () => {
       setChatList(data) // 리코일 값
     }
     fetchGetRooms()
-  }, [chatList.length])
+  }, [chatList.length]) // 이렇게 하지 않으니, 대화상대를 인식하지 못함
+
+  useEffect(() => {
+    const fetchGetGuideServices = async () => {
+      const data = await getGuideServices(Number(id))
+      console.log('🌝🌝data: ', data)
+      setGuideServices(data)
+    }
+
+    fetchGetGuideServices()
+  }, [id])
 
   // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -142,6 +165,7 @@ const GuideDetailPage = () => {
     nickname: '',
     birthdate: '',
     guideProfile: {
+      service: '',
       temperature: '',
       phoneNumber: '',
       verifiedID: false,
@@ -172,7 +196,7 @@ const GuideDetailPage = () => {
     //* 1. 가이드 정보 가져오기
     const fetchGetSelectedGuide = async () => {
       const data = await getSelectedGuide(Number(id))
-      // console.log('data: ', data)
+      console.log('data: ', data)
       setguideInfos(data)
     }
     fetchGetSelectedGuide()
@@ -354,7 +378,12 @@ const GuideDetailPage = () => {
             <ChatBtnWrapper>
               <ChatButton
                 onClick={() => {
-                  startChatHandler(), createRoomHandler()
+                  startChatHandler(),
+                    createRoomHandler(),
+                    setIsClickAtChat((prev) => ({
+                      ...prev,
+                      isClicked: false,
+                    }))
                 }}
               >
                 <ChatIcon style={{ width: '1.5rem', height: '1.5rem', fill: 'white' }} />
@@ -409,10 +438,11 @@ const GuideDetailPage = () => {
         {isOpenChat && <Chatting userInfo={userInfo} guideInfos={guideInfos} onClick={startChatHandler} />}
         <MiddleSection>
           <BlankTop10Rem />
-          {/* 1. 서비스 */}
+          {/* FIXME: 1. 서비스  => null 값임*/}
           <IntroLayout>
             <Title>소개</Title>
-            <ImageContainer>
+            {guideInfos.guideProfile.service}
+            {/* <ImageContainer>
               <IntroImageWrapper>
                 <img src={seoul} />
               </IntroImageWrapper>
@@ -423,8 +453,9 @@ const GuideDetailPage = () => {
                 <img src={ulsan} />
               </IntroImageWrapper>
             </ImageContainer>
-            <IntroContent>{serviceContent}</IntroContent>
+            <IntroContent>{serviceContent}</IntroContent> */}
           </IntroLayout>
+          {/* FIXME: 1. 서비스 */}
 
           <Partition>
             <Line />
@@ -434,6 +465,24 @@ const GuideDetailPage = () => {
           <ServiceLayout ref={serviceRef}>
             <Title>서비스</Title>
             <ServiceContainer>
+              {guideServices?.map((guideService) => (
+                <Service key={guideService.name}>
+                  <LeftImg>
+                    <img src={seoul} alt="" />
+                    {/* <img src={guideService.photo} alt="" /> */}
+                  </LeftImg>
+                  <RightContentWrap>
+                    <RightHover>&#62;</RightHover>
+                    <RightTitle>{guideService.name}</RightTitle>
+                    <RightPricingWrap>
+                      요금: <RightPricing>{guideService.price}</RightPricing>
+                    </RightPricingWrap>
+                    <RightContent>{guideService.description}</RightContent>
+                  </RightContentWrap>
+                </Service>
+              ))}
+            </ServiceContainer>
+            {/* <ServiceContainer>
               {[1, 2, 3].map((item) => (
                 <Service key={item}>
                   <LeftImg>
@@ -453,7 +502,7 @@ const GuideDetailPage = () => {
                   </RightContentWrap>
                 </Service>
               ))}
-            </ServiceContainer>
+            </ServiceContainer> */}
           </ServiceLayout>
 
           <Partition ref={travelPlanRef}>
