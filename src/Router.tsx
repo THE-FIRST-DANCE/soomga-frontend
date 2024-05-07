@@ -22,6 +22,7 @@ import MyPage from 'components/myPageCommon'
 import RequestGuide from 'components/myPageCommon/RequestGuide'
 import Layout from 'components/Layout'
 import PlanDetailPage from 'pages/PlanDetailPage'
+import { getUserInfo } from 'api/LoginSignUp'
 
 function LayoutWithRouter() {
   return (
@@ -33,14 +34,39 @@ function LayoutWithRouter() {
 
 const Router = () => {
   // 토큰 관리
-  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom) /* 🟡🟡🟡 */
   const [isAccessToken, setIsAccessToken] = useState<boolean>()
 
   const [userInfo, setuserInfo] = useState()
   console.log('userInfo: ', userInfo)
 
+  useEffect(() => {
+    if (!userInfo) {
+      localStorage.setItem('userInfo', JSON.stringify({}))
+    }
+  }, [userInfo])
+
+  // OAuth로그인 했을 때 데이터 받아오기
+  useEffect(() => {
+    const accessToken = getCookie('accessToken')
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+
+    if (!userInfo.id && accessToken) {
+      const fetchGetUserInfo = async () => {
+        const result = await getUserInfo()
+        localStorage.setItem('userInfo', JSON.stringify(result))
+      }
+      fetchGetUserInfo()
+      setRecoilToken({ ...recoilToken, token: !!accessToken, name: accessToken })
+      // getUserInfo().then((data) => {
+      //   localStorage.setItem('userInfo', JSON.stringify(data))
+      // })
+    }
+  }, [])
+
   /* 🟡🟡🟡 기본적으로 토큰이 들어있는지 토큰 상태를 브라우저에서 가져와서 확인 🟡🟡🟡 */
   useEffect(() => {
+    // 리코일에 액세스 토큰이 없고
     const accessToken = getCookie('accessToken') //! 쿠키에서 엑세스 토근 가져오기
     console.log('🌙🌙🌙🌙accessToken: ', accessToken)
     setIsAccessToken(!!accessToken) //! 토큰 상태를 저장
