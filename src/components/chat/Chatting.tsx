@@ -41,8 +41,8 @@ const Chatting = ({
   const [isClickAtChat, setIsClickAtChat] = useRecoilState(IsClickAtMain)
   console.log('😍😍😍😍', isClickAtChat)
 
-  // console.log('🌈🌈🌈🌈🌈🌈전달 받은 가이드 정보들입니다. ', guideInfos)
-  console.log('유저 정보', userInfo)
+  console.log('🌈🌈🌈🌈🌈🌈전달 받은 가이드 정보들입니다. ', guideInfos)
+  // console.log('유저 정보', userInfo)
 
   // 📍 클릭한 roomnumber 저장
   const [roomInfo, setRoomInfo] = useState('')
@@ -57,6 +57,8 @@ const Chatting = ({
 
   const [roomOwner, setRoomOwner] = useState('')
 
+  console.log('현재 방 주인: ', roomOwner)
+
   // 클릭여부 상태
   const [selectedGuideId, setSelectedGuideId] = useState(null)
 
@@ -67,6 +69,7 @@ const Chatting = ({
         setRoomInfo(list.id)
       }
     })
+    setRoomOwner(guideInfos?.nickname)
   }, [])
 
   const { isConnected, messages, sendMessage, fetchMessages, justRemoveMessage } = useChat(roomInfo)
@@ -326,12 +329,12 @@ const Chatting = ({
         </Suggestionayout>
       )}
 
-      {/* 채팅 레이아웃 */}
+      {/* 🟡🟡🟡 채팅 레이아웃 🟡🟡🟡 */}
       <ChatLayout>
         <ItemContent>
           <CancleWrapper>
-            {/* <CancleBtn onClick={onClick}>✖</CancleBtn> */}
             <ChatContent>
+              {/* 왼쪽 ❌ */}
               <LeftSection>
                 <CancleBtn
                   onClick={() => {
@@ -344,6 +347,8 @@ const Chatting = ({
                 >
                   ✖
                 </CancleBtn>
+
+                {/* 🟡🟡🟡 가이드 검색 🟡🟡🟡 */}
                 <SearchWrapper>
                   <TopSearchWrap>
                     {/* 🟡 가이드 검색 */}
@@ -357,6 +362,7 @@ const Chatting = ({
                     <SearchIcon style={{ width: '30px', height: '30px' }} />
                   </TopSearchWrap>
                 </SearchWrapper>
+
                 {/* 🟡🟡🟡🟡🟡🟡🟡현재 대화중인 사람들 🟡🟡🟡🟡🟡🟡🟡🟡 */}
                 <ChatListWrapper>
                   {(searchedGuide === '' ? chatLists : selectedGuides).map((chatList: any, index: Number) => (
@@ -364,7 +370,7 @@ const Chatting = ({
                     <GuideWrapper
                       data-roomId={chatList.id}
                       key={index.toString()}
-                      isSelected={selectedGuideId === chatList.id}
+                      isSelected={selectedGuideId === chatList.id} // 어떤 채팅창 클릭했는지 확인 => 후버 효과
                       onContextMenu={handleContextMenu}
                       onClick={(e: any) => {
                         // 여기서 roomId를 출력할 수 잇도록
@@ -373,7 +379,7 @@ const Chatting = ({
                           ...prev,
                           isClicked: false,
                         }))
-                        setSelectedGuideId(chatList.id)
+                        setSelectedGuideId(chatList.id) // 클릭했는지 확인
                       }}
                     >
                       {/* 만약 우측 버튼을 누른다면 ContextMenu를 보여줘라 */}
@@ -483,27 +489,27 @@ const Chatting = ({
 
                           {/* 🟡  플랜 올릴 때 */}
                           {/* <PlanChat
-                        who={'me'}
-                        imgUrl={userImg}
-                        location={'울산'}
-                        title={'플랜 제목'}
-                        start={'4월 17, 2024 2:23 오후'}
-                        end={'4월 17, 2024 2:23 오후'}
-                        content={
-                          '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
-                        }
-                      />
+                            who={'me'}
+                            imgUrl={userImg}
+                            location={'울산'}
+                            title={'플랜 제목'}
+                            start={'4월 17, 2024 2:23 오후'}
+                            end={'4월 17, 2024 2:23 오후'}
+                            content={
+                              '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
+                            }
+                          />
 
-                      <ServiceChat
-                        who={'me'}
-                        imgUrl={userImg}
-                        title={'서비스 제목'}
-                        start={'4월 17, 2024 2:23 오후'}
-                        end={'4월 17, 2024 2:23 오후'}
-                        content={
-                          '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
-                        }
-                      /> */}
+                          <ServiceChat
+                            who={'me'}
+                            imgUrl={userImg}
+                            title={'서비스 제목'}
+                            start={'4월 17, 2024 2:23 오후'}
+                            end={'4월 17, 2024 2:23 오후'}
+                            content={
+                              '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
+                            }
+                            /> */}
 
                           <div style={{ width: '100%', height: '1rem' }} ref={observeRef} />
                           <div style={{ width: '100%', height: '1px' }} ref={messageEndRef} />
@@ -752,6 +758,7 @@ const Right = styled.div`
   width: 100%;
   flex-direction: column;
   gap: 0.3rem;
+  background-color: #fb574e;
 `
 const ChatCard = styled.div`
   /* background-color: white; */
