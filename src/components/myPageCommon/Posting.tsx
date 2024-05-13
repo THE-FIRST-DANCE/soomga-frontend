@@ -181,7 +181,6 @@ import chungnam from 'assets/regions/chungnam.jpeg'
 import gyeongbuk from 'assets/regions/gyeongbuk.jpeg'
 import gyeongnam from 'assets/regions/gyeongnam.jpeg'
 import jeju from 'assets/regions/jeju.jpeg'
-import { postInfo } from 'pages/recommendationPage/detail'
 
 export let regionsArr = [
   {
@@ -330,7 +329,7 @@ const Posting = () => {
           <ReviewsWrapper ref={reviewWrapperRef}>
             {sortReviews(whatsReview.guide ? guideReviews : planReviews).map((review) => (
               // 반복시킬 내용
-              <PostCard key={review.id} review={review} postInfo={postInfo} />
+              <PostCard key={review.id} review={review} postInfo={Posting} />
             ))}
           </ReviewsWrapper>
         </ReviewWrapper>
