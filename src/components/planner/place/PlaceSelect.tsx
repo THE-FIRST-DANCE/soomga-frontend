@@ -54,6 +54,7 @@ const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean 
   useEffect(() => {
     if (data) {
       const newPlaces = data.pages.map((page) => page.items).flat()
+
       setPlaces(newPlaces)
     }
   }, [data])
@@ -95,12 +96,13 @@ const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean 
       </Category>
 
       {/* 아이템 */}
-      <ItemList>
+      <ItemList id="scrollableTarget">
         <InfiniteScroll
           dataLength={places.length}
           next={loadmore}
           hasMore={hasNextPage}
           loader={<Spinner type="ClipLoader" loading={isFetching} />}
+          scrollableTarget="scrollableTarget"
         >
           {isLoading ? (
             <Spinner type="ClipLoader" loading={isLoading} />

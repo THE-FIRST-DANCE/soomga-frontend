@@ -3,6 +3,7 @@ import styled, { CSSProp } from 'styled-components'
 interface CarProps {
   style: CSSProp
   marginRight?: string
+  className?: string
 }
 const CarIcon = ({ ...props }: CarProps) => {
   return (

@@ -6,6 +6,7 @@ interface ArrowProps {
   $color?: string
   $hoverColor?: string
   $angle?: string
+  $position?: string
 }
 
 const Arrow = ({ ...props }: ArrowProps) => {
@@ -27,4 +28,5 @@ const ArrowStyle = styled.svg<ArrowProps>`
   }
   transform: rotate(${(props) => props.$angle}); // deg 붙여 넣기
   transition: all 0.8s;
+  position: ${(props) => props.$position};
 `

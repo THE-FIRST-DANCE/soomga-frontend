@@ -1,11 +1,44 @@
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { createTripDto, editTourist, getTouristDetail, postTourist } from 'api/TouristAPI'
 import QuillEditor from 'components/react-quill/QuillEditor'
-import React, { useState } from 'react'
+import FullLoading from 'components/shared/FullLoading'
+import { provinces } from 'data/region'
+import { motion } from 'framer-motion'
+import { Tourist } from 'interfaces/tourist'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import styled, { keyframes } from 'styled-components'
 
 const PostCreate = () => {
+  const { post_Id } = useParams<{ post_Id: string }>()
+
+  const { data }: { data: Tourist } = useQuery({
+    queryKey: ['touristEdit', post_Id],
+    queryFn: () => getTouristDetail(Number(post_Id)),
+    enabled: !!post_Id,
+  })
+
+  useEffect(() => {
+    if (data) {
+      setTags(data.tags.map((tag) => tag.tag.name))
+      setTitle(data.title)
+      setContent(data.content)
+      setRegion(provinces.find((prov) => prov.id === data.areaId)?.name)
+      setEditMode(true)
+    }
+  }, [data])
+
+  const [editMode, setEditMode] = useState<boolean>(false)
   const [tags, setTags] = useState<string[]>([]) // 입력 받아 저장할 태그들
   const [hashTag, setHashTag] = useState<string>('') // 입력 받은 태그 임시 상태 저장
+  const [openProvince, setOpenProvince] = useState<boolean>(false)
+  const [region, setRegion] = useState<string>('')
+  const [title, setTitle] = useState<string>('')
+  const [content, setContent] = useState<string>('')
+  const [imageLoading, setImageLoading] = useState<boolean>(false)
+
+  const navigate = useNavigate()
 
   /* 태그 삭제 */
   const removeTag = (tag: string) => {
@@ -40,14 +73,105 @@ const PostCreate = () => {
     }
   }
 
+  const { mutate: createPost } = useMutation({
+    mutationFn: postTourist,
+    onSuccess: () => {
+      toast.success('게시글이 작성되었습니다.')
+      navigate(`/recommendations`)
+    },
+    onError: (error) => {
+      toast.error('게시글 작성에 실패했습니다.')
+      console.log(error)
+    },
+  })
+
+  const { mutate: editPost } = useMutation({
+    mutationFn: (data: {
+      id: number
+      title: string
+      content: string
+      tags: string[]
+      areaId: number | undefined
+      authorId: number
+    }) => editTourist(data.id, data),
+    onSuccess: () => {
+      toast.success('게시글이 수정되었습니다.')
+      navigate(`/recommendations/detail/${post_Id}`)
+    },
+    onError: (error) => {
+      toast.error('게시글 수정에 실패했습니다.')
+      console.log(error)
+    },
+  })
+
+  const onSubmit = () => {
+    if (editMode) {
+      if (!window.confirm('게시글을 수정하시겠습니까?')) return
+    } else {
+      if (!window.confirm('게시글을 작성하시겠습니까?')) return
+    }
+
+    if (!region) {
+      toast.error('지역을 선택해 주세요')
+      return
+    }
+
+    const createTripDto = {
+      title: title,
+      content: content,
+      tags: tags,
+      areaId: provinces.find((prov) => prov.name === region)?.id,
+      authorId: 2,
+    }
+
+    if (editMode) {
+      editPost({ ...createTripDto, id: Number(post_Id) })
+      return
+    }
+
+    createPost(createTripDto)
+  }
+
   return (
     <>
       <CreatePostLayout>
         <Container>
           <Title>포스트 작성하기</Title>
           <InputWrapper>
-            <TitleInput name="title" placeholder="제목을 입력해 주세요" />
-            <RegionInput name="region" placeholder="지역을 입력해 주세요" />
+            <TitleInput
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              name="title"
+              placeholder="제목을 입력해 주세요"
+            />
+            <RegionInput
+              onClick={() => {
+                setOpenProvince(!openProvince)
+              }}
+            >
+              {openProvince && (
+                <Dropdown
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ul>
+                    {provinces.map((prov) => (
+                      <DropdownItem
+                        key={prov.id}
+                        onClick={() => {
+                          setRegion(prov.name)
+                          setOpenProvince(false)
+                        }}
+                      >
+                        {prov.name}
+                      </DropdownItem>
+                    ))}
+                  </ul>
+                </Dropdown>
+              )}
+              {region ? region : '지역을 선택해 주세요'}
+            </RegionInput>
             <TageInput
               name="title"
               placeholder="태그를 최대 5개 까지 선택해 주세요 + 스페이스바를 입력"
@@ -55,10 +179,14 @@ const PostCreate = () => {
               onChange={onChangeHashTag}
               onKeyUp={handleKeyUp}
             />
+
             <InsertedHashtags>
               <SpanHashtagsTagOutput>
                 {tags.map((tag, index) => (
                   <SpanHashtagsTag
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
                     className="post-form__hashtags-tag"
                     key={index}
                     onClick={() => {
@@ -74,12 +202,19 @@ const PostCreate = () => {
 
           {/* 🟡 Quill 🟡 */}
           <QillWrapper>
-            <QuillEditor />
+            <QuillEditor setImgLoading={setImageLoading} value={content} onChange={setContent} />
           </QillWrapper>
           <BtnWrapper>
-            <Submit_Btn>작성</Submit_Btn>
+            <Submit_Btn
+              onClick={() => {
+                onSubmit()
+              }}
+            >
+              작성
+            </Submit_Btn>
           </BtnWrapper>
         </Container>
+        {imageLoading && <FullLoading isLoading={imageLoading} />}
       </CreatePostLayout>
     </>
   )
@@ -101,49 +236,77 @@ const CreatePostLayout = styled(FlexCenter)`
 `
 
 const Container = styled.div`
-  /* background-color: #f7d943; */
-  /* width: 70rem; */
   height: auto;
   width: 55%;
-  /* margin: 0 auto; */
 `
 const Title = styled.div`
-  /* background-color: #fff; */
   font-size: 2rem;
   border-bottom: 0.3rem solid var(--color-original);
   margin-bottom: 2rem;
 `
 
 const InputWrapper = styled.div`
-  border: 1px solid #c4c4c5;
-  /* width: 98%; */
-  padding: 1rem 1em;
   border-radius: 0.5rem;
   margin-bottom: 1rem;
 `
 
 const InputTag = styled.input`
   width: 100%;
-  height: 2rem;
+  height: 3rem;
   font-size: 1rem;
   border: none;
   outline: none;
-  padding: 0 1rem;
-  border-radius: 0.3rem;
   box-sizing: border-box;
-  background-color: #f5f6f8;
   margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-original);
 `
 const TitleInput = styled(InputTag)``
-const RegionInput = styled(InputTag)``
+const RegionInput = styled.div`
+  position: relative;
+  width: 100%;
+  height: 3rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-original);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`
 const TageInput = styled(InputTag)``
+
+const Dropdown = styled(motion.div)`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid var(--bs-gray-dark);
+  border-radius: 0.5rem;
+  box-shadow: var(--bs-box-shadow);
+  z-index: 10;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  max-height: 200px;
+  cursor: pointer;
+`
+
+const DropdownItem = styled.li`
+  padding: 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: var(--bs-gray-300);
+  }
+`
 
 const InsertedHashtags = styled.div``
 
 const SpanHashtagsTagOutput = styled.span`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 1px;
+  gap: 0.5rem;
 `
 
 const rotate = keyframes` 
@@ -164,13 +327,12 @@ const rotate = keyframes`
 }
 `
 
-const SpanHashtagsTag = styled.span`
-  font-size: 14px;
-  border: 1px solid black;
-  color: $primaryColor;
-  border-radius: 10px;
-  padding: 2px 6px;
-  margin-right: 8px;
+const SpanHashtagsTag = styled(motion.div)`
+  padding: 0.4rem 0.8rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--bs-gray-500);
+  color: var(--bs-info);
   cursor: pointer;
 
   &:hover,
@@ -186,6 +348,7 @@ const QillWrapper = styled.div`
   height: 23rem;
   position: relative;
   transform: translateX(-3px);
+  position: relative;
 `
 const BtnWrapper = styled.div`
   /* background-color: red; */
@@ -197,9 +360,9 @@ const BtnWrapper = styled.div`
 `
 
 const Submit_Btn = styled.div`
-  width: 2rem;
-  height: 3rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
+  border: 1px solid var(--color-original);
   border-radius: 0.5rem;
   font-size: 1rem;
   display: flex;
