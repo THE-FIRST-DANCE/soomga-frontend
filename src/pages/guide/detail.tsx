@@ -173,7 +173,7 @@ const GuideDetailPage = () => {
     },
     tags: [],
   })
-  // console.log('⭐️guideInfos: ', guideInfos)
+  console.log('⭐️guideInfos: ', guideInfos)
 
   /* 가이드 리뷰 */
   const [reviews, setReviews] = useState<Review[]>([])

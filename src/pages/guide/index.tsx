@@ -45,8 +45,10 @@ const GuidePage = () => {
   const [isCredentialsClick, setIsCredentialsClick] = useState<boolean>(true) //  토굴
   const [selectedCredentials, setSelectedCredentials] = useState<number[]>([]) // 선택된 자격증
 
-  const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState) // 리코일에 저장된 선택된 데이터들
-  /* 선택된 데이터들 */
+  // 리코일에 저장된 선택된 데이터들
+  const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
+
+  /* 입력받은 데이터들 */
   let selectedDatasObj = {
     // isClick: !selectedDatas.isClick,
     isClick: true,
@@ -59,7 +61,7 @@ const GuidePage = () => {
     credentials: selectedCredentials,
     rating: isRatingChecked,
   }
-  console.log('🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢selectedDatasObj: ', selectedDatasObj)
+  console.log('🟢 입력받은 데이터들: ', selectedDatasObj)
 
   return (
     <>
@@ -360,7 +362,6 @@ const GuidePage = () => {
               onClick={() => {
                 setSelectedDatas((prev): any => {
                   return { ...selectedDatasObj }
-                  // return { ...prev, ...selectedDatasObj } // 이전에 있었던 값을 굳이 다시 뺏다할 필요가 있나
                 })
                 console.log(selectedDatas)
               }}
