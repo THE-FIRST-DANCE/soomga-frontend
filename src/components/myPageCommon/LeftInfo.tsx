@@ -28,7 +28,7 @@ const LeftInfo = ({ name, email, nickname, phonNum, avatar, gender }: userInfoPr
             {/* <img src={avatar} alt="Img" /> */}
           </UserImageLayout>
         </GuideImageWrapper>
-        <Name>{name}</Name>
+        {/* <Name>{name}</Name> */}
         <InfoMail>{email}</InfoMail>
 
         <InfoBox>
@@ -116,7 +116,8 @@ const InfoBox = styled.div`
 `
 const InfoName = styled.div``
 const InfoMail = styled(InfoName)`
-  margin-bottom: 3.7rem;
+  margin: 2em;
+  font-size: 1.5rem;
 `
 const Application = styled.div`
   margin-top: 3rem;

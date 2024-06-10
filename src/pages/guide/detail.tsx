@@ -34,6 +34,7 @@ import { Plans } from 'interfaces/plan'
 import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
 import { IsClickAtMain } from 'state/store/IsClickAtMain'
+import PlanItem from 'components/planner/PlanItem'
 
 const plans = [
   {
@@ -458,8 +459,8 @@ const GuideDetailPage = () => {
 
           {/* 🟢 서비스 */}
           <ServiceLayout ref={serviceRef}>
-            <Title>서비스</Title>
             <ServiceContainer>
+              <Title>서비스</Title>
               {guideServices?.map((guideService) => (
                 <Service key={guideService.name}>
                   <LeftImg>
@@ -954,33 +955,6 @@ export const Title = styled.div`
   font-size: 1.5rem;
   margin-bottom: 1rem;
 `
-const ImageContainer = styled(FlexCenterd)`
-  /* background-color: #ff70c4; */
-  width: 100%;
-  height: 100%;
-  font-size: 3rem;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-`
-const IntroImageWrapper = styled(FlexCenterd)`
-  width: 13rem;
-  height: 13rem;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 3px 3px 3px 3px gray;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`
-
-const IntroContent = styled.div`
-  width: 100%;
-  font-size: 1rem;
-  line-height: 2rem;
-`
 
 // 서비스
 const ServiceLayout = styled(MiddleLayout)``
@@ -1099,7 +1073,7 @@ const RightContent = styled.div`
 // 2. 여행 플랜
 const TravelPlanLayout = styled(MiddleLayout)`
   /* background-color: #f2618aff; */
-  /* width: 90%; */
+  width: 99%;
   margin: auto;
   gap: 1rem;
 `
