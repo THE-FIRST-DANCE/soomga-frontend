@@ -17,7 +17,7 @@ export const getGuideList = async ({
 }: {
   cursor?: number
   limit?: number
-  requestParams: RequestParamsType
+  requestParams?: RequestParamsType
 }) => {
   const { age, temperature, guideCount, gender, areas, languages, guideCeritifications, rating } = requestParams
   const response = await api.get<Pagination<GuideProfile>>(`guides/search/`, {
@@ -34,7 +34,7 @@ export const getGuideList = async ({
       rating,
     },
   })
-  console.log('🟡🟡 response API 보낼 내용', response)
+  // console.log('🟡🟡 response API 보낼 내용', response)
 
   return response.data
 }
@@ -42,6 +42,12 @@ export const getGuideList = async ({
 /*  3. 가이드 상세 */
 export const getSelectedGuide = async (id: number) => {
   const response = await api.get(`guides/${id}`)
+  return response.data
+}
+
+/* 가이드 서비스 */
+export const getGuideServices = async (id: number) => {
+  const response = await api.get(`guides/${id}/services`)
   return response.data
 }
 

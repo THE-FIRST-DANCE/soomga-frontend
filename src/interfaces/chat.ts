@@ -15,8 +15,8 @@ export interface WhoseChat {
 }
 
 export interface ServiceProps {
-  serviceName: string
-  serviceTitle: string
+  name: string
+  title: string
   startDate: Date
   endDate: Date
 }

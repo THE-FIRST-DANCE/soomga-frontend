@@ -1,7 +1,12 @@
+import { acceptReservation, rejectReservation } from 'api/reservation'
+import { ReservationExtra } from 'interfaces/chat'
 import React from 'react'
 import { styled } from 'styled-components'
 
 const ServiceChat = ({
+  // roomInfo 받아오기
+  roomInfo,
+  extra,
   who,
   imgUrl,
   title,
@@ -9,6 +14,8 @@ const ServiceChat = ({
   end,
   content,
 }: {
+  extra: ReservationExtra
+  roomInfo: string
   who: string
   imgUrl: string
   title: string
@@ -23,12 +30,24 @@ const ServiceChat = ({
           <img src={imgUrl} />
           <SpeechContents>
             <SpeechTitle>{title}</SpeechTitle>
-            <SpeechStartEnd>{start}</SpeechStartEnd>
-            <SpeechStartEnd>{end}</SpeechStartEnd>
+            <SpeechStartEnd>시작일: {start}</SpeechStartEnd>
+            <SpeechStartEnd>종료일: {end}</SpeechStartEnd>
             <Speechcontent>{content}</Speechcontent>
             <SpeechBtnWrap>
-              <SpeechBtn>별로</SpeechBtn>
-              <SpeechBtn>신청</SpeechBtn>
+              {/*  대기상태  */}
+              {extra.data.status === 'PENDING' ? (
+                <>
+                  <SpeechBtn onClick={() => rejectReservation(extra.data.id, roomInfo)}>별로</SpeechBtn>
+                  <SpeechBtn onClick={() => acceptReservation(extra.data.id, roomInfo)}>신청</SpeechBtn>
+                </>
+              ) : // 거절 상태
+              extra.data.status === 'REJECTED' ? (
+                <>
+                  <div style={{ color: 'red' }}>예약을 거절하셨습니다 🥲</div>
+                </>
+              ) : (
+                <div style={{ color: 'blue' }}>예약이 완료되었습니다 😚</div>
+              )}
             </SpeechBtnWrap>
           </SpeechContents>
         </Speech>
@@ -56,12 +75,19 @@ const Conversation = styled.div<{ $whose: string }>`
 
 const Speech = styled.div<{ $whose: string }>`
   background-color: ${(props) => (props.$whose == 'me' ? 'white' : '#f6d690')};
-  padding: 1rem;
+  /* padding: 0.5rem; */
   border-radius: 0.5rem;
   box-sizing: border-box;
   max-width: 20rem;
   word-break: break-all;
   /* background-color: blue; */
+
+  & img {
+    width: 13rem;
+    height: 13rem;
+    border-radius: 7px;
+    margin: 0.5rem 0;
+  }
 
   img {
     min-width: 10rem;

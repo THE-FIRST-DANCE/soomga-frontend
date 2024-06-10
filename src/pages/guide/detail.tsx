@@ -20,7 +20,7 @@ import Location from 'components/icons/Location'
 import Star from 'components/icons/Star'
 import CalendarComponent from 'components/itineraryCalendar/Calendar'
 import { useParams } from 'react-router-dom'
-import { getReviews, getSelectedGuide } from 'api/GuidePageAPI'
+import { getGuideServices, getReviews, getSelectedGuide } from 'api/GuidePageAPI'
 import moment from 'moment'
 import Chatting from 'components/chat/Chatting'
 import { toast } from 'react-toastify'
@@ -33,7 +33,26 @@ import { Plans } from 'interfaces/plan'
 
 import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
+import { IsClickAtMain } from 'state/store/IsClickAtMain'
 import PlanItem from 'components/planner/PlanItem'
+
+const plans = [
+  {
+    seoul: [],
+    locations: [1, 2, 3],
+  },
+  {
+    seoul: [],
+    locations: [1, 2, 3, 4],
+  },
+]
+
+interface GuideService {
+  name: string
+  photo: string
+  description: string
+  price: string
+}
 
 const GuideDetailPage = () => {
   // 🌈 가이드 id 값
@@ -43,12 +62,18 @@ const GuideDetailPage = () => {
   const [userId, setUserId] = useState(null)
   const [userInfo, setUserInfo] = useState(null)
 
+  const [isClickAtChat, setIsClickAtChat] = useRecoilState(IsClickAtMain)
   // 🌈 채팅 리스트
   // const [chatLists, setChatLists] = useState<Room[]>([])
   // console.log('🩷채팅 리스트🩷 : ', chatLists)
 
   // 🌈 채팅 목록 리스트 Reocil값
   const [chatList, setChatList] = useRecoilState(ChatList)
+  console.log('chatList: ', chatList)
+
+  // 가이드 서비스 값
+  const [guideServices, setGuideServices] = useState<GuideService[]>(null)
+  console.log('🔶🔶🔶services: ', guideServices)
 
   const createRoomHandler = async () => {
     let roomExists = false
@@ -92,7 +117,17 @@ const GuideDetailPage = () => {
       setChatList(data) // 리코일 값
     }
     fetchGetRooms()
-  }, [chatList.length])
+  }, [chatList.length]) // 이렇게 하지 않으니, 대화상대를 인식하지 못함
+
+  useEffect(() => {
+    const fetchGetGuideServices = async () => {
+      const data = await getGuideServices(Number(id))
+      console.log('🌝🌝data: ', data)
+      setGuideServices(data)
+    }
+
+    fetchGetGuideServices()
+  }, [id])
 
   // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -129,6 +164,7 @@ const GuideDetailPage = () => {
     nickname: '',
     birthdate: '',
     guideProfile: {
+      service: '',
       temperature: '',
       phoneNumber: '',
       verifiedID: false,
@@ -137,6 +173,7 @@ const GuideDetailPage = () => {
     tags: [],
     plans: [],
   })
+  console.log('⭐️guideInfos: ', guideInfos)
   console.log('⭐️guideInfos: ', guideInfos)
 
   /* 가이드 리뷰 */
@@ -160,7 +197,7 @@ const GuideDetailPage = () => {
     //* 1. 가이드 정보 가져오기
     const fetchGetSelectedGuide = async () => {
       const data = await getSelectedGuide(Number(id))
-      // console.log('data: ', data)
+      console.log('data: ', data)
       setguideInfos(data)
     }
     fetchGetSelectedGuide()
@@ -337,7 +374,12 @@ const GuideDetailPage = () => {
             <ChatBtnWrapper>
               <ChatButton
                 onClick={() => {
-                  startChatHandler(), createRoomHandler()
+                  startChatHandler(),
+                    createRoomHandler(),
+                    setIsClickAtChat((prev) => ({
+                      ...prev,
+                      isClicked: false,
+                    }))
                 }}
               >
                 <ChatIcon style={{ width: '1.5rem', height: '1.5rem', fill: 'white' }} />
@@ -392,10 +434,11 @@ const GuideDetailPage = () => {
         {isOpenChat && <Chatting userInfo={userInfo} guideInfos={guideInfos} onClick={startChatHandler} />}
         <MiddleSection>
           <BlankTop10Rem />
-          {/* 1. 서비스 */}
+          {/* FIXME: 1. 서비스  => null 값임*/}
           <IntroLayout>
             <Title>소개</Title>
-            <ImageContainer>
+            {guideInfos.guideProfile.service}
+            {/* <ImageContainer>
               <IntroImageWrapper>
                 <img src={seoul} />
               </IntroImageWrapper>
@@ -406,8 +449,9 @@ const GuideDetailPage = () => {
                 <img src={ulsan} />
               </IntroImageWrapper>
             </ImageContainer>
-            <IntroContent>{serviceContent}</IntroContent>
+            <IntroContent>{serviceContent}</IntroContent> */}
           </IntroLayout>
+          {/* FIXME: 1. 서비스 */}
 
           <Partition>
             <Line />
@@ -415,22 +459,46 @@ const GuideDetailPage = () => {
 
           {/* 🟢 서비스 */}
           <ServiceLayout ref={serviceRef}>
-            <Title>서비스</Title>
             <ServiceContainer>
-              <Service>
-                <LeftImg>
-                  <img src={guideImg} alt="" />
-                </LeftImg>
-                <RightContentWrap>
-                  <RightHover>&#62;</RightHover>
-                  <RightTitle>{`가이드`}</RightTitle>
-                  <RightPricingWrap>
-                    요금: <RightPricing>{0}</RightPricing>
-                  </RightPricingWrap>
-                  <RightContent>하루간의 여행 가이드를 제공합니다</RightContent>
-                </RightContentWrap>
-              </Service>
+              <Title>서비스</Title>
+              {guideServices?.map((guideService) => (
+                <Service key={guideService.name}>
+                  <LeftImg>
+                    <img src={seoul} alt="" />
+                    {/* <img src={guideService.photo} alt="" /> */}
+                  </LeftImg>
+                  <RightContentWrap>
+                    <RightHover>&#62;</RightHover>
+                    <RightTitle>{guideService.name}</RightTitle>
+                    <RightPricingWrap>
+                      요금: <RightPricing>{guideService.price}</RightPricing>
+                    </RightPricingWrap>
+                    <RightContent>{guideService.description}</RightContent>
+                  </RightContentWrap>
+                </Service>
+              ))}
             </ServiceContainer>
+            {/* <ServiceContainer>
+              {[1, 2, 3].map((item) => (
+                <Service key={item}>
+                  <LeftImg>
+                    <img src={guideImg} alt="" />
+                  </LeftImg>
+                  <RightContentWrap>
+                    <RightHover>&#62;</RightHover>
+                    <RightTitle>{`제목`}</RightTitle>
+                    <RightPricingWrap>
+                      요금: <RightPricing>{70000}</RightPricing>
+                    </RightPricingWrap>
+                    <RightContent>
+                      그대 보내고 멀리 가을새와 작별하듯 그대 떠나 보내고 돌아와 술잔 앞에 앉으면 눈물 나누나 그대
+                      보내고 아주 지는 별빛 바라볼 때 눈에 흘러 내리는 못다한 말들 그 아픈 사랑 지울 수 있을까 어느 하루
+                      비라도 추억처럼 흩날리는 거리에서 쓸쓸한 사랑 되어 고개 숙이면 그대 목소리
+                    </RightContent>
+                  </RightContentWrap>
+                </Service>
+              ))}
+            </ServiceContainer> */}
           </ServiceLayout>
 
           <Partition ref={travelPlanRef}>
@@ -887,33 +955,6 @@ export const Title = styled.div`
   font-size: 1.5rem;
   margin-bottom: 1rem;
 `
-const ImageContainer = styled(FlexCenterd)`
-  /* background-color: #ff70c4; */
-  width: 100%;
-  height: 100%;
-  font-size: 3rem;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-`
-const IntroImageWrapper = styled(FlexCenterd)`
-  width: 13rem;
-  height: 13rem;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 3px 3px 3px 3px gray;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`
-
-const IntroContent = styled.div`
-  width: 100%;
-  font-size: 1rem;
-  line-height: 2rem;
-`
 
 // 서비스
 const ServiceLayout = styled(MiddleLayout)``
@@ -1032,7 +1073,7 @@ const RightContent = styled.div`
 // 2. 여행 플랜
 const TravelPlanLayout = styled(MiddleLayout)`
   /* background-color: #f2618aff; */
-  /* width: 90%; */
+  width: 99%;
   margin: auto;
   gap: 1rem;
 `

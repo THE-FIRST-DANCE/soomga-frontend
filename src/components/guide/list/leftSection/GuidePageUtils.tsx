@@ -26,12 +26,16 @@ const useGuideStateMethods = () => {
   const [guideCountRange, setGuideCountRange] = useState<number[]>([])
 
   // 성별 체크 박스
-  const [isAllChecked, setAllChecked] = useState(false) // 전체
-  const [isManChecked, setManChecked] = useState(false) // 남자
-  const [isWomanChecked, setWomanChecked] = useState(false) // 여자
+  const [isAllChecked, setAllChecked] = useState(null) // 전체
+  const [isManChecked, setManChecked] = useState(null) // 남자
+  const [isWomanChecked, setWomanChecked] = useState(null) // 여자
 
-  const [isRatingChecked, setIsRatingChecked] = useState<boolean[]>([false, false, false, false, false].reverse())
-  // const [isRatingChecked, setIsRatingChecked] = useState<number[]>([])
+  const [isRatingChecked, setIsRatingChecked] = useState<boolean[]>([null, null, null, null, null].reverse())
+  // const [isAllChecked, setAllChecked] = useState(false) // 전체
+  // const [isManChecked, setManChecked] = useState(false) // 남자
+  // const [isWomanChecked, setWomanChecked] = useState(false) // 여자
+
+  // const [isRatingChecked, setIsRatingChecked] = useState<boolean[]>([false, false, false, false, false].reverse())
 
   useEffect(() => {
     const fetchAreaData = async () => {
@@ -40,11 +44,11 @@ const useGuideStateMethods = () => {
     }
 
     fetchAreaData() // 호출!!
-  }, [])
+  }, [age, temperature, guideCount, isAllChecked, isManChecked, isWomanChecked])
 
   // 지역 데이터
   const [areasDatas, setRegionsDatas] = useState<Area[]>([])
-  console.log('🟢🟢불러온 지역 데이터: ', areasDatas)
+  // console.log('🟢🟢불러온 지역 데이터: ', areasDatas)
 
   // 언어 데이터
   // const [languageDatas, setLanguageDatas] = useState<string[]>(['한국어', 'English', '日本語'])
@@ -101,25 +105,25 @@ const useGuideStateMethods = () => {
           setAgeRange([])
           break
         case 10:
-          setAgeRange([10, 19])
+          setAgeRange([11, 19])
           break
         case 20:
-          setAgeRange([20, 29])
+          setAgeRange([21, 29])
           break
         case 30:
-          setAgeRange([30, 39])
+          setAgeRange([31, 39])
           break
         case 40:
-          setAgeRange([40, 49])
+          setAgeRange([41, 49])
           break
         case 50:
-          setAgeRange([50, 59])
+          setAgeRange([51, 59])
           break
         case 60:
-          setAgeRange([60, 69])
+          setAgeRange([61, 69])
           break
         case 70:
-          setAgeRange([70, 79])
+          setAgeRange([71, 79])
           break
         default:
           break

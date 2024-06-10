@@ -12,15 +12,16 @@ const GuideCard = () => {
   const navigate = useNavigate()
 
   const [guideDatas, setGuideDatas] = useState<any[]>([]) // 가이드 데이터
-  // console.log('가이드 데이터: ', guideDatas)
+  console.log('guideDatas: ', guideDatas)
 
   const [noData, setNoData] = useState('')
 
   const [nowCursor, setNowCursor] = useState<number | any>() // 페이지네이션 커서
+  console.log('🟢 nowCursor: ', nowCursor)
 
   const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
 
-  console.log('⭐️리코일에 저장된 값 : ', selectedDatas)
+  console.log('⭐️⭐️⭐️⭐️⭐️⭐️리코일에 저장된 값, isClick 변경되었니? : ', selectedDatas)
 
   // fetchSelectedGuideList에서 rating의 booleanr값을 정수로 변환
   const selectedRatingsRating = selectedDatas.rating
@@ -30,69 +31,64 @@ const GuideCard = () => {
 
   /* 데이터 요청 */
 
-  // 🟡 데이터 가져오기  🟡
+  // 🟡 데이터 가져오기 ->  옵져버에 닿을때 마다 실행된다.   🟡
   const fetchOriginalGuideList = useCallback(async () => {
+    if (nowCursor === null) {
+      console.log('데이타 다 받아옴')
+      return // nowCursor가 null이면 함수 실행 중지
+    }
+
     try {
+      // 1. 입력 받은 값들
       const requestParams = {
-        age: selectedDatas.age.join('-'),
+        age: selectedDatas.age?.join('-'),
         // temperature: '30-41',
-        temperature: selectedDatas.temperature.join('-'),
-        guideCount: selectedDatas.guideCount.join('-'),
+        temperature: selectedDatas.temperature?.join('-'),
+        guideCount: selectedDatas.guideCount?.join('-'),
         // guideCount: undefined,
-        gender: selectedDatas.gender.male ? 'MALE' : selectedDatas.gender.female ? 'FEMALE' : undefined,
-        areas: selectedDatas.areas.toString(),
-        languages: selectedDatas.languages.toString(),
-        guideCeritifications: selectedDatas.guideCeritifications.toString(),
-        rating: selectedRatingsRating,
+        gender: selectedDatas.gender?.male ? 'MALE' : selectedDatas.gender?.female ? 'FEMALE' : undefined,
+        areas: selectedDatas.areas?.toString(),
+        languages: selectedDatas.languages?.toString(),
+        guideCeritifications: selectedDatas.guideCeritifications?.toString(),
+        rating: selectedRatingsRating ?? '1,2,3,4,5',
       }
-      console.log('🟢 보낼 값 🟢 ', requestParams)
 
-      console.log(selectedDatas.age.length, selectedDatas.temperature.length, selectedDatas.guideCount.length)
-
-      const result = await getGuideList({ cursor: nowCursor, limit: 4, requestParams })
+      // 2. 요청하는 데이터 값들 ( 현재 커서, limit 수, 입력 받은 값들 )
+      const result = await getGuideList({ cursor: nowCursor, limit: 10, requestParams })
       console.log('🟠 받아온 값 🟠', result)
 
+      // 3. 받아온 next cursor 값 저장
       setNowCursor(result.nextCursor)
 
-      // if (result.items.length === 0) {
-      //   setNoData('데이터 없음')
-      //   setGuideDatas(() => [])
-      //   return
-      // }
-
+      // 4-1. 검색 버튼 눌렀을 때
       if (selectedDatas.isClick) {
-        // if (selectedDatas.isClick && result.items.length !== 0) {
-        /* 검색 버튼 눌렀을 때 */
-        console.log('🔶🔶🔶🔶🔶')
-        if (
-          selectedDatas.age.length == 0 &&
-          selectedDatas.temperature.length == 0 &&
-          selectedDatas.guideCount.length == 0
-        ) {
-          return setGuideDatas((prev) => [...prev, ...result.items])
-        }
-        setNowCursor(null)
-        setGuideDatas(() => [])
-        setGuideDatas((prev) => [...prev, ...result.items])
+        console.log('🟢 검색 버튼 누름 = 입력받은 값들이 있음')
+        setGuideDatas(result.items) // 검색 시 항상 새 데이터로 초기화
+        return
       } else {
-        /* 검색 버튼 안눌렀을 때 */
-        // setNowCursor(null)
-        console.log('🔵🔵🔵🔵')
-        setGuideDatas((prev) => [...prev, ...result.items])
+        console.log('🟣 검색 버튼 누르지 않음 = 초기화 상태')
+        if (result.items.length > 0) {
+          setGuideDatas((prev) => [...prev, ...result.items])
+        } else {
+          console.log('데이터 다 받아옴')
+          return
+        }
       }
-      setNoData('')
-      // return result
     } catch (error) {
-      console.error('🔴🔴필터링 리스트 에러🔴🔴 :', error)
+      console.error('🔴필터링 리스트 에러🔴 :', error)
     }
-    // }, [selectedDatas])
   }, [nowCursor, selectedDatas])
 
   useEffect(() => {
-    // console.log('🟣🟣🟣selectedDatas 업데이로 실행 🟣🟣🟣:', selectedDatas)
     window.scrollTo({ top: 100 })
-    fetchOriginalGuideList()
-  }, [selectedDatas])
+
+    if (selectedDatas.isClick) {
+      fetchOriginalGuideList().then(() => {
+        // 데이터 요청이 완료된 후 isClick을 false로 설정
+        setSelectedDatas((prev) => ({ ...prev, isClick: false }))
+      })
+    }
+  }, [selectedDatas.isClick])
 
   // 객체 감지 Ref
   const originObserveRef = useObserver(fetchOriginalGuideList)
@@ -104,8 +100,10 @@ const GuideCard = () => {
 
   return (
     <>
+      {/* 우측 상단 타잉틀 */}
       <RightSectionTitle>{`SoomGa의 가이드님, ${guideDatas.length} 명`}</RightSectionTitle>
 
+      {/* 반복되는 가이드 카드 */}
       {guideDatas.length === 0 || noData === '데이터 없음' ? (
         <Nodata>일치하는 데이터가 없습니다....</Nodata>
       ) : (
@@ -114,7 +112,7 @@ const GuideCard = () => {
             <CardLayout key={`CardLayout${i}`} onClick={() => navigate(`/guides/detail/${guideData.id}`)}>
               <CardContainer>
                 <Temperature>{`${guideData.temperature}°C`}</Temperature>
-                {/* 🟡 왼쪽 */}
+                {/* 🟡 왼쪽 🟡  */}
                 <LeftLayout>
                   <UserImageLayout>
                     <ImageWrapper>
@@ -132,7 +130,7 @@ const GuideCard = () => {
                   <UserName>{guideData.member.nickname}</UserName>
                 </LeftLayout>
 
-                {/* 🟡 중앙 */}
+                {/* 🟡 중앙 🟡 */}
                 <MiddleLayout>
                   <UserInfo>활동지역: {guideData.areas?.map((area: any) => area.area.name).join(', ')}</UserInfo>
                   <UserInfo>나이: {calculateAge(guideData.member.birthdate)} 세</UserInfo>
@@ -142,7 +140,7 @@ const GuideCard = () => {
                   </UserInfo>
                 </MiddleLayout>
 
-                {/* 🟡 우측 */}
+                {/* 🟡 우측 🟡 */}
                 <RightLayout>
                   {/* 가이드 횟수 | 평점 */}
                   <RightTop>
@@ -170,7 +168,9 @@ const GuideCard = () => {
           )
         })
       )}
-      <div style={{ height: '1px', width: '100%' }} ref={originObserveRef}></div>
+
+      {/* 옵저버 */}
+      <div style={{ minHeight: '2rem', width: '100%', backgroundColor: 'red' }} ref={originObserveRef}></div>
     </>
   )
 }

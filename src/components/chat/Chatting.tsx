@@ -2,7 +2,7 @@ import SearchIcon from 'components/icons/Search'
 import { styled } from 'styled-components'
 import userImg from '../../assets/guideImg.png'
 import Star from 'components/icons/Star'
-import { useEffect, useRef, useState } from 'react'
+import { LegacyRef, useEffect, useRef, useState } from 'react'
 import { MouseEventHandler } from 'react'
 import useClickOutsideToggle from 'hooks/useClickOutsideToggle'
 import ImageIcon from 'components/icons/ImageIcon'
@@ -15,6 +15,7 @@ import { ko } from 'date-fns/locale'
 import FromToIcon from 'components/icons/FromToIcon'
 import TimeIcon from 'components/icons/Time'
 import { useChat } from 'hooks/Chat/useChat'
+// import { Message, MouseAxis, Room, ServiceProps } from '../..hat'
 import { Message, MouseAxis, Room, ServiceProps } from '../../interfaces/chat'
 import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
@@ -24,10 +25,31 @@ import useObserveSingle from 'hooks/Chat/useObserveSingle'
 import PlanChat from './PlanChat'
 import ServiceChat from './ServiceChat'
 import { deleteRoom } from 'api/ChatAPI'
+import { boolean } from 'zod'
+import { IsClickAtMain } from 'state/store/IsClickAtMain'
+import logo from 'assets/logo.svg'
+import { ReservationPayload, createReservation, getServices } from 'api/ServiceAPI'
+import MessageItem from './Messages'
+import moment from 'moment'
+const Chatting = ({
+  userInfo,
+  guideInfos,
+  onClick,
+  isClickAtMain,
+}: {
+  userInfo?: any
+  guideInfos?: any
+  onClick?: () => void
+  isClickAtMain?: boolean
+}) => {
+  const [isClickAtChat, setIsClickAtChat] = useRecoilState(IsClickAtMain)
+  console.log('😍😍😍😍', isClickAtChat)
 
-const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfos?: any; onClick?: () => void }) => {
-  // console.log('🌈🌈🌈🌈🌈🌈전달 받은 가이드 정보들입니다. ', guideInfos)
+  console.log('🌈🌈🌈🌈🌈🌈전달 받은 가이드 정보들입니다. ', guideInfos)
   console.log('유저 정보', userInfo)
+
+  // 😙
+  const [userInfo2, setUserInfo2] = useState(null)
 
   // 📍 클릭한 roomnumber 저장
   const [roomInfo, setRoomInfo] = useState('')
@@ -42,6 +64,22 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
 
   const [roomOwner, setRoomOwner] = useState('')
 
+  console.log('현재 방 주인: ', roomOwner)
+
+  // 클릭여부 상태
+  const [selectedGuideId, setSelectedGuideId] = useState(null)
+
+  // 가이드 서비스 목록
+  const [serviceList, setServiceList] = useState([])
+  console.log('😚😚😚😚😚😚: ', serviceList)
+
+  // 선택된 서비스 목록
+  const [selectedServiceList, setSelectedServiceList] = useState({
+    serviceId: '',
+    serviceName: '',
+  })
+  console.log('😚😚😚😚😚😚: ', selectedServiceList)
+
   // FIXME: 클릭한 룸id값 가져오느것 까지 완료함
   useEffect(() => {
     chatLists.map((list) => {
@@ -49,6 +87,19 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
         setRoomInfo(list.id)
       }
     })
+    setRoomOwner(guideInfos?.nickname)
+
+    // 가이드 서비스 가져오기
+    const fetchGetServices = async () => {
+      const result = await getServices()
+      setServiceList(result)
+    }
+
+    console.log(fetchGetServices())
+
+    const userInfo = localStorage.getItem('userInfo')
+    setUserInfo2(userInfo ? JSON.parse(userInfo) : null)
+    console.log(userInfo2)
   }, [])
 
   const { isConnected, messages, sendMessage, fetchMessages, justRemoveMessage } = useChat(roomInfo)
@@ -77,7 +128,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
   // console.log('Sending message: ', inputVal)
 
   // 인풋 ref
-  const inputTag = useRef<HTMLInputElement>(null)
+  const inputTag = useRef<HTMLTextAreaElement>(null)
 
   // 모달
   const [isPlanOpen, setIsPlanOpen] = useState<boolean>(false) // 플랜 모달
@@ -90,8 +141,8 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
 
   // 서비스 제안
   const [serviceSuggestion, setserviceSuggestion] = useState<ServiceProps>({
-    serviceName: '',
-    serviceTitle: '',
+    name: '',
+    title: '',
     startDate: new Date(),
     endDate: new Date(),
   })
@@ -100,6 +151,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
   // 시작일
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [endDate, setEndDate] = useState<Date>(new Date())
+  console.log('시작시간:', startDate, ',', '끝시간', endDate)
 
   // 가이드 검색 입력 값
   const [searchedGuide, setSearchedGuide] = useState('') // 입력 받은 가이드 이름
@@ -168,6 +220,21 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
     }
   }
 
+  const tmpReserve = async () => {
+    console.log('🟡🟡임시 예약 버튼 눌렀다.🟡🟡')
+
+    const data: ReservationPayload = {
+      // memberId: 68, // FIXME: change this hard-coded value
+      memberId: userInfo.id,
+      serviceId: parseInt(selectedServiceList.serviceId),
+      startDate: startDate || new Date(),
+      endDate: endDate || new Date(),
+    }
+
+    // ( ReservationPayload , 방번호 )
+    createReservation(data, roomInfo)
+  }
+
   return (
     <>
       {/* 플랜 */}
@@ -206,6 +273,36 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
           <CancleBtn onClick={() => setIsServiceOpen(false)}>✖</CancleBtn>
           <IconTitle>서비스</IconTitle>
           <PlanWrapper>
+            {serviceList.map((service, index) => (
+              <PlanItem
+                key={index}
+                onClick={() => {
+                  setIsSuggestionOpen(true)
+                  setSelectedServiceList((prev) => ({
+                    ...prev,
+                    serviceName: service.name,
+                    serviceId: service.id,
+                  }))
+                }}
+              >
+                <PlanContent>
+                  <Title
+                    onClick={(e) => {
+                      // e.stopPropagation() // 이벤트 버블링 중지
+                      setserviceSuggestion((prev) => ({
+                        ...prev,
+                        serviceName: (e.target as Element).textContent ?? '', // serviceName을 업데이트
+                      }))
+                    }}
+                  >
+                    {service.name}
+                  </Title>
+                </PlanContent>
+                <PlanStyletDiv />
+              </PlanItem>
+            ))}
+          </PlanWrapper>
+          {/* <PlanWrapper>
             {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
               <PlanItem
                 onClick={() => {
@@ -226,7 +323,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                 <PlanStyletDiv />
               </PlanItem>
             ))}
-          </PlanWrapper>
+          </PlanWrapper> */}
         </ServiceLayout>
       )}
 
@@ -240,7 +337,8 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
             {/* 제목 */}
             <ItemWrapper>
               <Title>제목</Title>
-              <SuggestionInput
+              <SuggestionInput>{selectedServiceList.serviceName}</SuggestionInput>
+              {/* <SuggestionInput
                 placeholder="제목을 입력하세요.."
                 onBlur={(e) => {
                   setserviceSuggestion((prev) => ({
@@ -248,7 +346,7 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                     serviceTitle: e.target.value,
                   }))
                 }}
-              />
+              /> */}
             </ItemWrapper>
 
             <ItemWrapper>
@@ -294,12 +392,14 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
               onClick={() => {
                 setIsSuggestionOpen(false)
                 setIsServiceOpen(false)
-                // e.stopPropagation() // 이벤트 버블링 중지
                 setserviceSuggestion((prev) => ({
                   ...prev,
                   startDate,
                   endDate,
                 }))
+
+                // 🌈🌈 ReservationPayload실행 시켜서 대화창에 해당 서비스 띄우기 🌈🌈
+                tmpReserve()
               }}
             >
               선택
@@ -308,14 +408,26 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
         </Suggestionayout>
       )}
 
-      {/* 채팅 레이아웃 */}
+      {/* 🟡🟡🟡 채팅 레이아웃 🟡🟡🟡 */}
       <ChatLayout>
         <ItemContent>
           <CancleWrapper>
-            {/* <CancleBtn onClick={onClick}>✖</CancleBtn> */}
             <ChatContent>
+              {/* 왼쪽 ❌ */}
               <LeftSection>
-                <CancleBtn onClick={onClick}>✖</CancleBtn>
+                <CancleBtn
+                  onClick={() => {
+                    onClick()
+                    setIsClickAtChat((prev) => ({
+                      ...prev,
+                      isClicked: !prev.isClicked,
+                    }))
+                  }}
+                >
+                  ✖
+                </CancleBtn>
+
+                {/* 🟡🟡🟡 가이드 검색 🟡🟡🟡 */}
                 <SearchWrapper>
                   <TopSearchWrap>
                     {/* 🟡 가이드 검색 */}
@@ -326,9 +438,10 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                       }}
                       placeholder="가이드 검색"
                     />
-                    <SearchIcon width="30px" height="30px" />
+                    <SearchIcon style={{ width: '30px', height: '30px' }} />
                   </TopSearchWrap>
                 </SearchWrapper>
+
                 {/* 🟡🟡🟡🟡🟡🟡🟡현재 대화중인 사람들 🟡🟡🟡🟡🟡🟡🟡🟡 */}
                 <ChatListWrapper>
                   {(searchedGuide === '' ? chatLists : selectedGuides).map((chatList: any, index: Number) => (
@@ -336,10 +449,16 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
                     <GuideWrapper
                       data-roomId={chatList.id}
                       key={index.toString()}
+                      isSelected={selectedGuideId === chatList.id} // 어떤 채팅창 클릭했는지 확인 => 후버 효과
                       onContextMenu={handleContextMenu}
                       onClick={(e: any) => {
                         // 여기서 roomId를 출력할 수 잇도록
                         setRoomInfo(e.currentTarget.dataset.roomid)
+                        setIsClickAtChat((prev) => ({
+                          ...prev,
+                          isClicked: false,
+                        }))
+                        setSelectedGuideId(chatList.id) // 클릭했는지 확인
                       }}
                     >
                       {/* 만약 우측 버튼을 누른다면 ContextMenu를 보여줘라 */}
@@ -412,112 +531,176 @@ const Chatting = ({ userInfo, guideInfos, onClick }: { userInfo?: any; guideInfo
               {/* 오른쪽 색션 */}
               <RightSection>
                 <RightWrapper>
-                  <Top>
-                    <TopWrapper>
-                      <Image>
-                        <img src={userImg} alt="NoImg" />
-                      </Image>
-                      🟡🟡🟡🟡🟡
-                      <GuideName>{roomOwner}</GuideName>
-                    </TopWrapper>
-                  </Top>
-                  <Middle>
-                    <ConversationWrapper>
-                      <>
-                        {[...messageLists].reverse().map((messageInfo) => {
-                          return (
-                            // userInfo
+                  {isClickAtChat.isClicked ? (
+                    // <div>{String(isClickAtChat.isClicked)}</div>
+                    <DefaultChatPage>
+                      <img src={logo} />
+                    </DefaultChatPage>
+                  ) : (
+                    <>
+                      <Top>
+                        <TopWrapper>
+                          <Image>
+                            <img src={userImg} alt="NoImg" />
+                          </Image>
 
-                            <Conversation
-                              key={messageInfo.id}
-                              $whose={userInfo.nickname === messageInfo.sender.nickname}
-                            >
-                              <Speech $whose={userInfo.nickname === messageInfo.sender.nickname}>
-                                {messageInfo.content.message}
-                              </Speech>
-                            </Conversation>
-                          )
-                        })}
-                      </>
-                      {/* 🟡  플랜 올릴 때 */}
-                      {/* <PlanChat
-                        who={'me'}
-                        imgUrl={userImg}
-                        location={'울산'}
-                        title={'플랜 제목'}
-                        start={'4월 17, 2024 2:23 오후'}
-                        end={'4월 17, 2024 2:23 오후'}
-                        content={
-                          '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
-                        }
-                      />
+                          <GuideName>{roomOwner}</GuideName>
+                        </TopWrapper>
+                      </Top>
+                      <Middle>
+                        <ConversationWrapper>
+                          <>
+                            {[...messageLists].reverse().map((messageInfo) => {
+                              return (
+                                // userInfo
+                                <>
+                                  <Conversation
+                                    key={messageInfo.id}
+                                    $whose={userInfo.nickname == messageInfo.sender.nickname ? true : false}
+                                  >
+                                    <ChatUserInfoWrapper $whose={userInfo.nickname === messageInfo.sender.nickname}>
+                                      <ChatUserInfo>
+                                        <img
+                                          src={messageInfo.sender.avatar || 'https://github.com/cheiru94.png'}
+                                          alt=""
+                                        />
+                                        <span>{messageInfo.sender.nickname}</span>
+                                      </ChatUserInfo>
+                                      {/* FIXME: 여기에 왜 who 가 들어 있는지 모르겠다 */}
+                                      <Speech $whose={userInfo.nickname === messageInfo.sender.nickname}>
+                                        {messageInfo.content.message}
+                                        {messageInfo.content.extra?.type === 'reservation' && (
+                                          <>
+                                            <ServiceChat
+                                              roomInfo={roomInfo}
+                                              extra={messageInfo.content.extra}
+                                              who={messageInfo.sender?.nickname}
+                                              imgUrl={
+                                                messageInfo.content.extra.data.service.photo ||
+                                                messageInfo.sender.avatar
+                                              }
+                                              title={messageInfo.content.extra.data.service.name}
+                                              start={moment(messageInfo.content.extra.data.startDate).format(
+                                                'yy년 MM월 DD일 HH:mm',
+                                              )}
+                                              end={moment(messageInfo.content.extra.data.endDate).format(
+                                                'yy년 MM월 DD일 HH:mm',
+                                              )}
+                                              content={messageInfo.content.extra.data.service.description}
+                                            />
+                                          </>
+                                        )}
+                                        {messageInfo.content.extra?.type === 'plan' && (
+                                          <>
+                                            <PlanChat
+                                              roomInfo={roomInfo}
+                                              extra={messageInfo.content.extra}
+                                              who={messageInfo.sender?.nickname}
+                                              imgUrl={
+                                                messageInfo.content.extra.data.service.photo ||
+                                                messageInfo.sender.avatar
+                                              }
+                                              title={messageInfo.content.extra.data.service.name}
+                                              start={moment(messageInfo.content.extra.data.startDate).format(
+                                                'yy년 MM월 DD일 HH:mm',
+                                              )}
+                                              end={moment(messageInfo.content.extra.data.endDate).format(
+                                                'yy년 MM월 DD일 HH:mm',
+                                              )}
+                                              content={messageInfo.content.extra.data.service.description}
+                                            />
+                                          </>
+                                        )}
+                                      </Speech>
+                                    </ChatUserInfoWrapper>
+                                  </Conversation>
+                                </>
+                              )
+                            })}
+                          </>
 
-                      <ServiceChat
-                        who={'me'}
-                        imgUrl={userImg}
-                        title={'서비스 제목'}
-                        start={'4월 17, 2024 2:23 오후'}
-                        end={'4월 17, 2024 2:23 오후'}
-                        content={
-                          '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
-                        }
-                      /> */}
-
-                      <div style={{ width: '100%', height: '1rem' }} ref={observeRef} />
-                      <div style={{ width: '100%', height: '1px' }} ref={messageEndRef} />
-                    </ConversationWrapper>
-                  </Middle>
-                  <Bottom>
-                    <InputTag
-                      ref={inputTag}
-                      value={inputVal}
-                      onChange={(e) => setInputVal(e.target.value)}
-                      onKeyDown={handleKeyPress} // 키 이벤트 핸들러 추가
-                      placeholder="메시지를 입력하세요..."
-                    />
-                    <IconsContainer>
-                      <IconWrapper>
-                        {/* 이미지 추가 아이콘  */}
-                        <label htmlFor="file-input">
-                          <TooltipIcon data-tooltip="사진">
-                            <ImageIcon />
-                          </TooltipIcon>
-                        </label>
-                        <ImgInputTag id="file-input" type="file" onChange={handleFileUpload} />
-
-                        {/* 플랜 추가 아이콘 */}
-                        <TooltipIcon data-tooltip="플랜">
-                          <PlanIcon
-                            onClick={() => {
-                              setIsPlanOpen(true)
-                            }}
-                            style={{ width: '1.5rem', height: '1.5rem', cursor: 'pointer', margin: ' 0 0.5rem' }}
+                          {/* 🟡  플랜 올릴 때 */}
+                          {/* <PlanChat
+                            who={'me'}
+                            imgUrl={userImg}
+                            location={'울산'}
+                            title={'플랜 제목'}
+                            start={'4월 17, 2024 2:23 오후'}
+                            end={'4월 17, 2024 2:23 오후'}
+                            content={
+                              '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
+                            }
                           />
-                        </TooltipIcon>
 
-                        {/* 서비스 추가 아이콘 */}
-                        <TooltipIcon data-tooltip="예약">
-                          <ServiceIcon
+                          <ServiceChat
+                            who={'me'}
+                            imgUrl={userImg}
+                            title={'서비스 제목'}
+                            start={'4월 17, 2024 2:23 오후'}
+                            end={'4월 17, 2024 2:23 오후'}
+                            content={
+                              '내가 그의 이름을 불러주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다. 내가 그의 이름을 불러주었을 때 그는 나에게로 와서 꽃이 되었다.'
+                            }
+                          /> */}
+
+                          <div style={{ width: '100%', height: '1rem' }} ref={observeRef} />
+                          <div style={{ width: '100%', height: '1px' }} ref={messageEndRef} />
+                        </ConversationWrapper>
+                      </Middle>
+                      <Bottom>
+                        <InputTag
+                          ref={inputTag}
+                          value={inputVal}
+                          onChange={(e) => setInputVal(e.target.value)}
+                          onKeyDown={handleKeyPress} // 키 이벤트 핸들러 추가
+                          placeholder="메시지를 입력하세요..."
+                        />
+                        <IconsContainer>
+                          <IconWrapper>
+                            {/* 이미지 추가 아이콘  */}
+                            <label htmlFor="file-input">
+                              <TooltipIcon data-tooltip="사진">
+                                <ImageIcon />
+                              </TooltipIcon>
+                            </label>
+                            <ImgInputTag id="file-input" type="file" onChange={handleFileUpload} />
+
+                            {/* 플랜 추가 아이콘 */}
+                            <TooltipIcon data-tooltip="플랜">
+                              <PlanIcon
+                                onClick={() => {
+                                  setIsPlanOpen(true)
+                                }}
+                                style={{ width: '1.5rem', height: '1.5rem', cursor: 'pointer', margin: ' 0 0.5rem' }}
+                              />
+                            </TooltipIcon>
+
+                            {/* 서비스 추가 아이콘 */}
+                            <TooltipIcon data-tooltip="서비스">
+                              <ServiceIcon
+                                onClick={() => {
+                                  setIsServiceOpen(true) // 1. 서비스 모달창 띄우기
+                                  // 2. 🌈🌈🌈🌈🌈가이드가 가진 서비스 불러오기
+                                }}
+                                style={{ width: '1.5rem', height: '1.5rem', cursor: 'pointer' }}
+                              />
+                            </TooltipIcon>
+                          </IconWrapper>
+                          <SendBtn
+                            disabled={!inputVal.length}
+                            $inputVal={inputVal.length > 0 ? true : false}
                             onClick={() => {
-                              setIsServiceOpen(true)
+                              sendMessage({ message: inputVal }, recoilToken.name)
+                              setInputVal('')
+                              inputTag.current?.focus()
                             }}
-                            style={{ width: '1.5rem', height: '1.5rem', cursor: 'pointer' }}
-                          />
-                        </TooltipIcon>
-                      </IconWrapper>
-                      <SendBtn
-                        disabled={!inputVal.length}
-                        $inputVal={inputVal.length > 0 ? true : false}
-                        onClick={() => {
-                          sendMessage({ message: inputVal }, recoilToken.name)
-                          setInputVal('')
-                          inputTag.current?.focus()
-                        }}
-                      >
-                        보내기
-                      </SendBtn>
-                    </IconsContainer>
-                  </Bottom>
+                          >
+                            보내기
+                          </SendBtn>
+                        </IconsContainer>
+                      </Bottom>
+                    </>
+                  )}
                 </RightWrapper>
               </RightSection>
             </ChatContent>
@@ -666,15 +849,20 @@ const ChatListWrapper = styled.div`
 `
 
 /* 가이드 레퍼  */
-const GuideWrapper = styled(FlexCenter)`
+const GuideWrapper = styled(FlexCenter)<{ isSelected: boolean }>`
   width: 100%;
   height: auto;
   justify-content: flex-start;
   padding: 0.5rem 0;
   box-sizing: border-box;
   border-bottom: 1px solid gray;
-  /* background-color: #f0f0f0; */
+  background-color: ${({ isSelected }) => (isSelected ? '#f0f0f069' : 'none')};
+
   cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f069;
+  }
 `
 
 const Left = styled(FlexCenter)`
@@ -703,6 +891,7 @@ const Right = styled.div`
   width: 100%;
   flex-direction: column;
   gap: 0.3rem;
+  /* background-color: #fb574e; */
 `
 const ChatCard = styled.div`
   /* background-color: white; */
@@ -713,7 +902,7 @@ const GuideName = styled.div`
   font-size: 1.3rem;
   text-align: center;
   /* margin-right: 3rem; */
-  padding: 0ㄹ5rem;
+  padding: 0.5rem;
 `
 
 const ContentWrapper = styled.div`
@@ -748,6 +937,23 @@ const RightWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `
+
+/* 🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡대화창을 선택하라 알리기 */
+const DefaultChatPage = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & img {
+    border-radius: 10px;
+    background-color: red;
+    width: 20rem;
+    /* height: 20rem; */
+  }
+`
+
 const Top = styled.div`
   /* background-color: #e6e2db; */
   /* background-color: mediumaquamarine; */
@@ -814,21 +1020,41 @@ const Conversation = styled.div<{ $whose: boolean }>`
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
   box-sizing: border-box;
-  width: 100%;
   display: flex;
   justify-content: ${({ $whose }) => ($whose == true ? 'flex-end' : 'flex-start')};
+`
+
+const ChatUserInfoWrapper = styled.span<{ $whose: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: ${({ $whose }) => ($whose == true ? 'end' : 'start')};
+  /* background-color: red; */
+`
+
+const ChatUserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2rem 0 0.5rem 0.2rem;
+  /* margin-left: 0.5rem; */
+
+  & img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+  }
 `
 
 // 채팅 풍선
 const Speech = styled.div<{ $whose: boolean }>`
   background-color: ${(props) => (props.$whose == true ? 'white' : '#f6d690')};
+  /* background-color: blue; */
   padding: 1rem;
   border-radius: 0.5rem;
+  width: auto; // 넓이를 자동으로 설정
   box-sizing: border-box;
-  max-width: 20rem;
   word-break: break-all;
-  /* background-color: blue; */
-
   img {
     min-width: 10rem;
     min-height: 10rem;
@@ -836,57 +1062,6 @@ const Speech = styled.div<{ $whose: boolean }>`
     border-radius: 7px;
   }
 `
-// const SpeechContents = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   /* background-color: yellow; */
-//   width: 11.5rem;
-// `
-
-// const SpeechTitle = styled.span`
-//   font-size: 1.2rem;
-//   margin-bottom: 0.3rem;
-// `
-// const SpeechLocation = styled.span`
-//   color: #727070;
-//   font-size: 0.7rem;
-//   margin: 0.3rem 0;
-// `
-// const SpeechStartEnd = styled.span`
-//   color: #727070;
-//   font-size: 0.6rem;
-//   margin: 0.1rem 0;
-// `
-// const Speechcontent = styled.span`
-//   margin-top: 0.3rem;
-//   color: #727070;
-//   font-size: 0.8rem;
-// `
-
-// const SpeechBtnWrap = styled(FlexCenter)`
-//   justify-content: space-between;
-//   width: 100%;
-//   /* background-color: red; */
-//   margin: 0.8rem 0 0 0;
-// `
-
-// const SpeechBtn = styled.button`
-//   width: 5rem;
-//   border: none;
-//   border-radius: 7px;
-//   padding: 0.3rem 0.5rem;
-//   box-sizing: border-box;
-//   background-color: transparent;
-//   cursor: pointer;
-//   font-size: 1rem;
-//   color: #727070;
-//   background-color: var(--color-original);
-//   color: white;
-//   transition: all 0.2s ease;
-//   &:hover {
-//     background-color: #ff6021;
-//   }
-// `
 
 const Bottom = styled(FlexCenter)`
   width: 100%;
@@ -1108,13 +1283,17 @@ const Items = styled.div`
 `
 const Item = styled.div``
 
-const SuggestionInput = styled.input`
+// const SuggestionInput = styled.input`
+const SuggestionInput = styled.div`
   padding: 0.5rem 1rem;
   box-sizing: border-box;
   width: 100%;
   align-self: stretch;
   border-radius: 12px;
-  border: 2px solid var(--color-original);
+  background-color: #f0f0f0;
+  /* border: 2px dashed #ccc; */
+  /* color: #888; */
+  /* border: 2px solid var(--color-original); */
   font-size: 1.2rem;
   font-style: normal;
   font-weight: 400;

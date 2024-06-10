@@ -12,7 +12,7 @@ const PlanPage = () => {
 
   const { data } = useQuery({
     queryKey: ['plans'],
-    queryFn: () => getPlanList(1),
+    queryFn: () => getPlanList(68),
   })
 
   useEffect(() => {

@@ -12,7 +12,7 @@ export const useChat = (roomId: string | undefined) => {
   const onConnect = () => {
     setIsConnected(true)
   }
-  //?
+
   //! 연결 끊김
   const onDisconnect = () => {
     setIsConnected(false)
@@ -71,8 +71,8 @@ export const useChat = (roomId: string | undefined) => {
 
     if (!cursor || !roomId) return
     try {
-      //check: 6. 채팅방 메세지 가져오기 :  사용자가 추가 메시지를 로드하려 할 때 사용 ,
-      //check      현재 커서를 기반으로 다음 페이지의 메시지를 요청하고, 로드된 메시지를 기존 목록에 추가
+      // 채팅방 메세지 가져오기 :  사용자가 추가 메시지를 로드하려 할 때 사용 ,
+      // 현재 커서를 기반으로 다음 페이지의 메시지를 요청하고, 로드된 메시지를 기존 목록에 추가
       const { items, nextCursor } = await getMessages(roomId, cursor)
       setMessages((prev) => [...prev, ...items])
       setCursor(nextCursor) // nextCursor를 저장

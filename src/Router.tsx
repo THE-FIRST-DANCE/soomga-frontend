@@ -1,16 +1,15 @@
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
+import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
+import { useEffect, useState } from 'react'
+import { getCookie } from 'utils/cookie'
 import GuidePage from 'pages/guide'
-
 import PlanConfirm from 'pages/PlanConfirm'
-
 import PlanCreatePage from 'pages/PlanCreatePage'
 import PlanPage from 'pages/PlanPage'
 import GuideDetailPage from 'pages/guide/detail'
 import MainPage from 'pages/home'
 import LoginSignupPage from 'pages/login'
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
-
-import { useRecoilState } from 'recoil'
-import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import RedirectPage from 'pages/redirect'
 import ItineraryPage from 'pages/itinerary'
 import RecommendatedPostPage from 'pages/recommendationPage'
@@ -18,13 +17,12 @@ import RegionsList from 'pages/recommendationPage/regionslist'
 import RegionDetailPage from 'pages/recommendationPage/detail'
 import SchedulePage from 'pages/schedulePage'
 import PostCreate from 'components/recommendations/PostCreate'
-import PostEdit from 'components/recommendations/PostEdit'
+import PostEdit from 'components/recommendations/PostCreate'
 import MyPage from 'components/myPageCommon'
 import RequestGuide from 'components/myPageCommon/RequestGuide'
-import { useEffect, useState } from 'react'
-import { getCookie } from 'utils/cookie'
 import Layout from 'components/Layout'
 import PlanDetailPage from 'pages/PlanDetailPage'
+import { getUserInfo } from 'api/LoginSignUp'
 
 function LayoutWithRouter() {
   return (
@@ -36,15 +34,39 @@ function LayoutWithRouter() {
 
 const Router = () => {
   // 토큰 관리
-  // const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
-  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
+  const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom) /* 🟡🟡🟡 */
   const [isAccessToken, setIsAccessToken] = useState<boolean>()
 
   const [userInfo, setuserInfo] = useState()
   console.log('userInfo: ', userInfo)
 
+  useEffect(() => {
+    if (!userInfo) {
+      localStorage.setItem('userInfo', JSON.stringify({}))
+    }
+  }, [userInfo])
+
+  // OAuth로그인 했을 때 데이터 받아오기
+  useEffect(() => {
+    const accessToken = getCookie('accessToken')
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+
+    if (!userInfo.id && accessToken) {
+      const fetchGetUserInfo = async () => {
+        const result = await getUserInfo()
+        localStorage.setItem('userInfo', JSON.stringify(result))
+      }
+      fetchGetUserInfo()
+      setRecoilToken({ ...recoilToken, token: !!accessToken, name: accessToken })
+      // getUserInfo().then((data) => {
+      //   localStorage.setItem('userInfo', JSON.stringify(data))
+      // })
+    }
+  }, [])
+
   /* 🟡🟡🟡 기본적으로 토큰이 들어있는지 토큰 상태를 브라우저에서 가져와서 확인 🟡🟡🟡 */
   useEffect(() => {
+    // 리코일에 액세스 토큰이 없고
     const accessToken = getCookie('accessToken') //! 쿠키에서 엑세스 토근 가져오기
     console.log('🌙🌙🌙🌙accessToken: ', accessToken)
     setIsAccessToken(!!accessToken) //! 토큰 상태를 저장
@@ -66,7 +88,6 @@ const Router = () => {
           <Route path="/guides" element={<GuidePage />} />
           <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
 
-          {/* {recoilToken.token && ( */}
           {isAccessToken && (
             <>
               {/* 4. 여행일정 */}
@@ -81,7 +102,7 @@ const Router = () => {
           <Route path="/recommendations/detail/:detail_Id" element={<RegionDetailPage />} />
           {/* FIXME: 라우팅만 처리 */}
           <Route path="/post/create" element={<PostCreate />} />
-          <Route path="/post/create/:post_Id" element={<PostCreate />} />
+          <Route path="/post/edit/:post_Id" element={<PostEdit />} />
 
           {/* 여행 플래너 */}
           <Route path="/planner" element={<PlanPage />} />
