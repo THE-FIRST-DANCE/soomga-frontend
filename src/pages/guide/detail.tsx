@@ -594,7 +594,7 @@ const GuideDetailPage = () => {
                     <CommentUserWrapper>
                       {/* <CommentUserName>{review.guide.member.}</CommentUserName> */}
                       {/* FIXME: 누가 썼느지 이름 없음 */}
-                      <CommentUserName>{'누가 코멘트를 썻는지 이름이 없음'}</CommentUserName>
+                      <CommentUserName>{review.reviewer?.nickname}</CommentUserName>
                       {/* FIXME: 날짜 다 동일한게 찍히네? */}
                       <Created>{moment(review.createdAt).format('YYYY-MM-DD')}</Created>
                     </CommentUserWrapper>
