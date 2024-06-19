@@ -10,6 +10,7 @@ import RatingFakeCheckbox from '../../components/guide/list/leftSection/RatingFa
 import GuideCard from '../../components/guide/list/rightSection/GuideCard'
 import { useRecoilState } from 'recoil'
 import { selectedDatasState } from 'state/store/SelecteddatasAtom'
+import GuideRecommendations from 'components/guide/recommenadation/GuideRecommendations'
 
 const GuidePage = () => {
   const {
@@ -73,6 +74,7 @@ const GuidePage = () => {
           <SearchTagContainer>
             <MagnifieirIcon $width="40px" $height="40px" $fill="red" />
             <span className="searchLetter">Search</span>
+            <GuideRecommendations />
           </SearchTagContainer>
           {/* 🟠 2. 범위 선택 (range) : 나이 | 온도 | 가이드 횟수  🟠  */}
           <Layout>

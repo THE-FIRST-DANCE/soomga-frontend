@@ -9,6 +9,11 @@ export const api = axios.create({
   withCredentials: true,
 })
 
+export const getGuideCount = async ({ requestParams }: { requestParams: RequestParamsType }) => {
+  const res = await api.get<number>('/guides/count', { params: requestParams })
+  return res.data
+}
+
 /*  🟡 1. 가이드 리스트 요청 🟡 */
 export const getGuideList = async ({
   cursor,

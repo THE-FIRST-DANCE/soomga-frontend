@@ -1,7 +1,9 @@
+import { GLOBAL_CONFIG } from 'global.config'
+
 type OAuthProvider = 'google' | 'line'
 
 export function onOAuthConnect(provider: OAuthProvider, redirectUrl?: string) {
-  const url = `${import.meta.env.VITE_APP_BASE_URL}auth/${provider}`
+  const url = `${GLOBAL_CONFIG.VITE_APP_BASE_URL}/auth/${provider}`
 
   window.sessionStorage.setItem('redirect', redirectUrl || window.location.pathname)
 

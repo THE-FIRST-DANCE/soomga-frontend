@@ -181,6 +181,7 @@ import chungnam from 'assets/regions/chungnam.jpeg'
 import gyeongbuk from 'assets/regions/gyeongbuk.jpeg'
 import gyeongnam from 'assets/regions/gyeongnam.jpeg'
 import jeju from 'assets/regions/jeju.jpeg'
+// import { postInfo } from 'pages/recommendationPage/detail'
 
 export let regionsArr = [
   {

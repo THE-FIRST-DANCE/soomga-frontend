@@ -61,6 +61,7 @@ export const useChat = (roomId: string | undefined) => {
   //! 메세지 보내기
   const sendMessage = (content: Content, accessToken: string) => {
     console.log('✈️✈️✈️메세지 보내기가 활성화됨')
+
     // 서버로 보낼 메세지 전송:     "방 ID" "사용자의 접근 토큰", "메시지 내용"  서버에 전달
     socket.emit('newMessage', { roomId, accessToken, content })
   }
