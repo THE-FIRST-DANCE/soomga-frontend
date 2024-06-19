@@ -1,7 +1,8 @@
 import { api } from './PlanAPI'
 
 export interface ReservationPayload {
-  memberId: number
+  // memberId: number
+  guideId: number
   serviceId: number
   startDate: Date
   endDate: Date

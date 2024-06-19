@@ -220,12 +220,12 @@ const Chatting = ({
     }
   }
 
-  const tmpReserve = async () => {
+  const tmpReserve = async (guideId: string) => {
     console.log('🟡🟡임시 예약 버튼 눌렀다.🟡🟡')
 
     const data: ReservationPayload = {
       // memberId: 68, // FIXME: change this hard-coded value
-      memberId: userInfo.id,
+      guideId: guideInfos?.id,
       serviceId: parseInt(selectedServiceList.serviceId),
       startDate: startDate || new Date(),
       endDate: endDate || new Date(),
