@@ -36,11 +36,11 @@ const MainContainer = ({
       {/* 1. 기본정보 */}
       {basicInfo && (
         <BasicInfo
-          name={'이다슬'}
+          name={userInformation.name}
           email={userInformation.email}
           nickname={userInformation.nickname}
-          phonNum={'010-1234-1234'}
-          password={'12312312'}
+          phonNum={userInformation.phonNum || '미등록'}
+          password="********"
         />
       )}
       {/* 2. 리뷰 */}
