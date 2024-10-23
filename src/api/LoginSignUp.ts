@@ -1,18 +1,4 @@
-import axios from 'axios'
-import { GLOBAL_CONFIG } from 'global.config'
-
-export const baseApi = axios.create({
-  baseURL: GLOBAL_CONFIG.VITE_APP_BASE_URL,
-  withCredentials: true,
-
-  // 왜 이부분을 추가하니 에러가 뜨지>??
-  // headers: {
-  //   'Cache-Control': 'no-cache',
-  //   'Content-Type': 'application/json',
-  //   // 'Access-Control-Allow-Origin': '*',
-  // },
-  responseType: 'json',
-})
+import { baseApi } from 'baseApi'
 
 export const getLogin = async (email: string, password: string) => {
   const response = await baseApi.post('/auth/signin', {

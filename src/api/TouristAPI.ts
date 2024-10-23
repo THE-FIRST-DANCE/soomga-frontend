@@ -1,4 +1,4 @@
-import { api } from './GuidePageAPI'
+import { baseApi } from 'baseApi'
 
 export const getTouristList = async ({
   pageParam,
@@ -9,7 +9,7 @@ export const getTouristList = async ({
   areas: number[]
   sort?: string
 }) => {
-  const response = await api.get('/trips/find', {
+  const response = await baseApi.get('/trips/find', {
     params: {
       cursor: pageParam,
       areas,
@@ -29,19 +29,19 @@ export interface createTripDto {
 }
 
 export const postTourist = async (data: createTripDto) => {
-  const response = await api.post('/trips', data)
+  const response = await baseApi.post('/trips', data)
 
   return response.data
 }
 
 export const editTourist = async (id: number, data: createTripDto) => {
-  const response = await api.patch(`/trips/${id}`, data)
+  const response = await baseApi.patch(`/trips/${id}`, data)
 
   return response.data
 }
 
 export const deleteTouristApi = async (id: number) => {
-  const response = await api.delete(`/trips/${id}`)
+  const response = await baseApi.delete(`/trips/${id}`)
 
   return response.data
 }
@@ -50,7 +50,7 @@ export const imageUpload = async (file: File) => {
   const formData = new FormData()
   formData.append('file', file)
 
-  const response = await api.post('uploads', formData, {
+  const response = await baseApi.post('uploads', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -60,20 +60,20 @@ export const imageUpload = async (file: File) => {
 }
 
 export const getTouristDetail = async (id: number) => {
-  const response = await api.get(`/trips/${id}`)
+  const response = await baseApi.get(`/trips/${id}`)
 
   return response.data
 }
 
 export const getRecommendation = async () => {
-  const response = await api.get('/trips/recommendation')
+  const response = await baseApi.get('/trips/recommendation')
 
   return response.data
 }
 
 // 글 좋아요
 export const likeTourist = async (id: number) => {
-  const response = await api.post(`/trips/${id}/like`)
+  const response = await baseApi.post(`/trips/${id}/like`)
 
   return response.data
 }
@@ -91,21 +91,21 @@ export const postTouristComment = async (data: PostComment) => {
     content,
     memberId,
   }
-  const response = await api.post(`/trips/${boardId}/comment`, commentDto)
+  const response = await baseApi.post(`/trips/${boardId}/comment`, commentDto)
 
   return response.data
 }
 
 // 댓글 삭제
 export const deleteTouristComment = async (id: number) => {
-  const response = await api.delete(`/trips/comment/${id}`)
+  const response = await baseApi.delete(`/trips/comment/${id}`)
 
   return response.data
 }
 
 // 댓글 수정
 export const editTouristComment = async (commentId: number, content: string) => {
-  const response = await api.patch(`/trips/comment/${commentId}`, {
+  const response = await baseApi.patch(`/trips/comment/${commentId}`, {
     content,
   })
 

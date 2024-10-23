@@ -1,12 +1,7 @@
 import axios from 'axios'
-// import { GLOBAL_CONFIG } from 'global.config'
+import { baseApi } from 'baseApi'
 import { GooglePlaceResponse, PlaceData, PlanConfirmPeriodList, Plans } from 'interfaces/plan'
 import { PeriodList } from 'state/store/PlanList'
-
-export const api = axios.create({
-  baseURL: 'http://localhost:3000/api/',
-  withCredentials: true,
-})
 
 export const getSearchPlaceGoogle = async ({
   query,
@@ -17,7 +12,7 @@ export const getSearchPlaceGoogle = async ({
   location: string
   pagetoken: string | null
 }) => {
-  const response = await api.get('places/search', {
+  const response = await baseApi.get('places/search', {
     params: {
       query,
       location,
@@ -29,13 +24,13 @@ export const getSearchPlaceGoogle = async ({
 }
 
 export const addPlaceApi = async (data: PlaceData) => {
-  const response = await api.post('places/add', data)
+  const response = await baseApi.post('places/add', data)
 
   return response.data
 }
 
 export const getPlaceApi = async (category: string, region: string, cursor: number | null, search: string) => {
-  const response = await api.get('places', {
+  const response = await baseApi.get('places', {
     params: {
       category,
       region,
@@ -53,7 +48,7 @@ export const getPlaceRoute = async ({ planList, transport }: PlanListConfirm) =>
     transport,
   }
 
-  const response = await api.post('plans/distance', data)
+  const response = await baseApi.post('plans/distance', data)
 
   return response.data
 }
@@ -69,7 +64,7 @@ export const getPlaceRouteEdit = async ({ planList, transport }: PlanListConfirm
     transport,
   }
 
-  const response = await api.post('plans/route/edit', data)
+  const response = await baseApi.post('plans/route/edit', data)
 
   return response.data
 }
@@ -85,13 +80,13 @@ interface PlanSaveData {
 }
 
 export const savePlan = async (data: PlanSaveData) => {
-  const response = await api.post('plans/save', data)
+  const response = await baseApi.post('plans/save', data)
 
   return response.data
 }
 
 export const getPlanList = async (authorId: number) => {
-  const response = await api.get('plans', {
+  const response = await baseApi.get('plans', {
     params: {
       authorId,
     },
@@ -120,37 +115,37 @@ export const getTransCoord = async (x: number, y: number): Promise<{ x: number; 
 }
 
 export const getPlanById = async (planId: number) => {
-  const response = await api.get(`plans/${planId}`)
+  const response = await baseApi.get(`plans/${planId}`)
 
   return response.data
 }
 
 export const getPlanByUserId = async (userId: number): Promise<Plans> => {
-  const response = await api.get(`plans/user/${userId}`)
+  const response = await baseApi.get(`plans/user/${userId}`)
 
   return response.data
 }
 
 export const deletePlan = async (planId: number) => {
-  const response = await api.delete(`plans/${planId}`)
+  const response = await baseApi.delete(`plans/${planId}`)
 
   return response.data
 }
 
 export const getPlanComments = async (planId: number) => {
-  const response = await api.get(`plans/${planId}/comments`)
+  const response = await baseApi.get(`plans/${planId}/comments`)
 
   return response.data
 }
 
 export const addPlanComment = async (planCommentDto: { planId: number; content: string; memberId: number }) => {
-  const response = await api.post('plans/comment', planCommentDto)
+  const response = await baseApi.post('plans/comment', planCommentDto)
 
   return response.data
 }
 
 export const deletePlanComment = async (commentId: number) => {
-  const response = await api.delete(`plans/comment/${commentId}`)
+  const response = await baseApi.delete(`plans/comment/${commentId}`)
 
   return response.data
 }

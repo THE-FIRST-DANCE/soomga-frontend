@@ -1,4 +1,4 @@
-import { api } from './PlanAPI'
+import { baseApi } from 'baseApi'
 import { Reservation, ReservationPayload } from './ServiceAPI'
 
 //check: 예약 조회
@@ -7,7 +7,7 @@ export async function createReservation(
   roomId?: string,
 ) {
   try {
-    const res = await api.post<Reservation>('/reservations', payload, {
+    const res = await baseApi.post<Reservation>('/reservations', payload, {
       params: roomId ? { roomId } : {},
     })
     console.log('createReservation의 결과 값', res)
@@ -20,7 +20,7 @@ export async function createReservation(
 //check 예약 수락
 export async function acceptReservation(reservationId: number, roomId?: string) {
   try {
-    const res = await api.patch<Reservation>(
+    const res = await baseApi.patch<Reservation>(
       `/reservations/${reservationId}/accept`,
       {},
       {
@@ -37,7 +37,7 @@ export async function acceptReservation(reservationId: number, roomId?: string) 
 //check 예약 거절
 export async function rejectReservation(reservationId: number, roomId?: string) {
   try {
-    const res = await api.patch<Reservation>(
+    const res = await baseApi.patch<Reservation>(
       `/reservations/${reservationId}/reject`,
       {},
       {

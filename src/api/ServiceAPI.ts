@@ -1,4 +1,4 @@
-import { api } from './PlanAPI'
+import { baseApi } from 'baseApi'
 
 export interface ReservationPayload {
   // memberId: number
@@ -24,14 +24,14 @@ export interface Reservation {
 
 // 1. 서비스 조회
 export async function getServices() {
-  const res = await api.get('/services')
+  const res = await baseApi.get('/services')
   return res.data
 }
 
 // 예약 만들기
 export async function createReservation(payload: ReservationPayload, roomId?: string) {
   try {
-    const res = await api.post<Reservation>('/reservations', payload, {
+    const res = await baseApi.post<Reservation>('/reservations', payload, {
       params: roomId ? { roomId } : {},
     })
     console.log('예약만들기 결과', res)

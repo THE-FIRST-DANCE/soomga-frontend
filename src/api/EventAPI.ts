@@ -1,4 +1,4 @@
-import { api } from './PlanAPI'
+import { baseApi } from 'baseApi'
 
 // 일정 저장 데이터
 export interface EventAddData {
@@ -12,14 +12,14 @@ export interface EventAddData {
 
 // 일정 추가
 export const addEvent = async (data: EventAddData) => {
-  const response = await api.post('events', data)
+  const response = await baseApi.post('events', data)
 
   return response.data
 }
 
 // 일정 조회
 export const getEvent = async (memberId: number) => {
-  const response = await api.get('events', {
+  const response = await baseApi.get('events', {
     params: {
       memberId,
     },
@@ -29,12 +29,12 @@ export const getEvent = async (memberId: number) => {
 }
 
 export const deleteEvent = async (id: number) => {
-  const response = await api.delete(`events/${id}`)
+  const response = await baseApi.delete(`events/${id}`)
 
   return response.data
 }
 
 export const updateEvent = async ({ id, data }: { id: number; data: EventAddData }) => {
-  const response = await api.post(`events/${id}`, data)
+  const response = await baseApi.post(`events/${id}`, data)
   return response.data
 }
