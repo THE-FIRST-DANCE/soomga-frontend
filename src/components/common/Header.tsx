@@ -57,7 +57,8 @@ const Header = () => {
       {/* 2. 중앙 : 버튼 Container*/}
       <HeaderMiddleContainer_div>
         {/* 2.1 버튼 (가이드 | 여행일정 | 여행지 추천 | 플랜 | 채팅) */}
-        <HeaderMiddleBtn onClick={() => navigate('/guides')}>가이드</HeaderMiddleBtn>
+        {/* FIXME: (전시회) 가이드를 보여주지 않음. */}
+        {/* <HeaderMiddleBtn onClick={() => navigate('/guides')}>가이드</HeaderMiddleBtn> */}
         <HeaderMiddleBtn onClick={() => navigate('/schedule')}>여행 일정</HeaderMiddleBtn>
         <HeaderMiddleBtn onClick={() => navigate('/recommendations')}>여행지 추천</HeaderMiddleBtn>
         <HeaderMiddleBtn onClick={() => navigate('/planner')}>플랜</HeaderMiddleBtn>
