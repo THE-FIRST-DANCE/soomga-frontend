@@ -3,10 +3,11 @@ import main_leftImg from '../../assets/main_leftImg.png'
 import main_leftLetter from '../../assets/main_leftLetter.svg'
 import logo from '../../assets/logo_noLetter.svg'
 
-import seoul from '../../assets/seoul.png'
-import busan from '../../assets/busan.png'
-import ulsan from '../../assets/ulsan.png'
-import geoje from '../../assets/geoje.png'
+import seoul from '../../assets/region_seoul.png'
+import busan from '../../assets/region_busan.png'
+import ulsan from '../../assets/region_ulsan.png'
+import geoje from '../../assets/region_geoje.png'
+
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 

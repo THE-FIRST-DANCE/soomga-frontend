@@ -1,15 +1,16 @@
 import styled from 'styled-components'
 import logo from '../../assets/logo_noLetter.svg'
-import seoul from '../../assets/seoul.png'
-import busan from '../../assets/busan.png'
-import ulsan from '../../assets/ulsan.png'
-import geoje from '../../assets/geoje.png'
+import seoul from '../../assets/region_seoul.png'
+import busan from '../../assets/region_busan.png'
+import daegu from '../../assets/region_daegu.png'
+import jeju from '../../assets/region_jeju.png'
 import { useNavigate } from 'react-router-dom'
 
 const RecommendedRegions = () => {
   let navigate = useNavigate()
 
   /* 📝 임의 데이터 */
+  // FIXME: (전시회) 추천 지역 데이터
   let regionsArr = [
     {
       id: 1,
@@ -23,13 +24,13 @@ const RecommendedRegions = () => {
     },
     {
       id: 3,
-      regionName: '울산',
-      img: ulsan,
+      regionName: '대구',
+      img: daegu,
     },
     {
-      id: 4,
-      regionName: '거제도',
-      img: geoje,
+      id: 17,
+      regionName: '제주도',
+      img: jeju,
     },
   ]
 
@@ -49,7 +50,7 @@ const RecommendedRegions = () => {
       <RegionsContainer>
         {regionsArr.map((regionInfo) => (
           /* 3.1 추천 지역 카드 */
-          <Region key={regionInfo.regionName} onClick={() => navigate(`/recommendations/region/${regionInfo.id}`)}>
+          <Region key={regionInfo.regionName} onClick={() => navigate(`/recommendations/${regionInfo.id}`)}>
             {/* 3.1.1 추천 지역 이미지 */}
             <img src={regionInfo.img} alt={regionInfo.regionName} />
             {/* 3.1.2 추천 지역 글자 : 지역 이름 */}

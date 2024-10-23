@@ -4,9 +4,10 @@ import { CarIcon } from 'components/planner/SelectTransportation'
 import { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 
-import seoul from '../../assets/seoul.png'
-import busan from '../../assets/busan.png'
-import ulsan from '../../assets/ulsan.png'
+import seoul from '../../assets/region_seoul.png'
+import busan from '../../assets/region_busan.png'
+import ulsan from '../../assets/region_ulsan.png'
+
 import React from 'react'
 const plans = [
   {
