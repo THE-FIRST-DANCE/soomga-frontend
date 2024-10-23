@@ -105,11 +105,12 @@ const Router = () => {
           <Route path="/post/edit/:post_Id" element={<PostEdit />} />
 
           {/* 여행 플래너 */}
-          <Route path="/planner" element={<PlanPage />} />
+          {/* <Route path="/planner" element={<PlanPage />} /> */}
           <Route path="/planner/detail/:planId" element={<PlanDetailPage />} />
         </Route>
 
         {/* 6. 여행 플래너 생성 */}
+        <Route path="/planner" element={<PlanPage />} />
         <Route path="/planner/create" element={<PlanCreatePage />} />
         <Route path="/planner/confirm" element={<PlanConfirm />} />
         <Route path="/planner/confirm/:planId" element={<PlanConfirm />} />
