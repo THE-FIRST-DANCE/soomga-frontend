@@ -1,4 +1,4 @@
-import guideImg from '../../assets/guideImg.png'
+import defaultAvatar from '../../assets/default_avatar.webp'
 import { styled } from 'styled-components'
 import { useSetRecoilState } from 'recoil'
 import { RequestGuide } from 'state/store/RequestGuide'
@@ -24,8 +24,8 @@ const LeftInfo = ({ name, email, nickname, phonNum, avatar, gender }: userInfoPr
         <GuideImageWrapper>
           <UserImageLayout>
             <GenderMarker gender={gender} />
-            <img src={guideImg} alt="Img" />
-            {/* <img src={avatar} alt="Img" /> */}
+            {/* <img src={guideImg} alt="Img" /> */}
+            <img src={avatar || defaultAvatar} alt="Img" />
           </UserImageLayout>
         </GuideImageWrapper>
         {/* <Name>{name}</Name> */}
@@ -37,8 +37,8 @@ const LeftInfo = ({ name, email, nickname, phonNum, avatar, gender }: userInfoPr
         </InfoBox>
         <InfoBox>
           <InfoName>연락처</InfoName>
-          {/* <Info>{phonNum}</Info> */}
-          <Info>010-1234-1234</Info>
+          <Info>{phonNum || '미등록'}</Info>
+          {/* <Info>010-1234-1234</Info> */}
         </InfoBox>
 
         <Application onClick={() => setRequestOpend((prev) => ({ ...prev, isClick: !prev.isClick }))}>
