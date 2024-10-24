@@ -204,10 +204,11 @@ const HeaderLayout_div = styled.div`
   top: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.175);
   backdrop-filter: blur(5px) !important;
   border-radius: 10px;
   z-index: 5;
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
 `
 
 /* 左 */
