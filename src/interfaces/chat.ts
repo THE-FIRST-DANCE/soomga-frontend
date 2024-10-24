@@ -85,7 +85,11 @@ export interface ReservationExtra {
   type: 'reservation'
   data: Reservation
 }
-export interface Plan {}
+export interface Plan {
+  service?: any
+  startDate: Date
+  endDate: Date
+}
 export interface PlanExtra {
   type: 'plan'
   data: Plan

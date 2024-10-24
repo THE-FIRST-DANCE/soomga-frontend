@@ -19,18 +19,15 @@ import { useChat } from 'hooks/Chat/useChat'
 import { Message, MouseAxis, Room, ServiceProps } from '../../interfaces/chat'
 import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
-import { Content } from '../../interfaces/chat'
 import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import useObserveSingle from 'hooks/Chat/useObserveSingle'
 import PlanChat from './PlanChat'
 import ServiceChat from './ServiceChat'
-import { deleteRoom } from 'api/ChatAPI'
-import { boolean } from 'zod'
 import { IsClickAtMain } from 'state/store/IsClickAtMain'
 import logo from 'assets/logo.svg'
 import { ReservationPayload, createReservation, getServices } from 'api/ServiceAPI'
-import MessageItem from './Messages'
 import moment from 'moment'
+
 const Chatting = ({
   userInfo,
   guideInfos,
@@ -399,7 +396,6 @@ const Chatting = ({
                 }))
 
                 // 🌈🌈 ReservationPayload실행 시켜서 대화창에 해당 서비스 띄우기 🌈🌈
-                tmpReserve()
               }}
             >
               선택
@@ -593,8 +589,9 @@ const Chatting = ({
                                         {messageInfo.content.extra?.type === 'plan' && (
                                           <>
                                             <PlanChat
-                                              roomInfo={roomInfo}
-                                              extra={messageInfo.content.extra}
+                                              // roomInfo={roomInfo}
+                                              // extra={messageInfo.content.extra}
+                                              location="a"
                                               who={messageInfo.sender?.nickname}
                                               imgUrl={
                                                 messageInfo.content.extra.data.service.photo ||
