@@ -1,5 +1,8 @@
 # Builder stage
 FROM node:18-alpine AS builder
+
+ENV VITE_APP_SERVE_MODE='exhibition'
+
 WORKDIR /app
 COPY package*.json yarn.lock ./
 RUN yarn install
