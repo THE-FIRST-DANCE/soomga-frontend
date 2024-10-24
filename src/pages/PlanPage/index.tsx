@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { Plans } from 'interfaces/plan'
 import { useEffect, useState } from 'react'
 import PlanItem from 'components/planner/PlanItem'
+import BackButton from 'components/planner/BackButton'
 
 const PlanPage = () => {
   const [plans, setPlans] = useState<Plans[]>([])
@@ -24,6 +25,7 @@ const PlanPage = () => {
   return (
     <Container>
       <LeftSection>
+        <BackButton onClick={() => window.history.back()} />
         <CreatePlan />
         <PlanListStyle>
           <PlanItems>
