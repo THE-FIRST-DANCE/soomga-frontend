@@ -3,6 +3,7 @@ import Button from './Button'
 
 import logo from '../../assets/logo_noLetter.svg'
 import { useNavigate } from 'react-router-dom'
+import ServicePreview from './ServicePreview'
 
 const SimpleIntroduction = () => {
   const navigate = useNavigate()
@@ -25,14 +26,15 @@ const SimpleIntroduction = () => {
       </ContentSection>
 
       {/* FIXME: ImageSection 컴포넌트는 사용하지 않고, 시연하는 영상을 자동실행되는 컴포넌트를 사용할 예정 */}
-      <ImageSection>
+      {/* <ImageSection>
         <Image src="/placeholder.svg" alt="Soomga 서비스 시연" />
         <ImageOverlay>
           <Button variant="secondary" size="large">
             서비스 둘러보기
           </Button>
         </ImageOverlay>
-      </ImageSection>
+      </ImageSection> */}
+      <ServicePreview />
     </Container>
   )
 }
