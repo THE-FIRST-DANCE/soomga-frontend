@@ -7,6 +7,7 @@ import { Plans } from 'interfaces/plan'
 import { useEffect, useState } from 'react'
 import PlanItem from 'components/planner/PlanItem'
 import BackButton from 'components/planner/BackButton'
+import { useNavigate } from 'react-router-dom'
 
 const PlanPage = () => {
   const [plans, setPlans] = useState<Plans[]>([])
@@ -15,6 +16,8 @@ const PlanPage = () => {
     queryKey: ['plans'],
     queryFn: () => getPlanList(68),
   })
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (data) {
@@ -25,7 +28,7 @@ const PlanPage = () => {
   return (
     <Container>
       <LeftSection>
-        <BackButton onClick={() => window.history.back()} />
+        <BackButton onClick={() => navigate('/')} />
         <CreatePlan />
         <PlanListStyle>
           <PlanItems>
