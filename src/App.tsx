@@ -10,9 +10,15 @@ import 'react-toastify/dist/ReactToastify.css' // 추가
 /* CSS 초기화 */
 const GlobalStyle = createGlobalStyle`
   ${reset}
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+  @import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css');
 
   html, body {
     overscroll-behavior: none;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
   }
 
   /* 임의 폰트 (구글) */
