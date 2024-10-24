@@ -37,27 +37,26 @@ const RecommendedRegions = () => {
   return (
     // 1. Soomga의 추천지역 Layout
     <SRecommendedRegionsLayout>
-      {/* 2. Soomga의 추천 지역 : Logo + letter */}
-      <LogoAndLetterContainer>
-        {/* 2.1 Logo : 그림 이미지 */}
-        <ImgWrapper>
-          <img src={logo} alt="logo" />
-        </ImgWrapper>
-        {/* 2.2 letter : Soomga의 추천 지역 */}
-        <span>Soomga의 추천 지역</span>
-      </LogoAndLetterContainer>
-      {/* 3. 추천지역 List Container */}
-      <RegionsContainer>
-        {regionsArr.map((regionInfo) => (
-          /* 3.1 추천 지역 카드 */
-          <Region key={regionInfo.regionName} onClick={() => navigate(`/recommendations/${regionInfo.id}`)}>
-            {/* 3.1.1 추천 지역 이미지 */}
-            <img src={regionInfo.img} alt={regionInfo.regionName} />
-            {/* 3.1.2 추천 지역 글자 : 지역 이름 */}
-            <div>{regionInfo.regionName}</div>
-          </Region>
-        ))}
-      </RegionsContainer>
+      <div style={{ margin: '0 auto', maxWidth: '1200px' }}>
+        {/* 2. Soomga의 추천 지역 : Logo + letter */}
+        <LogoAndLetterContainer>
+          <Title>숨은 가이드's Pick 💁‍♂️</Title>
+          숨은 가이드가 엄선한 특별한 여행지를 만나보세요. 각 지역의 숨겨진 매력을 발견하고 잊지 못할 추억을
+          만들어보세요.
+        </LogoAndLetterContainer>
+        {/* 3. 추천지역 List Container */}
+        <RegionsContainer>
+          {regionsArr.map((regionInfo) => (
+            /* 3.1 추천 지역 카드 */
+            <Region key={regionInfo.regionName} onClick={() => navigate(`/recommendations/${regionInfo.id}`)}>
+              {/* 3.1.1 추천 지역 이미지 */}
+              <img src={regionInfo.img} alt={regionInfo.regionName} />
+              {/* 3.1.2 추천 지역 글자 : 지역 이름 */}
+              <div>{regionInfo.regionName}</div>
+            </Region>
+          ))}
+        </RegionsContainer>
+      </div>
     </SRecommendedRegionsLayout>
   )
 }
@@ -69,22 +68,22 @@ export default RecommendedRegions
 const SRecommendedRegionsLayout = styled.div`
   width: 100%;
   height: auto;
-  /* background-color: orange; */
+  padding-top: 3rem;
+  padding-bottom: 8rem;
+
+  opacity: 1;
+  background-color: rgb(250 250 250);
 `
 /* 2. Soomga의 추천 지역 : Logo + letter */
 const LogoAndLetterContainer = styled.div`
   /* background-color: orange; */
   width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 2rem 0;
-
-  /*  2.2 letter : Soomga의 추천 지역 */
-  span {
-    font-size: 2rem;
-    font-family: 'Black Han Sans', sans-serif;
-  }
+  /* justify-content: center; */
+  /* align-items: center; */
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 4rem;
 `
 /* 2.1 Logo : 그림 이미지  */
 const ImgWrapper = styled.div`
@@ -151,4 +150,10 @@ const Region = styled.div`
     color: white;
     background-image: linear-gradient(to top, #000000ae, #00000045);
   }
+`
+
+const Title = styled.h2`
+  font-size: 2rem;
+  font-family: 'Black Han Sans', sans-serif;
+  font-weight: bold;
 `

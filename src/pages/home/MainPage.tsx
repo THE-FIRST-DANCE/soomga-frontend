@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
 import { InnerContainer_div } from '.'
 import { IsClickAtMain } from 'state/store/IsClickAtMain'
+import SimpleIntroduction from './SimpleIntroduction'
 
 export const MainPage = () => {
   const [isOpenChat, setIsOpenChat] = useState<boolean>(false)
@@ -58,14 +59,17 @@ export const MainPage = () => {
       {/* 1. 비디오 */}
       <MainVideo />
 
+      <SimpleIntroduction />
+
+      <div style={{ display: 'flex', justifyContent: 'center', height: '2rem' }} />
       {/* 2. 숨가 추천지역 */}
       <RecommendedRegions />
 
       {/* 3. 한국 지도 */}
-      <InnerContainer_div>
-        {/* <Map width="70%" height="600px" zoom={7} /> */}
-        {/* FIXME: 사용할 떄마다 요금이 청구되니 잠시 꺼두자 */}
-        {/* <GoogleMapLoad
+      {/* <InnerContainer_div> */}
+      {/* <Map width="70%" height="600px" zoom={7} /> */}
+      {/* FIXME: 사용할 떄마다 요금이 청구되니 잠시 꺼두자 */}
+      {/* <GoogleMapLoad
               mapContainerStyle={{
                 // width: '53%',
                 width: '50rem',
@@ -75,21 +79,21 @@ export const MainPage = () => {
               zoom={7.4}
               center={{ lat: 36.55, lng: 127.7669 }}
             /> */}
-      </InnerContainer_div>
+      {/* </InnerContainer_div> */}
 
       {/* 4. sos페이지(갑자기 도움이 필요할 때) + 추천 지역(내 취향에 맞는 여행지를 찾아봐) */}
-      <URecommendedRegions />
+      {/* <URecommendedRegions /> */}
 
       {/* 5. 좋아요 수에 의한 추천 지역 캐러셀 FIXME: 아직 api 설계 안됨 */}
-      <RegionCarousel />
+      {/* <RegionCarousel /> */}
 
       {/* 6. 사용자 댓글 캐러셀  FIXME: 아직 api 설계 안됨 */}
-      <CommentCarousel />
+      {/* <CommentCarousel /> */}
 
       {/* 7. 대화 버튼 - 버튼 누르면 모달발생  FIXME: 아직 api 설계 안됨*/}
 
-      <ChatButton onClick={startChatHandler} />
-      {isOpenChat && <Chatting userInfo={userInfo} onClick={startChatHandler} />}
+      {/* <ChatButton onClick={startChatHandler} /> */}
+      {/* {isOpenChat && <Chatting userInfo={userInfo} onClick={startChatHandler} />} */}
     </>
   )
 }
