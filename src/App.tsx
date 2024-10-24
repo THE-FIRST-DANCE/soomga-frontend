@@ -11,6 +11,9 @@ import 'react-toastify/dist/ReactToastify.css' // 추가
 const GlobalStyle = createGlobalStyle`
   ${reset}
 
+  html, body {
+    overscroll-behavior: none;
+  }
 
   /* 임의 폰트 (구글) */
   /* @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');  
