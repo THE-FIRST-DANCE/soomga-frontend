@@ -8,12 +8,12 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="layout">
+    <div className="layout" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* 1. Header */}
       <Header />
 
       {/* 2. 페이지에 따른 내용등 */}
-      {children}
+      <main style={{ flex: 1 }}>{children}</main>
 
       {/* 3. Footer */}
       <Footer />
