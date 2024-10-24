@@ -58,13 +58,10 @@ export const MainPage = () => {
     <>
       {/* 1. 비디오 */}
       <MainVideo />
-
       <SimpleIntroduction />
-
       <div style={{ display: 'flex', justifyContent: 'center', height: '2rem' }} />
       {/* 2. 숨가 추천지역 */}
       <RecommendedRegions />
-
       {/* 3. 한국 지도 */}
       {/* <InnerContainer_div> */}
       {/* <Map width="70%" height="600px" zoom={7} /> */}
@@ -80,20 +77,15 @@ export const MainPage = () => {
               center={{ lat: 36.55, lng: 127.7669 }}
             /> */}
       {/* </InnerContainer_div> */}
-
       {/* 4. sos페이지(갑자기 도움이 필요할 때) + 추천 지역(내 취향에 맞는 여행지를 찾아봐) */}
       {/* <URecommendedRegions /> */}
-
       {/* 5. 좋아요 수에 의한 추천 지역 캐러셀 FIXME: 아직 api 설계 안됨 */}
       {/* <RegionCarousel /> */}
-
       {/* 6. 사용자 댓글 캐러셀  FIXME: 아직 api 설계 안됨 */}
       {/* <CommentCarousel /> */}
-
       {/* 7. 대화 버튼 - 버튼 누르면 모달발생  FIXME: 아직 api 설계 안됨*/}
-
-      {/* <ChatButton onClick={startChatHandler} /> */}
-      {/* {isOpenChat && <Chatting userInfo={userInfo} onClick={startChatHandler} />} */}
+      {/* <ChatButton onClick={startChatHandler} />
+      {isOpenChat && <Chatting userInfo={userInfo} onClick={startChatHandler} />} */}
     </>
   )
 }

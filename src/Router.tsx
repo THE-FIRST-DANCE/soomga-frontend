@@ -23,6 +23,8 @@ import RequestGuide from 'components/myPageCommon/RequestGuide'
 import Layout from 'components/Layout'
 import PlanDetailPage from 'pages/PlanDetailPage'
 import { getUserInfo } from 'api/LoginSignUp'
+import { GLOBAL_CONFIG } from 'global.config'
+import NotSupport from 'pages/NotSupport/ui/NotSupport'
 
 function LayoutWithRouter() {
   return (
@@ -85,8 +87,14 @@ const Router = () => {
           <Route path="/user/:id" element={<LoginSignupPage />} />
 
           {/* 3. 가이드 */}
-          <Route path="/guides" element={<GuidePage />} />
-          <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
+          {GLOBAL_CONFIG.VITE_APP_SERVE_MODE === 'exhibition' ? (
+            <Route path="/guides" element={<NotSupport message="가이드" />} />
+          ) : (
+            <>
+              <Route path="/guides" element={<GuidePage />} />
+              <Route path="/guides/detail/:id" element={<GuideDetailPage />} />
+            </>
+          )}
 
           {isAccessToken && (
             <>
@@ -115,20 +123,28 @@ const Router = () => {
         <Route path="/planner/confirm" element={<PlanConfirm />} />
         <Route path="/planner/confirm/:planId" element={<PlanConfirm />} />
 
-        {recoilToken.token && (
+        {GLOBAL_CONFIG.VITE_APP_SERVE_MODE === 'exhibition' ? (
           <>
-            {/* 7. 채팅 페이지 */}
-            <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
-
-            {/* 8. my 페이지  FIXME: 유저 + 가이드 ?  나눠서?? */}
-            <Route path="/mypage/info" element={<MyPage />} />
-            {/* <Route path="/mypage/review" element={<h1> 리뷰 </h1>} />
-            <Route path="/mypage/follwing" element={<h1> 팔로잉 </h1>} />
-            <Route path="/mypage/destination" element={<h1> 여행지 </h1>} /> */}
-
-            {/* 9. 가이드 신청 페이지 */}
-            <Route path="/mypage/RequestGuide" element={<RequestGuide />} />
+            <Route path="/chatting" element={<NotSupport message="채팅" />} />
+            <Route path="/mypage/info" element={<NotSupport message="마이 페이지" />} />
+            <Route path="/mypage/RequestGuide" element={<NotSupport message="마이 페이지" />} />
           </>
+        ) : (
+          recoilToken.token && (
+            <>
+              {/* 7. 채팅 페이지 */}
+              <Route path="/chatting" element={<h1> 채팅 페이지 </h1>} />
+
+              {/* 8. my 페이지  FIXME: 유저 + 가이드 ?  나눠서?? */}
+              <Route path="/mypage/info" element={<MyPage />} />
+              {/* <Route path="/mypage/review" element={<h1> 리뷰 </h1>} />
+              <Route path="/mypage/follwing" element={<h1> 팔로잉 </h1>} />
+              <Route path="/mypage/destination" element={<h1> 여행지 </h1>} /> */}
+
+              {/* 9. 가이드 신청 페이지 */}
+              <Route path="/mypage/RequestGuide" element={<RequestGuide />} />
+            </>
+          )
         )}
         <Route path="redirect" element={<RedirectPage />} />
         {/* 예외 발생 시 -> 로그인 시 OR 비로그인시 */}
