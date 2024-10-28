@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import logo from '../../assets/logo.svg'
+import logo from 'assets/logo.svg'
 
 import LanguageIcon from 'components/icons/LanguageIcon'
 import HambergIcon from 'components/icons/HambergIcon'
@@ -12,6 +12,50 @@ import { getCookie, getRemoveCookie } from 'utils/cookie'
 import { toast } from 'react-toastify'
 import { useRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
+import LanguageSelector from './LanguageSelector'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    guide: '가이드',
+    schedule: '여행 일정',
+    recommendations: '여행지 추천',
+    plan: '플랜',
+    userButton: {
+      login: '로그인',
+      signup: '회원가입',
+      mypage: '마이페이지',
+      logout: '로그아웃',
+    },
+    logout: '정상적으로 로그아웃 되었습니다',
+  },
+  'en-US': {
+    guide: 'Guide',
+    schedule: 'Travel Schedule',
+    recommendations: 'Travel Recommendations',
+    plan: 'Plan',
+    userButton: {
+      login: 'Login',
+      signup: 'Sign Up',
+      mypage: 'My Page',
+      logout: 'Logout',
+    },
+    logout: 'Successfully logged out',
+  },
+  'ja-JP': {
+    guide: 'ガイド',
+    schedule: '旅行日程',
+    recommendations: '旅行地推薦',
+    plan: 'プラン',
+    userButton: {
+      login: 'ログイン',
+      signup: '会員登録',
+      mypage: 'マイページ',
+      logout: 'ログアウト',
+    },
+    logout: '正常にログアウトされました',
+  },
+}
 
 interface IconWrapperProps {
   flex: number
@@ -20,11 +64,8 @@ interface IconWrapperProps {
 /* 🟢 HEADER */
 const Header = () => {
   const navigate = useNavigate()
-
-  const [nowLang, setnowLang] = useState<string>('KO') // 현재 언어 상태 : 기본 한국어
-
+  const [language] = useLanguage()
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
-  // console.log('recoilToken: ', recoilToken)
 
   // 언어 변경 : 커스텀훅_useClickOutsideToggle
   const {
@@ -40,13 +81,6 @@ const Header = () => {
     handleOnClick: handleLoginOnClick,
   } = useClickOutsideToggle()
 
-  // 언어 클릭시 다른 언어로 변경
-  const handleLangClick = (e: React.MouseEvent<HTMLLIElement>) => {
-    const target = e.target as HTMLLIElement
-    const selectedLang = target.dataset.lang
-    setnowLang(selectedLang!)
-  }
-
   return (
     <HeaderLayout_div>
       {/* 1. 좌측 : 로고 */}
@@ -58,10 +92,12 @@ const Header = () => {
       <HeaderMiddleContainer_div>
         {/* 2.1 버튼 (가이드 | 여행일정 | 여행지 추천 | 플랜 | 채팅) */}
         {/* FIXME: (전시회) 가이드를 보여주지 않음. */}
-        <HeaderMiddleBtn onClick={() => navigate('/guides')}>가이드</HeaderMiddleBtn>
-        <HeaderMiddleBtn onClick={() => navigate('/schedule')}>여행 일정</HeaderMiddleBtn>
-        <HeaderMiddleBtn onClick={() => navigate('/recommendations')}>여행지 추천</HeaderMiddleBtn>
-        <HeaderMiddleBtn onClick={() => navigate('/planner')}>플랜</HeaderMiddleBtn>
+        <HeaderMiddleBtn onClick={() => navigate('/guides')}>{messages[language].guide}</HeaderMiddleBtn>
+        <HeaderMiddleBtn onClick={() => navigate('/schedule')}>{messages[language].schedule}</HeaderMiddleBtn>
+        <HeaderMiddleBtn onClick={() => navigate('/recommendations')}>
+          {messages[language].recommendations}
+        </HeaderMiddleBtn>
+        <HeaderMiddleBtn onClick={() => navigate('/planner')}>{messages[language].plan}</HeaderMiddleBtn>
       </HeaderMiddleContainer_div>
 
       {/* 3. 우측 : 언어 | 버거 + 사용자 아이콘 */}
@@ -81,28 +117,7 @@ const Header = () => {
             <StyledLanguageIcon height="2rem" width="2rem " />
 
             {/* 3.1.2 우측 : 토글  [ KO | EN | JP ]*/}
-            <LanguageDropdown_ul>
-              {isLangOpen ? (
-                /* //! 여기를 감싸야 한다 */
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  // transition={{ duration: 0.5 }}
-                >
-                  <li onClick={handleLangClick} data-lang="KO">
-                    KO
-                  </li>
-                  <li onClick={handleLangClick} data-lang="EN">
-                    EN
-                  </li>
-                  <li onClick={handleLangClick} data-lang="JP">
-                    JP
-                  </li>
-                </motion.div>
-              ) : (
-                nowLang
-              )}
-            </LanguageDropdown_ul>
+            <LanguageSelector isLangOpen={isLangOpen} />
           </HeaderIconContainer_div>
         </motion.div>
 
@@ -151,14 +166,14 @@ const Header = () => {
                       navigate('/user/login')
                     }}
                   >
-                    로그인
+                    {messages[language].userButton.login}
                   </UseTab_btn>
                   <UseTab_btn
                     onClick={() => {
                       navigate('/user/signup')
                     }}
                   >
-                    회원가입
+                    {messages[language].userButton.signup}
                   </UseTab_btn>
                 </>
               ) : (
@@ -168,7 +183,7 @@ const Header = () => {
                       navigate('/mypage/info')
                     }}
                   >
-                    마이페이지
+                    {messages[language].userButton.mypage}
                   </UseTab_btn>
                   <UseTab_btn
                     onClick={() => {
@@ -177,7 +192,7 @@ const Header = () => {
                       setRecoilToken((prev) => ({ ...prev, token: false }))
 
                       localStorage.setItem('userInfo', JSON.stringify({}))
-                      toast.success('로그아웃 되었습니다')
+                      toast.success(messages[language].logout)
                       navigate('/')
                     }}
                   >
@@ -274,22 +289,6 @@ const HeaderIconContainer_div = styled.div<IconWrapperProps>`
 const StyledLanguageIcon = styled(motion(LanguageIcon))`
   :hover {
     color: var(--color-original);
-  }
-`
-
-// 3.1.2 우측 : 토글 [ KO | EN | JP ]
-const LanguageDropdown_ul = styled.ul`
-  padding: 10px;
-  box-sizing: border-box;
-  width: 50px;
-  font-weight: 700;
-  cursor: pointer;
-  li {
-    padding-bottom: 15px;
-    box-sizing: border-box;
-    &:hover {
-      color: var(--color-original);
-    }
   }
 `
 
