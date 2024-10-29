@@ -14,7 +14,25 @@ export default defineConfig({
       brotliSize: true,
     }),
   ],
+  build: {
+    assetsInlineLimit: 4096,
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[hash][extname]',
+        chunkFileNames: 'assets/[hash].js',
+        entryFileNames: 'assets/[hash].js',
+        manualChunks: {
+          editor: ['react-quill', 'quill-image-resize-module-ts'],
+          calendar: ['react-big-calendar'],
+          vendor: ['lodash'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 500,
+    cssCodeSplit: true,
+    sourcemap: false,
+  },
   optimizeDeps: {
-    include: ['react-router-dom'],
+    include: ['react-quill', 'react-big-calendar'],
   },
 })
