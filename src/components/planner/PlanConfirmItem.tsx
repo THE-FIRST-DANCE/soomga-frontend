@@ -8,6 +8,19 @@ import { useEffect, useState } from 'react'
 import { PlanConfirmList } from 'state/store/PlanList'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { CurrentPeriod } from 'state/store/PlanInfo'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    descriptionPlaceholder: '설명을 입력해주세요',
+  },
+  'en-US': {
+    descriptionPlaceholder: 'Please enter a description',
+  },
+  'ja-JP': {
+    descriptionPlaceholder: '説明を入力してください',
+  },
+}
 
 interface PlanConfirmItemProps {
   index: number
@@ -19,6 +32,9 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
   const [planConfirmList, setPlanConfirmList] = useRecoilState(PlanConfirmList)
   const currentPeriod = useRecoilValue(CurrentPeriod)
   const [descript, setDescript] = useState<string>(data.description || '')
+
+  const [language] = useLanguage()
+  const message = messages[language]
 
   // 카카오 지도 연결
   const onClick = async () => {
@@ -79,7 +95,7 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
       </TimeLine>
       <Info>
         <Name>{data.item.name}</Name>
-        <Category>{category?.label}</Category>
+        <Category>{category?.label[language]}</Category>
         <Time>{data.stayTime}</Time>
         {data.nextTime && (
           <TimeBox
@@ -94,7 +110,7 @@ const PlanConfirmItem = ({ index, data }: PlanConfirmItemProps) => {
       </Info>
 
       <Description
-        placeholder="설명을 입력해주세요"
+        placeholder={message.descriptionPlaceholder}
         value={descript}
         onChange={(e) => {
           setDescript(e.target.value)

@@ -10,12 +10,30 @@ import PlaceAddItem from './PlaceAddItem'
 import Spinner from 'components/shared/Spinner'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    searchPlaceholder: '장소를 검색하세요',
+    noResults: '검색 결과가 없습니다',
+  },
+  'en-US': {
+    searchPlaceholder: 'Search for a place',
+    noResults: 'No results found',
+  },
+  'ja-JP': {
+    searchPlaceholder: '場所を検索',
+    noResults: '検索結果がありません',
+  },
+}
 
 const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
   const [search, setSearch] = useState<string>('') // 검색어
   const [searchResult, setSearchResult] = useState<GooglePlace[]>([]) // 검색 결과
   const [executeSearch, setExecuteSearch] = useState<boolean>(false) // 검색 실행 여부
   const [center, setCenter] = useState({ lat: plan.lat, lng: plan.lng }) // 지도 중심 좌표
+  const [language] = useLanguage()
+  const message = messages[language]
 
   const { data, isFetching, hasNextPage, fetchNextPage } = useInfiniteQuery({
     queryKey: ['places', plan.province, search],
@@ -76,7 +94,7 @@ const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
           onChange={(e) => setSearch(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           fuc={handleSearch}
-          placeholder="장소를 검색하세요"
+          placeholder={message.searchPlaceholder}
         />
         <SearchIcon
           style={{
@@ -105,7 +123,7 @@ const PlaceAdd = ({ plan }: { plan: PlanInfo }) => {
               <PlaceAddItem key={index} region={plan.province} item={item} changeCenter={changeCenter} />
             ))
           ) : (
-            <div>검색 결과가 없습니다</div>
+            <div>{message.noResults}</div>
           )}
         </InfiniteScroll>
       </PlaceList>

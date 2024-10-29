@@ -3,7 +3,31 @@ import { CurrentPeriod } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import logo from 'assets/logo.svg'
 import { useNavigate } from 'react-router-dom'
+import useLanguage from 'hooks/useLanguage'
 
+const messages = {
+  'ko-KR': {
+    next: '다음',
+    prev: '이전',
+    confirm: '정말 나가시겠습니까?',
+    periodDay: '일차',
+    deleteButton: '삭제',
+  },
+  'en-US': {
+    next: 'Next',
+    prev: 'Previous',
+    confirm: 'Are you sure you want to leave?',
+    periodDay: 'day',
+    deleteButton: 'Delete',
+  },
+  'ja-JP': {
+    next: '次へ',
+    prev: '前へ',
+    confirm: '本当に終了しますか？',
+    periodDay: '日目',
+    deleteButton: '削除',
+  },
+}
 interface PlanLeftTabProps {
   onNext: () => void
   onPrev?: () => void
@@ -30,6 +54,8 @@ const PlanLeftTab = ({
   const [currentPeriod, setCurrentPeriod] = useRecoilState(CurrentPeriod)
   const memberId = 2
   const navigate = useNavigate()
+  const [language] = useLanguage()
+  const message = messages[language]
 
   return (
     <LeftTab>
@@ -52,7 +78,10 @@ const PlanLeftTab = ({
             className={currentPeriod === i + 1 ? 'active' : ''}
             key={i}
           >
-            <PeriodText>{i + 1}일차</PeriodText>
+            <PeriodText>
+              {i + 1}
+              {message.periodDay}
+            </PeriodText>
           </Period>
         ))}
       </PeriodBox>
@@ -65,7 +94,7 @@ const PlanLeftTab = ({
               onDel()
             }}
           >
-            삭제
+            {message.deleteButton}
           </DelPage>
         )}
         {onPrev && (

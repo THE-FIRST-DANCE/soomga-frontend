@@ -4,15 +4,33 @@ import TouristCard from 'components/recommendations/TouristCard'
 import Spinner from 'components/shared/Spinner'
 import { provinces } from 'data/region'
 import { motion } from 'framer-motion'
+import useLanguage from 'hooks/useLanguage'
 import { Tourist } from 'interfaces/tourist'
 import { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate, useParams } from 'react-router-dom'
 import { styled } from 'styled-components'
 
+const messages = {
+  'ko-KR': {
+    searchPlaceholder: '검색',
+    write: '글쓰기',
+  },
+  'en-US': {
+    searchPlaceholder: 'Search',
+    write: 'Write',
+  },
+  'ja-JP': {
+    searchPlaceholder: '検索',
+    write: '書く',
+  },
+}
+
 const RegionsList = () => {
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [touristList, setTouristList] = useState<Tourist[]>([])
+  const [language] = useLanguage()
+  const message = messages[language]
 
   let { region_Id } = useParams()
   const region = provinces.find((region) => region.id === Number(region_Id))
@@ -52,9 +70,9 @@ const RegionsList = () => {
 
   return (
     <Layout>
-      <RegionTitle>{region?.name}</RegionTitle>
+      <RegionTitle>{region.name[language]}</RegionTitle>
       <Header>
-        <Search type="text" placeholder="검색" />
+        <Search type="text" placeholder={message.searchPlaceholder} />
         <Views>
           <ViewChange initial={false} animate={viewChangeVariants} transition={{ duration: 0.3 }} />
           <IconBox
@@ -77,7 +95,7 @@ const RegionsList = () => {
             navigate(`/post/create`)
           }}
         >
-          글쓰기
+          {message.write}
         </WriteButton>
       </Header>
       <InfiniteScroll

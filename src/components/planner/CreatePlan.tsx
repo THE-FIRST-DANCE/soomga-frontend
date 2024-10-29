@@ -3,18 +3,36 @@ import Button from 'components/shared/Button'
 import { useState } from 'react'
 import styled from 'styled-components'
 import CreatePlanModal from './CreatePlanModal'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    title: '새로운 플래너',
+    create: '만들기',
+  },
+  'en-US': {
+    title: 'Create Plan',
+    create: 'Create',
+  },
+  'ja-JP': {
+    title: '新しいプラン',
+    create: '作成',
+  },
+}
 
 const CreatePlan = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [language] = useLanguage()
+  const message = messages[language]
 
   return (
     <Container>
       <PlanBox>
         <TravelSvg />
         <CreateBox>
-          <CreateBoxTitle>새로운 플래너</CreateBoxTitle>
+          <CreateBoxTitle>{message.title}</CreateBoxTitle>
           <Button
-            label="만들기"
+            label={message.create}
             $width="100%"
             $height="40px"
             $color="var(--color-primary)"

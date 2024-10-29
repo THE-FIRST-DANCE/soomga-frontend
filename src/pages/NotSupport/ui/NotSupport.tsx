@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import useLanguage from 'hooks/useLanguage'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
@@ -43,12 +44,30 @@ const CountdownMessage = styled.p`
   animation: ${fadeIn} 0.5s ease-in 0.4s both;
 `
 
-interface NotSupportProps {
-  message?: string
+const messages = {
+  'ko-KR': {
+    main: '현재 모드에서 제공하지 않는 기능입니다! ⚙️',
+    sub: '죄송합니다. 이 기능은 현재 지원되지 않습니다.',
+    countdown: '초 후 이전 페이지로 이동합니다...',
+  },
+  'en-US': {
+    main: 'This feature is not available in the current mode! ⚙️',
+    sub: 'Sorry, this feature is currently not supported.',
+    countdown: 'Redirecting to the previous page in seconds...',
+  },
+  'ja-JP': {
+    main: '現在のモードでは利用できない機能です！ ⚙️',
+    sub: '申し訳ありませんが、この機能は現在サポートされていません。',
+    countdown: '秒後に前のページにリダイレクトします...',
+  },
 }
-const NotSupport = ({ message }: NotSupportProps) => {
+
+const NotSupport = () => {
   const navigate = useNavigate()
   const [countdown, setCountdown] = useState(3)
+  const [language] = useLanguage()
+
+  const message = messages[language]
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -67,9 +86,11 @@ const NotSupport = ({ message }: NotSupportProps) => {
 
   return (
     <Container>
-      <Message>현재 모드에서 {message}은/는 제공하지 않는 기능입니다! ⚙️</Message>
-      <SubMessage>죄송합니다. 이 기능은 현재 지원되지 않습니다.</SubMessage>
-      <CountdownMessage aria-live="polite">{countdown}초 후 이전 페이지로 이동합니다...</CountdownMessage>
+      <Message>{message.main}</Message>
+      <SubMessage>{message.sub}</SubMessage>
+      <CountdownMessage aria-live="polite">
+        {countdown} {message.countdown}
+      </CountdownMessage>
     </Container>
   )
 }

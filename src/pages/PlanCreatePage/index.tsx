@@ -3,6 +3,7 @@ import Places from 'components/planner/place/PlaceTab'
 import PlanLeftTab from 'components/planner/PlanLeftTab'
 import PlanOrder from 'components/planner/PlanOrder'
 import SelectTransportation from 'components/planner/SelectTransportation'
+import useLanguage from 'hooks/useLanguage'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
@@ -10,11 +11,31 @@ import { CurrentPeriod, PlanInfo } from 'state/store/PlanInfo'
 import { PeriodPlanRecoil } from 'state/store/PlanList'
 import styled from 'styled-components'
 
+const messages = {
+  'ko-KR': {
+    next: '다음',
+    prev: '이전',
+    confirm: '정말 나가시겠습니까?',
+  },
+  'en-US': {
+    next: 'Next',
+    prev: 'Previous',
+    confirm: 'Are you sure you want to leave?',
+  },
+  'ja-JP': {
+    next: '次へ',
+    prev: '前へ',
+    confirm: '本当に終了しますか？',
+  },
+}
+
 const PlanCreatePage = () => {
   const plan = useRecoilValue(PlanInfo)
   const planPeriod = useRecoilValue(PeriodPlanRecoil)
   const currentPeriod = useRecoilValue(CurrentPeriod)
   const [isOpen, setIsOpen] = useState(false)
+  const [language] = useLanguage()
+  const message = messages[language]
 
   const planList = planPeriod[currentPeriod] || []
 
@@ -30,10 +51,9 @@ const PlanCreatePage = () => {
   useEffect(() => {
     // 페이지를 벗어나기 전에 확인
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      const message = '변경사항이 저장되지 않았습니다. 페이지를 벗어나시겠습니까?'
       event.preventDefault()
-      event.returnValue = message
-      return message
+      event.returnValue = message.confirm
+      return message.confirm
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
@@ -60,7 +80,13 @@ const PlanCreatePage = () => {
   return (
     <Container>
       <LeftSection>
-        <PlanLeftTab period={plan.period} onNext={onNext} onPrev={onPrev} prevText="이전" nextText="다음" />
+        <PlanLeftTab
+          period={plan.period}
+          onNext={onNext}
+          onPrev={onPrev}
+          prevText={message.prev}
+          nextText={message.next}
+        />
         <Places plan={plan} />
         <PlanOrder />
       </LeftSection>

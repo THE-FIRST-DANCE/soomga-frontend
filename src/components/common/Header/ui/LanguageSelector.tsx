@@ -23,7 +23,7 @@ interface LanguageSelectorProps {
 }
 const LanguageSelector = ({ isLangOpen }: LanguageSelectorProps) => {
   const [language, setLanguage] = useLanguage()
-  const { short, main } = messages[language]
+  const message = messages[language]
 
   const handleLangClick = (e: React.MouseEvent<HTMLLIElement>) => {
     const selectedLang = e.currentTarget.dataset.lang
@@ -72,7 +72,7 @@ const LanguageDropdown_ul = styled.ul`
   position: relative;
   padding: 10px;
   box-sizing: border-box;
-  width: 75px;
+  width: 50px;
   font-weight: 700;
   cursor: pointer;
   li {

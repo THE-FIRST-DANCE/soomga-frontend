@@ -5,11 +5,27 @@ import { motion } from 'framer-motion'
 
 import PlaceSelect from './PlaceSelect'
 import PlaceAdd from './PlaceAdd'
+import useLanguage from 'hooks/useLanguage'
 
-const menu = ['장소 선택', '장소 추가']
+const messages = {
+  'ko-KR': {
+    placeSelect: '장소 선택',
+    placeAdd: '장소 추가',
+  },
+  'en-US': {
+    placeSelect: 'Place Select',
+    placeAdd: 'Place Add',
+  },
+  'ja-JP': {
+    placeSelect: '場所選択',
+    placeAdd: '場所追加',
+  },
+}
 
 const Places = ({ plan }: { plan: PlanInfo }) => {
   const [currentTab, setCurrentTab] = useState<number>(0)
+  const [language] = useLanguage()
+  const message = messages[language]
 
   const underlineStyle = {
     left: `${currentTab * 50}%`,
@@ -21,15 +37,13 @@ const Places = ({ plan }: { plan: PlanInfo }) => {
 
       {/* 네비게이션 탭 */}
       <Navibar>
-        {menu.map((item, index) => (
-          <NavibarItem
-            key={index}
-            onClick={() => setCurrentTab(index)}
-            className={currentTab === index ? 'active' : ''}
-          >
-            {item}
-          </NavibarItem>
-        ))}
+        <NavibarItem onClick={() => setCurrentTab(0)} className={currentTab === 0 ? 'active' : ''}>
+          {message.placeSelect}
+        </NavibarItem>
+        <NavibarItem onClick={() => setCurrentTab(1)} className={currentTab === 1 ? 'active' : ''}>
+          {message.placeAdd}
+        </NavibarItem>
+
         <Underline
           className="underline"
           layoutId="underline"

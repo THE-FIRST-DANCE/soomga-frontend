@@ -44,8 +44,8 @@ const messages = {
   },
   'ja-JP': {
     guide: 'ガイド',
-    schedule: '旅行日程',
-    recommendations: '旅行地推薦',
+    schedule: '旅行スケジュール',
+    recommendations: 'おすすめスポット',
     plan: 'プラン',
     userButton: {
       login: 'ログイン',
@@ -53,7 +53,7 @@ const messages = {
       mypage: 'マイページ',
       logout: 'ログアウト',
     },
-    logout: '正常にログアウトされました',
+    logout: 'ログアウトしました',
   },
 }
 
@@ -65,6 +65,7 @@ interface IconWrapperProps {
 const Header = () => {
   const navigate = useNavigate()
   const [language] = useLanguage()
+  const message = messages[language]
   const [recoilToken, setRecoilToken] = useRecoilState(AccessTokenAtom)
 
   // 언어 변경 : 커스텀훅_useClickOutsideToggle
@@ -85,25 +86,28 @@ const Header = () => {
     <HeaderLayout_div>
       {/* 1. 좌측 : 로고 */}
       <HeaderLeftWrapper_div>
-        <img src={logo} alt="HeaderLogo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
+        <img
+          src={logo}
+          alt="HeaderLogo"
+          onClick={() => navigate('/')}
+          style={{ cursor: 'pointer', userSelect: 'none' }}
+        />
       </HeaderLeftWrapper_div>
 
       {/* 2. 중앙 : 버튼 Container*/}
       <HeaderMiddleContainer_div>
         {/* 2.1 버튼 (가이드 | 여행일정 | 여행지 추천 | 플랜 | 채팅) */}
         {/* FIXME: (전시회) 가이드를 보여주지 않음. */}
-        <HeaderMiddleBtn onClick={() => navigate('/guides')}>{messages[language].guide}</HeaderMiddleBtn>
-        <HeaderMiddleBtn onClick={() => navigate('/schedule')}>{messages[language].schedule}</HeaderMiddleBtn>
-        <HeaderMiddleBtn onClick={() => navigate('/recommendations')}>
-          {messages[language].recommendations}
-        </HeaderMiddleBtn>
-        <HeaderMiddleBtn onClick={() => navigate('/planner')}>{messages[language].plan}</HeaderMiddleBtn>
+        <HeaderMiddleBtn onClick={() => navigate('/guides')}>{message.guide}</HeaderMiddleBtn>
+        <HeaderMiddleBtn onClick={() => navigate('/schedule')}>{message.schedule}</HeaderMiddleBtn>
+        <HeaderMiddleBtn onClick={() => navigate('/recommendations')}>{message.recommendations}</HeaderMiddleBtn>
+        <HeaderMiddleBtn onClick={() => navigate('/planner')}>{message.plan}</HeaderMiddleBtn>
       </HeaderMiddleContainer_div>
 
       {/* 3. 우측 : 언어 | 버거 + 사용자 아이콘 */}
       <HeaderRightContainer_div>
         {/* 3.1 우측 : 언어 선택 버튼 */}
-        <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}>
+        <motion.div whileHover={{ scale: 1.2 }}>
           <HeaderIconContainer_div
             flex={0.3}
             ref={refForLangToggle}
@@ -166,14 +170,14 @@ const Header = () => {
                       navigate('/user/login')
                     }}
                   >
-                    {messages[language].userButton.login}
+                    {message.userButton.login}
                   </UseTab_btn>
                   <UseTab_btn
                     onClick={() => {
                       navigate('/user/signup')
                     }}
                   >
-                    {messages[language].userButton.signup}
+                    {message.userButton.signup}
                   </UseTab_btn>
                 </>
               ) : (
@@ -183,7 +187,7 @@ const Header = () => {
                       navigate('/mypage/info')
                     }}
                   >
-                    {messages[language].userButton.mypage}
+                    {message.userButton.mypage}
                   </UseTab_btn>
                   <UseTab_btn
                     onClick={() => {
@@ -192,11 +196,11 @@ const Header = () => {
                       setRecoilToken((prev) => ({ ...prev, token: false }))
 
                       localStorage.setItem('userInfo', JSON.stringify({}))
-                      toast.success(messages[language].logout)
+                      toast.success(message.logout)
                       navigate('/')
                     }}
                   >
-                    로그아웃
+                    {message.userButton.logout}
                   </UseTab_btn>
                 </>
               )}

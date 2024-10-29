@@ -2,12 +2,43 @@ import { useMutation } from '@tanstack/react-query'
 import { getPlaceRoute } from 'api/PlanAPI'
 import FullLoading from 'components/shared/FullLoading'
 import Modal from 'components/shared/Modal'
+import useLanguage from 'hooks/useLanguage'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { PlanInfo } from 'state/store/PlanInfo'
 import { PeriodPlanRecoil, PlanConfirmList } from 'state/store/PlanList'
 import styled, { CSSProp } from 'styled-components'
+
+const messages = {
+  'ko-KR': {
+    close: '닫기',
+    create: '일정생성',
+    title: '이동수단 선택',
+    transit: '대중교통',
+    transitMessage: '대중교통을 이용합니다',
+    driving: '승용차',
+    drivingMessage: '승용차를 이용합니다',
+  },
+  'en-US': {
+    close: 'Close',
+    create: 'Create',
+    title: 'Select Transportation',
+    transit: 'Public Transit',
+    transitMessage: 'Use public transportation',
+    driving: 'Car',
+    drivingMessage: 'Use personal vehicle',
+  },
+  'ja-JP': {
+    close: '閉じる',
+    create: '作成',
+    title: '移動手段選択',
+    transit: '交通機関',
+    transitMessage: '交通機関を利用します',
+    driving: '自動車',
+    drivingMessage: '自動車を利用します',
+  },
+}
 
 interface SelectTransportationProps {
   isOpen: boolean
@@ -23,6 +54,9 @@ const SelectTransportation = ({ isOpen, onRequestClose }: SelectTransportationPr
   const planInfo = useRecoilValue(PlanInfo)
 
   const navigate = useNavigate()
+
+  const [language] = useLanguage()
+  const message = messages[language]
 
   const { mutate } = useMutation({
     mutationFn: getPlaceRoute,
@@ -59,29 +93,29 @@ const SelectTransportation = ({ isOpen, onRequestClose }: SelectTransportationPr
         }}
       >
         <Container>
-          <Title>이동수단 선택</Title>
-          <Explan>{transportation === 'transit' ? '대중교통을 이용합니다.' : '승용차를 이용합니다.'}</Explan>
+          <Title>{message.title}</Title>
+          <Explan>{transportation === 'transit' ? message.transitMessage : message.drivingMessage}</Explan>
           <Select>
             <SelectTransportationItem
               className={transportation === 'transit' ? 'active' : ''}
               onClick={() => setTransportation('transit')}
             >
               <SubwayIcon width="2rem" height="2rem" />
-              <div>대중교통</div>
+              <div>{message.transit}</div>
             </SelectTransportationItem>
             <SelectTransportationItem
               className={transportation === 'driving' ? 'active' : ''}
               onClick={() => setTransportation('driving')}
             >
               <CarIcon width="2rem" height="2rem" />
-              <div>승용차</div>
+              <div>{message.driving}</div>
             </SelectTransportationItem>
           </Select>
           <Footer>
             <FooterText onClick={() => onRequestClose()} style={{ color: 'var(--bs-gray-400)' }}>
-              닫기
+              {message.close}
             </FooterText>
-            <FooterText onClick={() => submitHandler()}>일정생성</FooterText>
+            <FooterText onClick={() => submitHandler()}>{message.create}</FooterText>
           </Footer>
         </Container>
       </Modal>

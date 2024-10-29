@@ -4,36 +4,49 @@ import Button from './Button'
 import logo from '../../assets/logo_noLetter.svg'
 import { useNavigate } from 'react-router-dom'
 import ServicePreview from './ServicePreview'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    title: '특별한 여행 경험',
+    subtitle: '당신만의 여행 플랜을 만들고, 현지 가이드들과 함께 특별한 경험을 만들어 보세요!',
+    createPlanBtn: '🚗 플랜 만들기',
+  },
+  'en-US': {
+    title: 'Extraordinary Travel Experiences',
+    subtitle: 'Create your own travel plans and create unique experiences with local guides!',
+    createPlanBtn: '🚗 Create a plan',
+  },
+  'ja-JP': {
+    title: '特別な旅行の経験',
+    subtitle: 'あなたならではの旅行プランを作り、ローカルガイドさんたちと一緒に特別な思い出を作ってみましょう！',
+    createPlanBtn: '🚗 プラン作成',
+  },
+}
 
 const SimpleIntroduction = () => {
   const navigate = useNavigate()
+  const [language] = useLanguage()
+  const message = messages[language]
+
   return (
     <Container>
       <ContentSection>
         <div>
           <img src={logo} alt="logo" style={{ width: '64px', height: '64px', marginBottom: '1.25rem' }} />
-          <Title>특별한 여행 경험 | 숨은 가이드</Title>
+          <Title>{message.title}</Title>
         </div>
-        <Subtitle>당신만의 여행 플랜을 만들고, 현지 가이드들과 함께 특별한 경험을 만들어 보세요!</Subtitle>
+        <Subtitle>{message.subtitle}</Subtitle>
 
         <div style={{ marginBottom: '3.2rem' }}></div>
 
         <ButtonGroup>
           <Button size="large" onClick={() => navigate('/planner')}>
-            🚗 플랜 만들기
+            {message.createPlanBtn}
           </Button>
         </ButtonGroup>
       </ContentSection>
 
-      {/* FIXME: ImageSection 컴포넌트는 사용하지 않고, 시연하는 영상을 자동실행되는 컴포넌트를 사용할 예정 */}
-      {/* <ImageSection>
-        <Image src="/placeholder.svg" alt="Soomga 서비스 시연" />
-        <ImageOverlay>
-          <Button variant="secondary" size="large">
-            서비스 둘러보기
-          </Button>
-        </ImageOverlay>
-      </ImageSection> */}
       <ServicePreview />
     </Container>
   )

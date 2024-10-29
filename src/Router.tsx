@@ -25,6 +25,8 @@ import PlanDetailPage from 'pages/PlanDetailPage'
 import { getUserInfo } from 'api/LoginSignUp'
 import { GLOBAL_CONFIG } from 'global.config'
 import NotSupport from 'pages/NotSupport/ui/NotSupport'
+import useLanguage from 'hooks/useLanguage'
+import useMetadata from 'hooks/useMetadata'
 
 function LayoutWithRouter() {
   return (
@@ -41,6 +43,8 @@ const Router = () => {
 
   const [userInfo, setuserInfo] = useState()
   console.log('userInfo: ', userInfo)
+
+  useMetadata()
 
   useEffect(() => {
     if (!userInfo) {
@@ -88,7 +92,7 @@ const Router = () => {
 
           {/* 3. 가이드 */}
           {GLOBAL_CONFIG.VITE_APP_SERVE_MODE === 'exhibition' ? (
-            <Route path="/guides" element={<NotSupport message="가이드" />} />
+            <Route path="/guides" element={<NotSupport />} />
           ) : (
             <>
               <Route path="/guides" element={<GuidePage />} />
@@ -125,9 +129,9 @@ const Router = () => {
 
         {GLOBAL_CONFIG.VITE_APP_SERVE_MODE === 'exhibition' ? (
           <>
-            <Route path="/chatting" element={<NotSupport message="채팅" />} />
-            <Route path="/mypage/info" element={<NotSupport message="마이 페이지" />} />
-            <Route path="/mypage/RequestGuide" element={<NotSupport message="마이 페이지" />} />
+            <Route path="/chatting" element={<NotSupport />} />
+            <Route path="/mypage/info" element={<NotSupport />} />
+            <Route path="/mypage/RequestGuide" element={<NotSupport />} />
           </>
         ) : (
           recoilToken.token && (
