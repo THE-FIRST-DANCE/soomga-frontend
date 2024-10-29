@@ -1,7 +1,26 @@
 import { useMemo } from 'react'
 import { PlanListItem } from 'state/store/PlanList'
+import useLanguage from './useLanguage'
+
+const messages = {
+  'ko-KR': {
+    hour: '시간',
+    minute: '분',
+  },
+  'en-US': {
+    hour: 'hr',
+    minute: 'min',
+  },
+  'ja-JP': {
+    hour: '時間',
+    minute: '分',
+  },
+}
 
 const useCalculateTotalTime = (list: PlanListItem[]) => {
+  const [language] = useLanguage()
+  const message = messages[language]
+
   return useMemo(() => {
     const totalMinutes = list.reduce((acc, item) => {
       const [hours, minutes] = item.stayTime
@@ -24,7 +43,7 @@ const useCalculateTotalTime = (list: PlanListItem[]) => {
     const hours = Math.floor(totalMinutes / 60)
     const minutes = totalMinutes % 60
 
-    return `${hours}시간 ${minutes}분` // 문자열 형태로 반환
+    return `${hours}${message.hour} ${minutes}${message.minute}` // 문자열 형태로 반환
   }, [list])
 }
 

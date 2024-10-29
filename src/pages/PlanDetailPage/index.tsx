@@ -9,6 +9,8 @@ import styled from 'styled-components'
 import { PlanDetailCommentsTab, PlanDetailPlanTab } from './tab'
 import { motion } from 'framer-motion'
 
+import defaultAvatar from 'assets/default_avatar.webp'
+
 const PlanDetailPage = () => {
   const [plan, setPlan] = useState<Plans>()
   const [currentTab, setCurrentTab] = useState<number>(0)
@@ -59,7 +61,7 @@ const PlanDetailPage = () => {
           <Period>{plan?.period}일</Period>
         </div>
         <User>
-          <Avatar src={plan?.author.avatar} />
+          <Avatar src={plan?.author.avatar || defaultAvatar} />
           <Username>{plan?.author.nickname}</Username>
         </User>
         <SubInfo>

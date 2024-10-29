@@ -27,6 +27,70 @@ import { getCookie } from 'utils/cookie'
 import { useRecoilState } from 'recoil'
 import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
 import { onGoogleLogin, onLineLogin } from 'utils/oauth.connector'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    title: '로그인',
+    email: '이메일',
+    password: '비밀번호',
+    login: '로그인하기',
+    signup: '회원가입',
+    forgotPassword: '비밀번호 찾기',
+    or: '또는',
+    kakaoLogin: '카카오로 로그인',
+    naverLogin: '네이버로 로그인',
+    googleLogin: '구글로 로그인',
+    emailPlaceholder: '이메일을 입력해주세요',
+    passwordPlaceholder: '비밀번호를 입력해주세요',
+    nicknamePlaceholder: '닉네임을 입력해주세요',
+    loginError: '로그인에 실패했습니다',
+    emailRequired: '이메일을 입력해주세요',
+    passwordRequired: '비밀번호를 입력해주세요',
+    invalidEmail: '올바른 이메일 형식이 아닙니다',
+    greeting: '안녕, 함께 떠나자! ✈️',
+  },
+  'en-US': {
+    title: 'Login',
+    email: 'Email',
+    password: 'Password',
+    login: 'Login',
+    signup: 'Sign Up',
+    forgotPassword: 'Forgot Password',
+    or: 'OR',
+    kakaoLogin: 'Login with Kakao',
+    naverLogin: 'Login with Naver',
+    googleLogin: 'Login with Google',
+    emailPlaceholder: 'Enter your email',
+    passwordPlaceholder: 'Enter your password',
+    nicknamePlaceholder: 'Enter your nickname',
+    loginError: 'Login failed',
+    emailRequired: 'Email is required',
+    passwordRequired: 'Password is required',
+    invalidEmail: 'Invalid email format',
+    greeting: "Let's travel together! ✈️",
+  },
+  'ja-JP': {
+    title: 'ログイン',
+    email: 'メールアドレス',
+    password: 'パスワード',
+    login: 'ログイン',
+    signup: '会員登録',
+    forgotPassword: 'パスワードを忘れた方',
+    or: 'または',
+    kakaoLogin: 'カカオでログイン',
+    naverLogin: 'ネイバーでログイン',
+    googleLogin: 'Googleでログイン',
+    emailPlaceholder: 'メールアドレスを入力してください',
+    passwordPlaceholder: 'パスワードを入力してください',
+    nicknamePlaceholder: 'ニックネームを入力してください',
+    loginError: 'ログインに失敗しました',
+    emailRequired: 'メールアドレスを入力してください',
+    passwordRequired: 'パスワードを入力してください',
+    invalidEmail: 'メールアドレスの形式が正しくありません',
+    greeting: '一緒に旅に出かけよう！ ✈️',
+  },
+}
 
 interface LoginForm {
   email: string
@@ -44,6 +108,11 @@ const LoginSignupPage = () => {
   const [checkPassword, setCheckPassword] = useState<string>('')
   const [errorMsg, setErrorMsg] = useState<string>('')
   const navigate = useNavigate()
+
+  const [language] = useLanguage()
+  const message = messages[language]
+
+  // 현재 선택된 언어의 메시지
 
   // 로그인 유효성 검사 스키마 :
   const loginForm = useForm<LoginForm>({
@@ -64,7 +133,6 @@ const LoginSignupPage = () => {
     try {
       const userInfos = await getUserInfo()
 
-      // ⭐️⭐️현재 유저 정보 넣기
       localStorage.setItem(
         'userInfo',
         JSON.stringify({
@@ -74,47 +142,38 @@ const LoginSignupPage = () => {
           avatar: userInfos.avatar,
         }),
       )
-      console.log('⭐️로컬 유저 정보 :  ', JSON.parse(localStorage.getItem('userInfo') ?? ''))
     } catch (error) {
       console.error('유저 정보를 가져오는 중 에러가 발생했습니다.', error)
     }
   }
 
-  // FIXME:Post 요청할 때 보내기
   const onSubmitForLogin = async (data: LoginForm) => {
-    console.log(data)
-
     try {
       const loginResult = await getLogin(data.email, data.password)
 
       const token = await getCookie('accessToken')
       setRecoilToken({ ...recoilToken, token: !!token })
 
-      fetchUserInfo() // 유저 정보 가져오기
+      fetchUserInfo()
 
       navigate('/')
-      toast.success('로그인 되었습니다!')
+      toast.success(message.login)
 
       return loginResult
     } catch (error: any) {
       console.error('Error during login:', error.response.data.message)
       setErrorMsg(error.response.data.message)
-      toast.error('확인되지 않은 계정이에요!')
+      toast.error(message.loginError)
     }
-    // console.log(getLogin(data.email, data.password).then((data) => console.log(data)))
   }
 
   const onSubmitForSignup = async (data: SignuppForm) => {
-    console.log(data)
-
     try {
       const result = await getSignup(data.email, data.nickName, data.password, data.password)
-      console.log(result)
       window.location.replace('/')
       toast.success('회원가입에 성공했습니다!')
     } catch (error: any) {
       console.error('Error during login:', error)
-      // setErrorMsg(error.response.data.message)
     }
   }
 
@@ -124,40 +183,31 @@ const LoginSignupPage = () => {
     /* 로그인 페이지 */
     <UserForm>
       <Inner>
-        {/* 🟡 1. Form  */}
         <FormWrapper>
           <form onSubmit={loginForm.handleSubmit(onSubmitForLogin)}>
-            {/* 1.1 Input태그  : EmailInput + PasswordInput  */}
             <InputWrapper>
               <Inputwrap>
-                <EmailInput
-                  {...loginForm.register('email')} // ()안에 넣는 문자가 handleSubmit 함수안의 함수의 인자에서 출력해 사용할 수 있다.
-                  type="email"
-                  placeholder="Email을 입력하세요..."
-                />
+                <EmailInput {...loginForm.register('email')} type="email" placeholder={message.emailPlaceholder} />
                 <p>{loginForm.formState.errors.email?.message as React.ReactNode}</p>
               </Inputwrap>
               <Inputwrap>
                 <PasswordInput
                   {...loginForm.register('password')}
                   type="password"
-                  placeholder="Password를 입력하세요..."
+                  placeholder={message.passwordPlaceholder}
                 />
                 <p>{loginForm.formState.errors.password?.message as React.ReactNode}</p>
                 {errorMsg && <p>{errorMsg}</p>}
               </Inputwrap>
             </InputWrapper>
 
-            {/* 1.2 로그인 버튼 */}
-            <LoginBtn>Log in</LoginBtn>
+            <LoginBtn>{message.login}</LoginBtn>
           </form>
         </FormWrapper>
 
-        {/* 🟡 3. OAuth */}
         <OAuthContainer>
-          {/* 3.1 OAuth 래퍼 : LetterOr + GoogleIcon + LineIcon */}
           <OAuthWrapper>
-            <LetterOr>Or</LetterOr>
+            <LetterOr>{message.or}</LetterOr>
             <GoogleIcon
               width="35"
               height="35"
@@ -185,21 +235,16 @@ const LoginSignupPage = () => {
       <Inner>
         <FormWrapper>
           <form onSubmit={signupForm.handleSubmit(onSubmitForSignup)}>
-            {/* 1.1 Input태그  : EmailInput + PasswordInput  */}
             <InputWrapper>
               <Inputwrap>
-                <EmailInput
-                  {...signupForm.register('email')} // ()안에 넣는 문자가 handleSubmit 함수안의 함수의 인자에서 출력해 사용할 수 있다.
-                  type="email"
-                  placeholder="Email을 입력하세요..."
-                />
+                <EmailInput {...signupForm.register('email')} type="email" placeholder={message.emailPlaceholder} />
                 <p>{signupForm.formState.errors.email?.message as React.ReactNode}</p>
               </Inputwrap>
               <Inputwrap>
                 <PasswordInput
                   {...signupForm.register('nickName')}
                   type="text"
-                  placeholder="Nickname를 입력하세요..."
+                  placeholder={message.nicknamePlaceholder}
                 />
                 <p>{signupForm.formState.errors.nickName?.message as React.ReactNode}</p>
               </Inputwrap>
@@ -210,7 +255,7 @@ const LoginSignupPage = () => {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setPassword(e.target.value)
                   }}
-                  placeholder="Password를 입력하세요..."
+                  placeholder={message.passwordPlaceholder}
                 />
                 <p>{signupForm.formState.errors.password?.message as React.ReactNode}</p>
               </Inputwrap>
@@ -218,22 +263,24 @@ const LoginSignupPage = () => {
                 <PasswordInput
                   {...signupForm.register('repassword')}
                   type="password"
-                  placeholder="다시 Password를 입력하세요..."
+                  placeholder={message.passwordPlaceholder}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setCheckPassword(e.target.value)
                   }}
                 />
                 <p>{signupForm.formState.errors.repassword?.message as React.ReactNode}</p>
 
-                {/* 비밀번호가 일치하지 않을 시  */}
                 {password !== checkPassword && (
                   <p style={{ color: 'var(--color-original)' }}>* Password가 일치하지 않습니다! </p>
                 )}
               </Inputwrap>
             </InputWrapper>
 
-            {/* 1.2 로그인 버튼 */}
-            {password !== checkPassword ? <NoLoginBtn>Sign up</NoLoginBtn> : <LoginBtn>Sign up</LoginBtn>}
+            {password !== checkPassword ? (
+              <NoLoginBtn>{message.signup}</NoLoginBtn>
+            ) : (
+              <LoginBtn>{message.signup}</LoginBtn>
+            )}
           </form>
         </FormWrapper>
       </Inner>
@@ -249,5 +296,4 @@ const Inner = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: red; */
 `

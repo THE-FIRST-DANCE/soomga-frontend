@@ -20,8 +20,7 @@ export const useChat = (roomId: string | undefined) => {
 
   //! ✅ 소켓 이벤트 ✅
   useEffect(() => {
-    console.log('roomId', roomId)
-    console.log('🌈소켓 연결 상태: ', isConnected)
+    console.log('is socket connected?:', isConnected)
     // 소켓이 서버와 연결되었을 때 발생하는 이벤트
     socket.on('connect', onConnect)
     // 소켓 연결이 끊겼을 때 발생하는 이벤트
@@ -39,7 +38,6 @@ export const useChat = (roomId: string | undefined) => {
 
   //! ✅ 방번호가 변경되면 실행 ✅
   useEffect(() => {
-    console.log('🟡useEffect_방번호:', roomId)
     if (!roomId) return // 방 번호 없으면 실행 취소
     socket.emit('joinRoom', { roomId }) // 입장한 방 번호 서버에 전달
 
@@ -60,16 +58,12 @@ export const useChat = (roomId: string | undefined) => {
 
   //! 메세지 보내기
   const sendMessage = (content: Content, accessToken: string) => {
-    console.log('✈️✈️✈️메세지 보내기가 활성화됨')
-
     // 서버로 보낼 메세지 전송:     "방 ID" "사용자의 접근 토큰", "메시지 내용"  서버에 전달
     socket.emit('newMessage', { roomId, accessToken, content })
   }
 
   //! 채팅방 메세지 가져오기
   const fetchMessages = async () => {
-    console.log('🌈 현재 커서 :', cursor)
-
     if (!cursor || !roomId) return
     try {
       // 채팅방 메세지 가져오기 :  사용자가 추가 메시지를 로드하려 할 때 사용 ,

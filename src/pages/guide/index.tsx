@@ -11,6 +11,70 @@ import GuideCard from '../../components/guide/list/rightSection/GuideCard'
 import { useRecoilState } from 'recoil'
 import { selectedDatasState } from 'state/store/SelecteddatasAtom'
 import GuideRecommendations from 'components/guide/recommenadation/GuideRecommendations'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    age: '나이',
+    temperature: '온도',
+    guideCount: '가이드 횟수',
+    all: '전체',
+    male: '남성',
+    female: '여성',
+    region: '지역',
+    language: '언어',
+    credentials: '자격증',
+    rating: '평점',
+    search: '검색',
+    input: '입력',
+    select: '선택',
+    apply: '적용',
+    selectRegion: '지역 선택',
+    selectLanguage: '언어 선택',
+    selectCredentials: '자격증 선택',
+    gender: '성별',
+  },
+  'en-US': {
+    age: 'Age',
+    temperature: 'Temperature',
+    guideCount: 'Guide Count',
+    all: 'All',
+    male: 'Male',
+    female: 'Female',
+    region: 'Region',
+    language: 'Language',
+    credentials: 'Credentials',
+    rating: 'Rating',
+    search: 'Search',
+    input: 'Input',
+    select: 'Select',
+    apply: 'Apply',
+    selectRegion: 'Select Region',
+    selectLanguage: 'Select Language',
+    selectCredentials: 'Select Credentials',
+    gender: 'Gender',
+  },
+  'ja-JP': {
+    age: '年齢',
+    temperature: '温度',
+    guideCount: 'ガイド回数',
+    all: '全て',
+    male: '男性',
+    female: '女性',
+    region: '地域',
+    language: '言語',
+    credentials: '資格',
+    rating: '評価',
+    search: '検索',
+    input: '入力',
+    select: '選択',
+    apply: '適用',
+    selectRegion: '地域選択',
+    selectLanguage: '言語選択',
+    selectCredentials: '資格選択',
+    gender: '性別',
+  },
+}
 
 const GuidePage = () => {
   const {
@@ -49,6 +113,9 @@ const GuidePage = () => {
   // 리코일에 저장된 선택된 데이터들
   const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
 
+  const [language] = useLanguage()
+  const message = messages[language]
+
   /* 입력받은 데이터들 */
   let selectedDatasObj = {
     // isClick: !selectedDatas.isClick,
@@ -62,7 +129,6 @@ const GuidePage = () => {
     credentials: selectedCredentials,
     rating: isRatingChecked,
   }
-  console.log('🟢 입력받은 데이터들: ', selectedDatasObj)
 
   return (
     <>
@@ -73,19 +139,18 @@ const GuidePage = () => {
           {/* 🟠 1. Search (text)  🟠 */}
           <SearchTagContainer>
             <MagnifieirIcon $width="40px" $height="40px" $fill="red" />
-            <span className="searchLetter">Search</span>
+            <span className="searchLetter">{message.search}</span>
             <GuideRecommendations />
           </SearchTagContainer>
           {/* 🟠 2. 범위 선택 (range) : 나이 | 온도 | 가이드 횟수  🟠  */}
           <Layout>
             {/* 1. Age */}
             <RangeComponent
-              title="나이"
+              title={message.age}
               rangeValues={ageRange}
               value={age}
               name="age"
               max="70"
-              // min="10"
               min="0"
               step="10"
               onChange={onChangeRange}
@@ -93,7 +158,7 @@ const GuidePage = () => {
 
             {/* 2. Temperature */}
             <RangeComponent
-              title="온도"
+              title={message.temperature}
               rangeValues={temperatureRange}
               value={temperature}
               name="temperature"
@@ -105,7 +170,7 @@ const GuidePage = () => {
 
             {/* 3. Guide Count */}
             <RangeComponent
-              title="가이드 횟수"
+              title={message.guideCount}
               rangeValues={guideCountRange}
               value={guideCount}
               name="guideCount"
@@ -118,7 +183,7 @@ const GuidePage = () => {
             {/* 🟠  3. 성별 선택 (checkBox) : 전부 | 남자 | 여자 🟠  */}
             <RadioButtonsContainer>
               <Container>
-                <LangeTitle>성별</LangeTitle>
+                <LangeTitle>{message.gender}</LangeTitle>
                 <GenderWrapper>
                   <CheckboxComponent
                     id="all"
@@ -126,7 +191,7 @@ const GuidePage = () => {
                     checked={isAllChecked}
                     onChange={onChangeCheckBox}
                     onClick={onClickGender}
-                    label="전부"
+                    label={message.all}
                   />
 
                   {/* 3.2 남자 */}
@@ -136,7 +201,7 @@ const GuidePage = () => {
                     checked={isManChecked}
                     onChange={onChangeCheckBox}
                     onClick={onClickGender}
-                    label="남자"
+                    label={message.male}
                   />
 
                   {/* 3.3 여자 */}
@@ -146,7 +211,7 @@ const GuidePage = () => {
                     checked={isWomanChecked}
                     onChange={onChangeCheckBox}
                     onClick={onClickGender}
-                    label="여자"
+                    label={message.female}
                   />
                 </GenderWrapper>
               </Container>
@@ -156,9 +221,9 @@ const GuidePage = () => {
             <RegionsContainer>
               {/* 하얀색으로 감싸는 부분 */}
               <Container>
-                <LangeTitle>지역</LangeTitle>
+                <LangeTitle>{message.region}</LangeTitle>
                 <SelectContainer onClick={() => setIsRegionClick(!isRegionClick)}>
-                  <PlaceholderOfSelect>지역을 선택하세요</PlaceholderOfSelect>
+                  <PlaceholderOfSelect>{message.selectRegion}</PlaceholderOfSelect>
                   {isRegionClick ? (
                     <TriangleIcon onClick={() => setIsRegionClick(!isRegionClick)}>▼</TriangleIcon>
                   ) : (
@@ -197,9 +262,9 @@ const GuidePage = () => {
             <LanguageContainer>
               {/* 하얀색으로 감싸는 부분 */}
               <Container>
-                <LangeTitle>언어</LangeTitle>
+                <LangeTitle>{message.language}</LangeTitle>
                 <SelectContainer onClick={() => setIsLanguageClick(!isLanguageClick)}>
-                  <PlaceholderOfSelect>언어을 선택하세요</PlaceholderOfSelect>
+                  <PlaceholderOfSelect>{message.selectLanguage}</PlaceholderOfSelect>
                   {isLanguageClick ? (
                     <TriangleIcon onClick={() => setIsLanguageClick(!isLanguageClick)}>▼</TriangleIcon>
                   ) : (
@@ -238,10 +303,10 @@ const GuidePage = () => {
             <CredentialsContainer>
               {/* 하얀색으로 감싸는 부분 */}
               <Container>
-                <LangeTitle>자격증</LangeTitle>
+                <LangeTitle>{message.credentials}</LangeTitle>
                 <SelectContainer>
                   <PlaceholderOfSelect onClick={() => setIsCredentialsClick(!isCredentialsClick)}>
-                    자격증을 선택하세요
+                    {message.selectCredentials}
                   </PlaceholderOfSelect>
                   {isCredentialsClick ? (
                     <TriangleIcon onClick={() => setIsCredentialsClick(!isCredentialsClick)}>▼</TriangleIcon>
@@ -255,9 +320,6 @@ const GuidePage = () => {
                   <CredentialDropWrapper isRegionClick={isCredentialsClick}>
                     {/* 일본어 */}
                     <LanguageTitle>日本語(JLPT) 🇯🇵</LanguageTitle>
-                    {/* <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div>
-                    <div style={{ width: '100%', height: '1rem' }}></div> */}
                     <Scores>
                       {CredentialsDatas.japanesse.map((language) => {
                         const isSelected = selectedCredentials.includes(language.id)
@@ -311,7 +373,7 @@ const GuidePage = () => {
             {/* 🟠  7. 평점 선택 🟠   */}
             <RadioButtonsContainer>
               <Container>
-                <LangeTitle>평점</LangeTitle>
+                <LangeTitle>{message.rating}</LangeTitle>
                 <StarWrapper>
                   {/* 별들 삽입 */}
                   {Array.from({ length: 5 }, (_, totalindex) => (
@@ -365,17 +427,15 @@ const GuidePage = () => {
                 setSelectedDatas((prev): any => {
                   return { ...selectedDatasObj }
                 })
-                console.log(selectedDatas)
               }}
             >
-              검색
+              {message.search}
             </SearchBtn>
           </BtnWrapper>
         </LeftSection>
 
         {/* 🟢🟢🟢 오른쪽 🟢🟢🟢 */}
         <RightSection>
-          {/* <RightSectionTitle>총 ??? 명</RightSectionTitle> */}
           <GuideCard />
         </RightSection>
       </GuidePageLayout>

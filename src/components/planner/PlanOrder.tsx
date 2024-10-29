@@ -7,6 +7,28 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { PeriodPlanRecoil, PlanTime } from 'state/store/PlanList'
 import Arrow from 'components/icons/Arrow'
 import useCalculateTotalTime from 'hooks/useCalcurateTotalTime'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    hour: '시간',
+    minute: '분',
+    confirm: '확인',
+    resetList: '장소 초기화',
+  },
+  'en-US': {
+    hour: 'hr',
+    minute: 'min',
+    confirm: 'confirm',
+    resetList: 'Reset List',
+  },
+  'ja-JP': {
+    hour: '時間',
+    minute: '分',
+    confirm: '確認',
+    resetList: 'リストをリセット',
+  },
+}
 
 const PlanOrder = () => {
   const [fold, setFold] = useState<boolean>(false) // 접기/펼치기
@@ -23,6 +45,9 @@ const PlanOrder = () => {
   const [minuteState, setMinuteState] = useState<number>(minute)
 
   const planList = planPeriod[currentPeriod] || [] // 현재 일차의 여행 리스트
+
+  const [language] = useLanguage()
+  const message = messages[language]
 
   // 장소 초기화
   const resetPlan = () => {
@@ -72,13 +97,13 @@ const PlanOrder = () => {
               ) : (
                 <FlexCenter>
                   <TimeInput type="number" value={hourState} onChange={(e) => setHourState(Number(e.target.value))} />
-                  <span>시간</span>
+                  <span>{message.hour}</span>
                   <TimeInput
                     type="number"
                     value={minuteState}
                     onChange={(e) => setMinuteState(Number(e.target.value))}
                   />
-                  <span>분</span>
+                  <span>{message.minute}</span>
                 </FlexCenter>
               )}
             </CountTime>
@@ -93,7 +118,7 @@ const PlanOrder = () => {
                   setTimeMod(false)
                 }}
               >
-                확인
+                {message.confirm}
               </div>
             ) : (
               <ResetButton
@@ -101,7 +126,7 @@ const PlanOrder = () => {
                   resetPlan()
                 }}
               >
-                장소 초기화
+                {message.resetList}
               </ResetButton>
             )}
           </Header>

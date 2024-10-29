@@ -8,6 +8,22 @@ import { RequestGuide } from 'state/store/RequestGuide'
 import { getUserInfo } from 'api/LoginSignUp'
 import { ModalAtom } from 'state/store/ModalAtom'
 import EmailModal from './emailModal/EmailModal'
+import BackButton from 'components/shared/BackButton'
+import useLanguage from 'hooks/useLanguage'
+import { useNavigate } from 'react-router-dom'
+
+const messages = {
+  'ko-KR': {
+    back: '뒤로 가기',
+  },
+  'en-US': {
+    back: 'Back',
+  },
+  'ja-JP': {
+    back: '戻る',
+  },
+}
+
 const MyPage = () => {
   // 태그별 열림 상태
   const [basicInfo, setBasicInfo] = useState<boolean>(true)
@@ -27,7 +43,6 @@ const MyPage = () => {
 
   /* ⭐️⭐️ 로그인 유저 정보 가져오기 ⭐️⭐️ */
   let userInfo = JSON.parse(localStorage.getItem('userInfo') ?? '')
-  console.log('💛[myPageCommon.index] 현재 로그인 유저 정보 :', userInfo)
 
   /* ⭐️⭐️ 유저 정보 가져오기 ⭐️⭐️ */
   const [userInformation, setuserInformation] = useState({
@@ -39,12 +54,16 @@ const MyPage = () => {
     gender: '',
   })
 
+  const navigate = useNavigate()
+
+  const [language] = useLanguage()
+  const message = messages[language]
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const result = await getUserInfo()
         setuserInformation(result)
-        console.log('🌙🌙🌙🌙🌙🌙🌙 API 요청 정보', result)
       } catch (error) {
         console.error('유저 정보를 가져오는 중 에러가 발생했습니다.', error)
       }
@@ -54,7 +73,6 @@ const MyPage = () => {
   }, [])
 
   useEffect(() => {
-    console.log('useCallback 실행')
     setBasicInfo(false)
     setReview(false)
     setPosting(false)
@@ -134,8 +152,11 @@ const MyPage = () => {
 
   return (
     <>
+      <div style={{ position: 'absolute', top: '0', left: '0' }}>
+        <BackButton onClick={() => navigate('/')} message={message.back} />
+      </div>
       {isOpenModal && <EmailModal />}
-      <Blank />
+      {/* <Blank /> */}
       <OverallLayout>
         <RedOuterFrame>
           {/* 🟡 왼쪽 : 사용자 Info */}

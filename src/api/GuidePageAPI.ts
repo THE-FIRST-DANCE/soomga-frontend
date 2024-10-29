@@ -32,7 +32,6 @@ export const getGuideList = async ({
       rating,
     },
   })
-  // console.log('🟡🟡 response API 보낼 내용', response)
 
   return response.data
 }

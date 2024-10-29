@@ -17,8 +17,8 @@ export const usePlanConfirm = () => {
     onSuccess: (data: Plans) => {
       const periodPlan: { [key: number]: PlanConfirmListItem[] } = {}
 
-      const lat = provinces.find((item) => item.name === data.region)?.lat
-      const lng = provinces.find((item) => item.name === data.region)?.lng
+      const lat = provinces.find((item) => item.id === data.id)?.lat
+      const lng = provinces.find((item) => item.id === data.id)?.lng
 
       data.daySchedules.forEach((item) => {
         periodPlan[item.day] = item.schedules

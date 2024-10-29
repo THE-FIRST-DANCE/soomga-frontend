@@ -9,19 +9,37 @@ import { PlaceData } from 'interfaces/plan'
 import Spinner from 'components/shared/Spinner'
 import { useDebounce } from 'hooks/useDebounce'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import useLanguage from 'hooks/useLanguage'
 
 export const categories = [
-  { label: '추천', value: 'all' },
-  { label: '명소', value: 'tourist_attraction' },
-  { label: '음식점', value: 'restaurant' },
-  { label: '카페', value: 'cafe' },
-  { label: '숙소', value: 'lodging' },
+  { label: { 'ko-KR': '추천', 'en-US': 'Recommended', 'ja-JP': 'おすすめ' }, value: 'all' },
+  { label: { 'ko-KR': '명소', 'en-US': 'Attractions', 'ja-JP': '観光' }, value: 'tourist_attraction' },
+  { label: { 'ko-KR': '음식점', 'en-US': 'Restaurants', 'ja-JP': 'レストラン' }, value: 'restaurant' },
+  { label: { 'ko-KR': '카페', 'en-US': 'Cafes', 'ja-JP': 'カフェ' }, value: 'cafe' },
+  { label: { 'ko-KR': '숙소', 'en-US': 'Lodging', 'ja-JP': '宿泊' }, value: 'lodging' },
 ]
+
+const messages = {
+  'ko-KR': {
+    searchPlaceholder: '장소를 검색하세요',
+    noResults: '장소가 없습니다 🫥',
+  },
+  'en-US': {
+    searchPlaceholder: 'Search for a place',
+    noResults: 'No places 🫥',
+  },
+  'ja-JP': {
+    searchPlaceholder: '場所を検索',
+    noResults: '場所がありません 🫥',
+  },
+}
 
 const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean }) => {
   const [search, setSearch] = useState<string>('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [places, setPlaces] = useState<PlaceData[]>([])
+  const [language] = useLanguage()
+  const message = messages[language]
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target
@@ -68,7 +86,7 @@ const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean 
           style={{ height: '50px', position: 'relative' }}
           name="search"
           onChange={onChange}
-          placeholder="장소를 검색하세요"
+          placeholder={message.searchPlaceholder}
         ></Input>
         <SearchIcon
           style={{
@@ -90,7 +108,7 @@ const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean 
             onClick={() => setSelectedCategory(item.value)}
             className={selectedCategory === item.value ? 'active' : ''}
           >
-            {item.label}
+            {item.label[language]}
           </CategoryItem>
         ))}
       </Category>
@@ -114,7 +132,7 @@ const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean 
                 marginTop: '1rem',
               }}
             >
-              장소가 없습니다
+              {message.noResults}
             </div>
           )}
         </InfiniteScroll>
@@ -126,11 +144,20 @@ const PlaceSelect = ({ region, editMode }: { region: string; editMode?: boolean 
 export default PlaceSelect
 
 const Category = styled.div`
+  width: 100%;
   display: flex;
   gap: 1rem;
   padding: 1rem 0;
   box-sizing: border-box;
   position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `
 
 const CategoryItem = styled.div`

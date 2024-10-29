@@ -20,7 +20,6 @@ const useAccessToken = () => {
       setHasAccessToken(!!result)
       // FIXME: name 속성을 추가하여 AccessTokenAtom 타입에 맞게 수정
       setAccessToken({ token: result, name: 'defaultName' }) // 'defaultName'은 적절한 값으로 변경 필요
-      console.log('리코일에 저장한 토큰 상태', accessToken)
     }
 
     checkAccessToken()

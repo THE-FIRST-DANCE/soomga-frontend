@@ -10,7 +10,6 @@ export async function createReservation(
     const res = await baseApi.post<Reservation>('/reservations', payload, {
       params: roomId ? { roomId } : {},
     })
-    console.log('createReservation의 결과 값', res)
     return res.data
   } catch (error) {
     console.error(error)
@@ -27,7 +26,6 @@ export async function acceptReservation(reservationId: number, roomId?: string) 
         params: roomId ? { roomId } : {},
       },
     )
-    console.log(res)
     return res.data
   } catch (error) {
     console.error(error)
@@ -44,7 +42,6 @@ export async function rejectReservation(reservationId: number, roomId?: string) 
         params: roomId ? { roomId } : {},
       },
     )
-    console.log(res)
     return res.data
   } catch (error) {
     console.error(error)

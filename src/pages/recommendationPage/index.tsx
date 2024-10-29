@@ -16,9 +16,33 @@ import { useQuery } from '@tanstack/react-query'
 import { getRecommendation } from 'api/TouristAPI'
 import { Tourist } from 'interfaces/tourist'
 import TouristCard from 'components/recommendations/TouristCard'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    title: '추천 포스트',
+    subtitle: '여행 추천 포스트를 확인해보세요',
+    region: '지역별 여행지',
+    more: '더보기',
+  },
+  'en-US': {
+    title: 'Recommended posts',
+    subtitle: 'Check out recommended travel posts',
+    region: 'Regions',
+    more: 'More',
+  },
+  'ja-JP': {
+    title: 'オススメのポスト',
+    subtitle: 'オススメの旅行ポストをチェックしてください',
+    region: '地域',
+    more: 'もっと見る',
+  },
+}
 
 const RecommendatedPostPage = () => {
   const [recommendation, setRecommendation] = useState<Tourist[]>([])
+  const [language] = useLanguage()
+  const message = messages[language]
 
   const navigate = useNavigate()
 
@@ -40,7 +64,7 @@ const RecommendatedPostPage = () => {
   return (
     <Layout>
       {/* 🟡 추천 포스트 🟡 */}
-      <Title>추천 포스트</Title>
+      <Title>{message.title}</Title>
       <CarouselLayout>
         <SwiperLayout>
           <Swiper
@@ -60,16 +84,14 @@ const RecommendatedPostPage = () => {
             }}
           >
             {recommendation?.map((post: Tourist) => (
-              <SwiperSlide key={post.id}>
-                <TouristCard data={post} />
-              </SwiperSlide>
+              <SwiperSlide key={post.id}>{/* <TouristCard data={post} /> */}</SwiperSlide>
             ))}
           </Swiper>
         </SwiperLayout>
       </CarouselLayout>
 
       {/* 🟡 지역 🟡 */}
-      <RegionsTitle>지역</RegionsTitle>
+      <RegionsTitle>{message.region}</RegionsTitle>
       <RegionsContainer>
         {provinces.map((regionInfo) => (
           <RegionCard
@@ -78,8 +100,8 @@ const RecommendatedPostPage = () => {
             }}
             key={regionInfo.id}
           >
-            <img src={regionInfo.img} alt={regionInfo.name} loading="lazy" />
-            <Letter>{regionInfo.name}</Letter>
+            <img src={regionInfo.img} alt={regionInfo.name[language]} loading="lazy" />
+            <Letter>{regionInfo.name[language]}</Letter>
           </RegionCard>
         ))}
       </RegionsContainer>
@@ -99,6 +121,7 @@ const Title = styled.div`
   font-size: 2rem;
   margin-bottom: 2rem;
   text-align: center;
+  font-weight: bold;
 `
 
 /* 캐러셀 */

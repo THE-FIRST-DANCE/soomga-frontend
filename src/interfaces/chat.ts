@@ -86,6 +86,10 @@ export interface ReservationExtra {
   data: Reservation
 }
 export interface Plan {
+  id: number
+  title: string
+  region: string
+  period: string
   service?: any
   startDate: Date
   endDate: Date

@@ -1,12 +1,19 @@
 import styled from 'styled-components'
-import logo from '../../assets/footerLogo.svg'
+import logo from 'assets/footerLogo.svg'
 const Footer = () => {
   return (
     // 전체 Layout div
     <FooterContainer_div>
       {/* 중앙 잉미지 */}
       <ImageWrapper>
-        <img src={logo} alt="FooterLogo" />
+        <img
+          src={logo}
+          alt="FooterLogo"
+          style={{
+            userSelect: 'none',
+            pointerEvents: 'none',
+          }}
+        />
       </ImageWrapper>
     </FooterContainer_div>
   )

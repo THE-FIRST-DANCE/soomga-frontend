@@ -19,7 +19,6 @@ const URecommendedRegions = () => {
   useEffect(() => {
     const handleResize = () => {
       const newWidth = window.innerWidth
-      console.log(`현재 윈도우 창의 너비: ${newWidth}px`)
       setTets(newWidth)
     }
 

@@ -39,9 +39,10 @@ const StyledButton = styled.button`
 
 interface BackButtonProps {
   onClick: () => void
+  message?: string
 }
 
-export default function Component({ onClick }: BackButtonProps = { onClick: () => {} }) {
+export default function Component({ onClick, message }: BackButtonProps = { onClick: () => {} }) {
   return (
     <StyledButton onClick={onClick}>
       <svg
@@ -58,7 +59,7 @@ export default function Component({ onClick }: BackButtonProps = { onClick: () =
         <path d="m12 19-7-7 7-7" />
         <path d="M19 12H5" />
       </svg>
-      뒤로 가기
+      {message}
     </StyledButton>
   )
 }

@@ -97,7 +97,6 @@ export const PlanDetailCommentsTab = ({
   const { mutate: deleteComment } = useMutation({
     mutationFn: deletePlanComment,
     onSuccess: () => {
-      console.log('success')
       queryClient.invalidateQueries({
         queryKey: ['planDetail', String(planId)],
       })

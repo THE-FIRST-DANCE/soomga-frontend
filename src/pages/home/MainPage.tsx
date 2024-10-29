@@ -22,7 +22,6 @@ export const MainPage = () => {
 
   // recoil로 메인 페이지에서 대화창 눌렀는지를 감지
   const [isClickAtMain, setIsClickAtMain] = useRecoilState(IsClickAtMain)
-  console.log('😍😍isClickAtMain: ', isClickAtMain.isClicked)
 
   useEffect(() => {
     //! 현재 Login한 유저 id
@@ -32,7 +31,6 @@ export const MainPage = () => {
     //! 방정보 가져오기
     const fetchGetRooms = async () => {
       const data = await getRooms()
-      console.log('data: ', data)
 
       setChatList(data) // 리코일 값
     }
@@ -45,7 +43,6 @@ export const MainPage = () => {
       toast.error('로그인이 필요한 기능입니다.')
       return
     }
-    console.log('❌❌❌', localStorage.getItem('userInfo'))
     // 2. 채팅 모달창 띄우기
     setIsOpenChat((prev) => !prev)
     setIsClickAtMain((prev) => ({
@@ -84,8 +81,8 @@ export const MainPage = () => {
       {/* 6. 사용자 댓글 캐러셀  FIXME: 아직 api 설계 안됨 */}
       {/* <CommentCarousel /> */}
       {/* 7. 대화 버튼 - 버튼 누르면 모달발생  FIXME: 아직 api 설계 안됨*/}
-      {/* <ChatButton onClick={startChatHandler} />
-      {isOpenChat && <Chatting userInfo={userInfo} onClick={startChatHandler} />} */}
+      <ChatButton onClick={startChatHandler} />
+      {isOpenChat && <Chatting userInfo={userInfo} onClick={startChatHandler} />}
     </>
   )
 }

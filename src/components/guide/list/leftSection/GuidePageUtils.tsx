@@ -48,7 +48,6 @@ const useGuideStateMethods = () => {
 
   // 지역 데이터
   const [areasDatas, setRegionsDatas] = useState<Area[]>([])
-  // console.log('🟢🟢불러온 지역 데이터: ', areasDatas)
 
   // 언어 데이터
   // const [languageDatas, setLanguageDatas] = useState<string[]>(['한국어', 'English', '日本語'])
@@ -198,8 +197,6 @@ const useGuideStateMethods = () => {
 
   // 성별 전환 (가상요소 checkbox用)
   const onClickGender = (name: string) => {
-    console.log('gender: ', name)
-
     switch (name) {
       case 'all':
         setAllChecked(!isAllChecked)
@@ -224,22 +221,18 @@ const useGuideStateMethods = () => {
   // 성별 전환 (label用)
   const onChangeCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target
-    console.log('name, checked: ', name, checked)
     switch (name) {
       case 'all':
-        console.log('all 선택됨')
         setAllChecked(checked)
         setManChecked(false)
         setWomanChecked(false)
         break
       case 'MALE':
-        console.log('MALE 선택됨')
         setManChecked(checked)
         setAllChecked(false)
         setWomanChecked(false)
         break
       case 'FEMALE':
-        console.log('FEMALE 선택됨')
         setWomanChecked(checked)
         setAllChecked(false)
         setManChecked(false)

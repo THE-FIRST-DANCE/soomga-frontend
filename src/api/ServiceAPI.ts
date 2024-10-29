@@ -34,7 +34,6 @@ export async function createReservation(payload: ReservationPayload, roomId?: st
     const res = await baseApi.post<Reservation>('/reservations', payload, {
       params: roomId ? { roomId } : {},
     })
-    console.log('예약만들기 결과', res)
     return res.data
   } catch (error) {
     console.error(error)

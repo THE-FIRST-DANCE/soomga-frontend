@@ -68,4 +68,5 @@ interface Count {
 export interface Pagination<Type> {
   items: Type[]
   nextCursor: number | null
+  count?: number
 }

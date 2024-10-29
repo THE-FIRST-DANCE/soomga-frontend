@@ -6,11 +6,26 @@ import styled from 'styled-components'
 import { Plans } from 'interfaces/plan'
 import { useEffect, useState } from 'react'
 import PlanItem from 'components/planner/PlanItem'
-import BackButton from 'components/planner/BackButton'
+import BackButton from 'components/shared/BackButton'
 import { useNavigate } from 'react-router-dom'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    back: '뒤로 가기',
+  },
+  'en-US': {
+    back: 'Back',
+  },
+  'ja-JP': {
+    back: '戻る',
+  },
+}
 
 const PlanPage = () => {
   const [plans, setPlans] = useState<Plans[]>([])
+  const [language] = useLanguage()
+  const message = messages[language]
 
   const { data } = useQuery({
     queryKey: ['plans'],
@@ -28,7 +43,7 @@ const PlanPage = () => {
   return (
     <Container>
       <LeftSection>
-        <BackButton onClick={() => navigate('/')} />
+        <BackButton onClick={() => navigate('/')} message={message.back} />
         <CreatePlan />
         <PlanListStyle>
           <PlanItems>

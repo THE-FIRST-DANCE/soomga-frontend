@@ -5,6 +5,7 @@ import { TravelSvg } from './CreatePlan'
 import Arrow from 'components/icons/Arrow'
 import { provinces } from 'data/region'
 import useCreatePlan from 'hooks/plan/useCreatePlan'
+import useLanguage from 'hooks/useLanguage'
 
 interface ICreatePlanModal {
   isOpen: boolean
@@ -14,24 +15,72 @@ interface ICreatePlanModal {
 const setDate = [
   {
     value: 1,
-    label: '1일',
+    label: {
+      'ko-KR': '1일',
+      'en-US': '1 day',
+      'ja-JP': '1日',
+    },
   },
   {
     value: 2,
-    label: '2일',
+    label: {
+      'ko-KR': '2일',
+      'en-US': '2 day',
+      'ja-JP': '2日',
+    },
   },
   {
     value: 3,
-    label: '3일',
+    label: {
+      'ko-KR': '3일',
+      'en-US': '3 day',
+      'ja-JP': '3日',
+    },
   },
   {
     value: '직접입력',
-    label: '직접입력',
+    label: {
+      'ko-KR': '직접 입력',
+      'en-US': 'enter',
+      'ja-JP': '入力',
+    },
   },
 ]
 
+const messages = {
+  'ko-KR': {
+    title: '새로운 플래너',
+    modalTitle: '플래너 만들기',
+    planTitle: '플랜 이름',
+    planTitlePlaceholder: '플랜 이름을 입력해주세요',
+    provinceTitle: '지역',
+    create: '만들기',
+    directInput: '직접 입력',
+  },
+  'en-US': {
+    title: 'New Planner',
+    modalTitle: 'Create Planner',
+    planTitle: 'Plan Name',
+    planTitlePlaceholder: 'Please enter plan name',
+    provinceTitle: 'Region',
+    create: 'Create',
+    directInput: 'Enter manually',
+  },
+  'ja-JP': {
+    title: '新しいプラン',
+    modalTitle: 'プランナー作成',
+    planTitle: 'プラン名',
+    planTitlePlaceholder: 'プラン名を入力してください',
+    provinceTitle: '地域',
+    create: '作成',
+    directInput: '直接入力',
+  },
+}
+
 const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
   const { province, setProvince, openProvince, setOpenProvince, onChange, createPlan, setLat, setLng } = useCreatePlan()
+  const [language] = useLanguage()
+  const message = messages[language]
 
   return (
     <Modal
@@ -60,24 +109,24 @@ const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
           {/* 모달 헤더 */}
           <ModalHeader>
             <TravelSvg width="32px" height="32px" />
-            <ModalTitle>새로운 플래너</ModalTitle>
+            <ModalTitle>{message.planTitle}</ModalTitle>
           </ModalHeader>
 
           {/* 플랜 이름 */}
           <ModalBox>
-            <ModalInfo>플랜 이름</ModalInfo>
+            <ModalInfo>{message.planTitle}</ModalInfo>
             <ModalInput
               name="planTitle"
               required
               type="text"
-              placeholder="플랜 이름을 정해주세요"
+              placeholder={message.planTitlePlaceholder}
               onChange={onChange}
             />
           </ModalBox>
 
           {/* 지역 */}
           <ModalBox>
-            <ModalInfo>지역</ModalInfo>
+            <ModalInfo>{message.provinceTitle}</ModalInfo>
 
             <ModalSelect
               onClick={() => {
@@ -95,13 +144,13 @@ const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
                       <DropdownItem
                         key={prov.id}
                         onClick={() => {
-                          setProvince(prov.name)
+                          setProvince(prov.name[language])
                           setLat(prov.lat)
                           setLng(prov.lng)
                           setOpenProvince(false)
                         }}
                       >
-                        {prov.name}
+                        {prov.name[language]}
                       </DropdownItem>
                     ))}
                   </ul>
@@ -134,7 +183,7 @@ const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
                     }}
                     type="number"
                     name="date"
-                    placeholder="직접 입력"
+                    placeholder={message.directInput}
                     onChange={onChange}
                   />
                 ) : (
@@ -145,7 +194,7 @@ const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
                     }}
                     htmlFor="date"
                   >
-                    {date.label}
+                    {date.label[language]}
                   </label>
                 )}
               </SetDate>
@@ -160,7 +209,7 @@ const CreatePlanModal = ({ isOpen, onRequestClose }: ICreatePlanModal) => {
               onRequestClose()
             }}
           >
-            만들기
+            {message.create}
           </ModalButton>
         </form>
       </CreateModal>

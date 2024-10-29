@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { categories } from './place/PlaceSelect'
 import Cancel from 'components/icons/Cancel'
 import { PlanConfirmListItem } from 'interfaces/plan'
+import useLanguage from 'hooks/useLanguage'
 
 interface PlanEditItemProps {
   data: PlanConfirmListItem
@@ -12,13 +13,15 @@ interface PlanEditItemProps {
 const PlanEditItem = ({ data, index, onDelete }: PlanEditItemProps) => {
   const category = categories.find((item) => item.value === data.item.category)
 
+  const [language] = useLanguage()
+
   return (
     <Container>
       <Body>
         <Order>{index}</Order>
         <Content>
           <Name>{data.item.name}</Name>
-          <Category>{category?.label}</Category>
+          <Category>{category?.label[language]}</Category>
           <Time>{data.stayTime}</Time>
         </Content>
         <div

@@ -29,8 +29,6 @@ const MainContainer = ({
   requetGuide,
   userInformation,
 }: TagOpenStateProps) => {
-  console.log(requetGuide)
-
   return (
     <Layouy>
       {/* 1. 기본정보 */}

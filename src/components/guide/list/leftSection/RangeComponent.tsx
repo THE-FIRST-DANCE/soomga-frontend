@@ -3,6 +3,19 @@ import React from 'react'
 import { styled } from 'styled-components'
 import flag from 'assets/flag2.svg'
 import { Container, LangeTitle, Wrapper } from 'pages/guide'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    text: '범위를 정해주세요',
+  },
+  'en-US': {
+    text: 'Please set a range',
+  },
+  'ja-JP': {
+    text: '範囲を設定してください',
+  },
+}
 
 interface RangeComponentProps {
   title: string
@@ -25,6 +38,9 @@ const RangeComponent: React.FC<RangeComponentProps> = ({
   step,
   onChange,
 }) => {
+  const [language] = useLanguage()
+  const message = messages[language]
+
   return (
     <Container>
       <LangeTitle>{title}</LangeTitle>
@@ -37,7 +53,7 @@ const RangeComponent: React.FC<RangeComponentProps> = ({
               <LangeText>{rangeValues[1]}</LangeText>
             </>
           ) : (
-            <LangeText>범위를 정해주세요</LangeText>
+            <LangeText>{message.text}</LangeText>
           )}
         </LangeTextWrapper>
         <InputLange type="range" value={value} name={name} max={max} min={min} step={step} onChange={onChange} />

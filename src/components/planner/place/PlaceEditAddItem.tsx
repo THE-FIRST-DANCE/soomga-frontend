@@ -1,16 +1,19 @@
 import { PlaceData } from 'interfaces/plan'
 import styled from 'styled-components'
 import { categories } from './PlaceSelect'
+import useLanguage from 'hooks/useLanguage'
 
 const PlaceEditAddItem = ({ data }: { data: PlaceData }) => {
   const category = categories.find((item) => item.value === data.category)
+
+  const [language] = useLanguage()
 
   return (
     <Container>
       <Body>
         <Content>
           <Name>{data.name}</Name>
-          <Category>{category?.label}</Category>
+          <Category>{category?.label[language]}</Category>
         </Content>
       </Body>
     </Container>

@@ -10,6 +10,7 @@ import useSubstring from 'hooks/useSubstring'
 import { useState } from 'react'
 import PlaceDetail from './PlaceDetail'
 import { CurrentPeriod } from 'state/store/PlanInfo'
+import useLanguage from 'hooks/useLanguage'
 
 const PlaceItem = ({ data, editMode }: { data: PlaceData; editMode?: boolean }) => {
   const address = useSubstring(data.address, 10) // 주소 10글자로 자르기
@@ -21,6 +22,8 @@ const PlaceItem = ({ data, editMode }: { data: PlaceData; editMode?: boolean }) 
 
   const category = categories.find((category) => category.value === data.category) // 카테고리 정보
   const currentPlan = planPeriod[currentPeriod] || [] // 현재 일차의 여행 리스트
+
+  const [language] = useLanguage()
 
   // 체크 여부 (장소 추가 모드일 때는 placeBox, 여행 일정 수정 모드일 때는 currentPlan)
   const checked = editMode
@@ -88,7 +91,7 @@ const PlaceItem = ({ data, editMode }: { data: PlaceData; editMode?: boolean }) 
       >
         <Title>{data.name}</Title>
         <SubInfo>
-          <Category>{category?.label}</Category>
+          <Category>{category.label[language]}</Category>
           <Address>{address}</Address>
         </SubInfo>
 

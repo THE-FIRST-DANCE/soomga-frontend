@@ -16,7 +16,6 @@ export interface userInfoProps {
 const LeftInfo = ({ name, email, nickname, phonNum, avatar, gender }: userInfoProps) => {
   const setRequestOpend = useSetRecoilState(RequestGuide)
   let userInfo = JSON.parse(localStorage.getItem('userInfo') ?? '')
-  console.log('🩷[myPageCommon.LeftInfo] 현재 로그인 유저 정보 :', userInfo)
 
   return (
     <>

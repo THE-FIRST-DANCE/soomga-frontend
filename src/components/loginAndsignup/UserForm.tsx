@@ -12,10 +12,29 @@ import {
   RightTitle,
   Login_SingupContainer,
 } from './UserForm.login.style'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    greeting1: '안녕, ',
+    greeting2: '함께 떠나자! ✈️',
+  },
+  'en-US': {
+    greeting1: "Let's, ",
+    greeting2: 'travel together! ✈️',
+  },
+  'ja-JP': {
+    greeting1: '一緒に、',
+    greeting2: '旅をしよう！ ✈️',
+  },
+}
 
 const UserForm = ({ children }: React.PropsWithChildren<{}>) => {
   let { id } = useParams()
   const navigate = useNavigate()
+
+  const [language] = useLanguage()
+  const message = messages[language]
 
   return (
     <LoginPageLayout>
@@ -37,8 +56,8 @@ const UserForm = ({ children }: React.PropsWithChildren<{}>) => {
           <RightSectionInner>
             {/* 2.1.1 우측 타이틀  */}
             <RightTitle>
-              <span className="gray">안녕, </span>
-              <span className="red">함께 떠나자!</span> ✈️
+              <span className="gray">{message.greeting1}</span>
+              <span className="red">{message.greeting2}</span>
             </RightTitle>
 
             {/* 2.1.2 우측 login & signup 컨테이너  */}

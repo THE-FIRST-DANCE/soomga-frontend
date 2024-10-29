@@ -1,35 +1,67 @@
 import styled from 'styled-components'
-import logo from '../../assets/logo_noLetter.svg'
-import seoul from '../../assets/region_seoul.png'
-import busan from '../../assets/region_busan.png'
-import daegu from '../../assets/region_daegu.png'
-import jeju from '../../assets/region_jeju.png'
+import logo from 'assets/logo_noLetter.svg'
+import seoul from 'assets/region_seoul.png'
+import busan from 'assets/region_busan.png'
+import daegu from 'assets/region_daegu.png'
+import jeju from 'assets/region_jeju.png'
 import { useNavigate } from 'react-router-dom'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    title: "숨은 가이드's Pick 💁‍♂️",
+    subtitle:
+      '숨은 가이드가 엄선한 특별한 여행지를 만나보세요. 각 지역의 숨겨진 매력을 발견하고 잊지 못할 추억을 만들어보세요.',
+    seoul: '서울',
+    busan: '부산',
+    daegu: '대구',
+    jeju: '제주도',
+  },
+  'en-US': {
+    title: "Hidden Guide's Pick 💁‍♂️",
+    subtitle:
+      'Discover the hidden charms of each region and create unforgettable memories with our handpicked destinations.',
+    seoul: 'Seoul',
+    busan: 'Busan',
+    daegu: 'Daegu',
+    jeju: 'Jeju',
+  },
+  'ja-JP': {
+    title: "隠されて名ガイド's Pick 💁‍♂️",
+    subtitle: '隠されて名ガイドが厳選した特別な旅行スポットを確認してみて下さい。',
+    seoul: 'ソウル',
+    busan: '釜山',
+    daegu: '大邱',
+    jeju: '済州島',
+  },
+}
 
 const RecommendedRegions = () => {
   let navigate = useNavigate()
+  const [language] = useLanguage()
+  const message = messages[language]
 
   /* 📝 임의 데이터 */
   // FIXME: (전시회) 추천 지역 데이터
   let regionsArr = [
     {
       id: 1,
-      regionName: '서울',
+      regionName: message.seoul,
       img: seoul,
     },
     {
       id: 2,
-      regionName: '부산',
+      regionName: message.busan,
       img: busan,
     },
     {
       id: 3,
-      regionName: '대구',
+      regionName: message.daegu,
       img: daegu,
     },
     {
       id: 17,
-      regionName: '제주도',
+      regionName: message.jeju,
       img: jeju,
     },
   ]
@@ -40,9 +72,8 @@ const RecommendedRegions = () => {
       <div style={{ margin: '0 auto', maxWidth: '1200px' }}>
         {/* 2. Soomga의 추천 지역 : Logo + letter */}
         <LogoAndLetterContainer>
-          <Title>숨은 가이드's Pick 💁‍♂️</Title>
-          숨은 가이드가 엄선한 특별한 여행지를 만나보세요. 각 지역의 숨겨진 매력을 발견하고 잊지 못할 추억을
-          만들어보세요.
+          <Title>{message.title}</Title>
+          {message.subtitle}
         </LogoAndLetterContainer>
         {/* 3. 추천지역 List Container */}
         <RegionsContainer>
@@ -98,24 +129,26 @@ const ImgWrapper = styled.div`
 
 /* 3. 추천지역 List Container */
 const RegionsContainer = styled.div`
-  /* background-color: orange; */
   width: 100%;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 기본적으로 4개의 열 */
+  gap: 2rem;
+  justify-items: center;
   align-items: center;
-  gap: 5rem;
-  /* margin: 0.5rem 0; */
+  padding: 0 2rem;
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); /* 모바일에서는 2개의 열 */
+    gap: 1rem;
+    padding: 0 1rem;
+  }
 `
 
 /* 3.1 추천 지역 카드 */
 const Region = styled.div`
-  width: 12rem;
-  height: 12rem;
-  /* width: 10rem;
-  height: 10rem; */
+  aspect-ratio: 1/1; /* 1:1 비율 */
   overflow: hidden;
   position: relative;
-  /* margin: 30px; */
   border-radius: 20px;
   cursor: pointer;
   box-shadow:

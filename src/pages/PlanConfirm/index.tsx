@@ -6,6 +6,7 @@ import PlanEdit from 'components/planner/PlanEdit'
 import PlanLeftTab from 'components/planner/PlanLeftTab'
 import { motion } from 'framer-motion'
 import { usePlanConfirm } from 'hooks/plan/usePlanConfirm'
+import useLanguage from 'hooks/useLanguage'
 import { PlanConfirmListItem } from 'interfaces/plan'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -14,12 +15,45 @@ import { CurrentPeriod } from 'state/store/PlanInfo'
 import styled from 'styled-components'
 import { svgToDataUrl } from 'utils/svgToDataUrl'
 
+const messages = {
+  'ko-KR': {
+    save: '저장',
+    confirmEdit: '수정하시겠습니까?',
+    confirmSave: '저장하시겠습니까?',
+    edit: '수정',
+    editWarning: '수정을 하게 되면 작성한 설명들이 초기화됩니다. 수정하시겠습니까?',
+    delete: '삭제',
+    confirmDelete: '정말 삭제하시겠습니까?',
+  },
+  'en-US': {
+    save: 'Save',
+    confirmEdit: 'Do you want to edit?',
+    confirmSave: 'Do you want to save?',
+    edit: 'Edit',
+    editWarning: 'Editing will reset all descriptions. Do you want to edit?',
+    delete: 'Delete',
+    confirmDelete: 'Are you sure you want to delete?',
+  },
+  'ja-JP': {
+    save: '保存',
+    confirmEdit: '修正しますか？',
+    confirmSave: '保存しますか？',
+    edit: '修正',
+    editWarning: '修正すると説明がリセットされます。修正しますか？',
+    delete: '削除',
+    confirmDelete: '本当に削除しますか？',
+  },
+}
+
 const PlanConfirmPage = () => {
   const { planConfirm } = usePlanConfirm()
   const currentPeriod = useRecoilValue(CurrentPeriod)
   const [planList, setPlanList] = useState<PlanConfirmListItem[]>([])
   const { planId } = useParams<{ planId: string }>()
   const memberId = 2
+
+  const [language] = useLanguage()
+  const message = messages[language]
 
   useEffect(() => {
     if (planConfirm.periodPlan[currentPeriod]) {
@@ -56,13 +90,13 @@ const PlanConfirmPage = () => {
       transport: planConfirm.transport,
     }
 
-    if (window.confirm(planId ? '수정하시겠습니까?' : '저장하시겠습니까?') === false) return
+    if (window.confirm(planId ? message.confirmEdit : message.confirmSave) === false) return
 
     savePlanMutate(data)
   }
 
   const onEdit = () => {
-    if (window.confirm('수정을 하게 되면 작성한 설명들이 초기화됩니다. 수정하시겠습니까?') === false) return
+    if (window.confirm(message.editWarning) === false) return
     setEditMode(true)
   }
 
@@ -73,7 +107,7 @@ const PlanConfirmPage = () => {
   const onDel = () => {
     if (!planId) return
 
-    if (window.confirm('정말 삭제하시겠습니까?') === false) return
+    if (window.confirm(message.confirmDelete) === false) return
 
     deletePlanMutate(Number(planId))
   }
@@ -113,8 +147,8 @@ const PlanConfirmPage = () => {
             <PlanLeftTab
               onNext={onNext}
               onEdit={onEdit}
-              nextText="저장"
-              editText="수정"
+              nextText={message.save}
+              editText={message.edit}
               period={planConfirm.info.period}
               onDel={onDel}
               planMember={1}
