@@ -4,7 +4,8 @@ import { styled } from 'styled-components'
 
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
-import moment from 'moment'
+import dayjs from 'dayjs'
+
 import { Title } from 'pages/guide/detail'
 
 import { targetDates } from '../../pages/itinerary/index'
@@ -42,7 +43,7 @@ const CalendarComponent = () => {
 
   useEffect(() => {
     const selectedDate = value as Date
-    const selectedMonth = moment(selectedDate).format('M')
+    const selectedMonth = dayjs(selectedDate).format('M')
     if (month.month !== selectedMonth) {
       setMonth({ month: selectedMonth })
     }
@@ -55,7 +56,7 @@ const CalendarComponent = () => {
         <CalendarWrapper>
           <Calendar
             onClickDay={(e: any) => {
-              console.log(moment(e).format('YYYY MM. DD'))
+              console.log(dayjs(e).format('YYYY MM. DD'))
             }}
             className="react-calendar"
             onChange={(date) => {
@@ -63,8 +64,8 @@ const CalendarComponent = () => {
             }}
             value={value}
             calendarType="gregory"
-            formatDay={(locale, date: Date) => moment(date).format('D')}
-            formatMonthYear={(locale, date: Date) => moment(date).format('YYYY년 M월')}
+            formatDay={(locale, date: Date) => dayjs(date).format('D')}
+            formatMonthYear={(locale, date: Date) => dayjs(date).format('YYYY년 M월')}
             tileContent={tileContent} // tileContent 적용
             next2Label={null}
             prev2Label={null}

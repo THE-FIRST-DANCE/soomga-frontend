@@ -1,6 +1,6 @@
 import CalendarComponent from 'components/itineraryCalendar/Calendar'
 import ScheduleList from 'components/itineraryCalendar/ScheduleList'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { Title } from 'pages/guide/detail'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
@@ -18,13 +18,12 @@ export const targetDates: { id: number; name: string; date: Date }[] = [
 
 const ItineraryPage = () => {
   const [month, setMonth] = useRecoilState(MonthAtom)
-  console.log(' 달력 리코일 출력month: ', month)
 
   const [filteredDates, setFilteredDates] = useState<{ id: number; name: string; date: Date }[]>([])
 
   useEffect(() => {
     const filtered = targetDates.filter((data) => {
-      const MatchedMonth = moment(data.date).format('M')
+      const MatchedMonth = dayjs(data.date).format('M')
       return month.month === MatchedMonth
     })
     setFilteredDates(filtered)
@@ -44,8 +43,8 @@ const ItineraryPage = () => {
         <RightSection>
           <ScheduleList>
             {targetDates.map((data) => {
-              const formattedDate = moment(data.date).format('YYYY년 M월 D일')
-              const MatchedMonth = moment(data.date).format('M')
+              const formattedDate = dayjs(data.date).format('YYYY년 M월 D일')
+              const MatchedMonth = dayjs(data.date).format('M')
               let isSame = month.month === MatchedMonth
 
               return isSame ? (

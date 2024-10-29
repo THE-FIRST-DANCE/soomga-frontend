@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
+import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import CustomToolbar from 'components/schedule/CustomToolbar'
 
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import CreateEventModal from 'components/schedule/ScheduleCreateModal'
@@ -82,7 +82,7 @@ const DateCellContainer = styled.div`
 `
 
 const SchedulePage = () => {
-  const localizer = momentLocalizer(moment)
+  const localizer = dayjsLocalizer(dayjs)
   const [open, setOpen] = useState<boolean>(false)
   const [detailOpen, setDetailOpen] = useState<boolean>(false)
   const [selectedItem, setSelectedItem] = useState<EventData | undefined>(undefined)

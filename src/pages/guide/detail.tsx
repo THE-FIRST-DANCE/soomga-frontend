@@ -7,12 +7,7 @@ import ChatIcon from 'components/icons/ChatIcon'
 import FollowIcon from 'components/icons/FollowIcon'
 import CautionIcon from 'components/icons/CautionIcon'
 import { useEffect, useRef, useState } from 'react'
-import seoul from '../../assets/region_seoul.png'
-import busan from '../../assets/region_busan.png'
-import ulsan from '../../assets/region_ulsan.png'
-import Time from 'components/icons/Time'
-import Arrow from 'components/icons/Arrow'
-import CarIcon from 'components/icons/CarIcon'
+import seoul from 'assets/region_seoul.png'
 import 'react-calendar/dist/Calendar.css'
 import CircleCheck from 'components/icons/CircleCheck'
 import Comunication from 'components/icons/Comunication'
@@ -21,31 +16,136 @@ import Star from 'components/icons/Star'
 import CalendarComponent from 'components/itineraryCalendar/Calendar'
 import { useParams } from 'react-router-dom'
 import { getGuideServices, getReviews, getSelectedGuide } from 'api/GuidePageAPI'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Chatting from 'components/chat/Chatting'
 import { toast } from 'react-toastify'
-import guideImg from '../../assets/guideImg.png'
 import React from 'react'
 import { Review } from '../../interfaces/review'
 import { createRoom, getRooms } from 'api/ChatAPI'
-import { Member, Room } from 'interfaces/chat'
 import { Plans } from 'interfaces/plan'
 
 import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
 import { IsClickAtMain } from 'state/store/IsClickAtMain'
 import PlanItem from 'components/planner/PlanItem'
+import useLanguage from 'hooks/useLanguage'
 
-const plans = [
-  {
-    seoul: [],
-    locations: [1, 2, 3],
+const messages = {
+  'ko-KR': {
+    gender: '성별',
+    guideCount: '가이드 횟수',
+    language: '사용 언어',
+    male: '남',
+    female: '여',
+    none: '없음',
+    times: '회',
+    chat: '채팅하기',
+    follow: '찜하기',
+    myGuide: '내 가이드',
+    followSuccess: '님을 팔로우 했습니다!',
+    unfollowSuccess: '님을 팔로우 취소 했습니다!',
+    reportSuccess: '님을 신고 했습니다!',
+    phone: '휴대폰',
+    id: '신분증',
+    account: '계좌',
+    report: '신고',
+    intro: '소개',
+    service: '서비스',
+    fee: '요금',
+    addToFavorites: '찜하기',
+    loginRequired: '로그인이 필요한 기능입니다.',
+    age: '세',
+    temperature: '온도',
+    reviews: '리뷰',
+    communicationScore: '의사소통',
+    kindnessScore: '친절도',
+    locationScore: '위치',
+    totalScore: '전체 평점',
+    reviewCount: '리뷰 수',
+    menu: '메뉴',
+    travelPlan: '여행 플랜',
+    viewMore: '더보기',
+    viewLess: '접기',
+    price: '요금:',
+    won: '원',
   },
-  {
-    seoul: [],
-    locations: [1, 2, 3, 4],
+  'en-US': {
+    gender: 'Gender',
+    guideCount: 'Guide Count',
+    language: 'Languages',
+    male: 'Male',
+    female: 'Female',
+    none: 'None',
+    times: 'times',
+    chat: 'Chat',
+    follow: 'Follow',
+    myGuide: 'My Guide',
+    followSuccess: ' has been followed!',
+    unfollowSuccess: ' has been unfollowed!',
+    reportSuccess: ' has been reported!',
+    phone: 'Phone',
+    id: 'ID Card',
+    account: 'Account',
+    report: 'Report',
+    intro: 'Introduction',
+    service: 'Services',
+    fee: 'Fee',
+    addToFavorites: 'Add to Favorites',
+    loginRequired: 'Login required',
+    age: 'years old',
+    temperature: 'Temperature',
+    reviews: 'Reviews',
+    communicationScore: 'Communication',
+    kindnessScore: 'Kindness',
+    locationScore: 'Location',
+    totalScore: 'Total Score',
+    reviewCount: 'Review Count',
+    menu: 'Menu',
+    travelPlan: 'Travel Plan',
+    viewMore: 'View More',
+    viewLess: 'View Less',
+    price: 'Price:',
+    won: 'KRW',
   },
-]
+  'ja-JP': {
+    gender: '性別',
+    guideCount: 'ガイド回数',
+    language: '使用言語',
+    male: '男性',
+    female: '女性',
+    none: 'なし',
+    times: '回',
+    chat: 'チャット',
+    follow: 'お気に入り',
+    myGuide: 'マイガイド',
+    followSuccess: 'さんをフォローしました！',
+    unfollowSuccess: 'さんのフォローを解除しました！',
+    reportSuccess: 'さんを報告しました！',
+    phone: '携帯電話',
+    id: '身分証明書',
+    account: '口座',
+    report: '通報',
+    intro: '紹介',
+    service: 'サービス',
+    fee: '料金',
+    addToFavorites: 'お気に入り登録',
+    loginRequired: 'ログインが必要です',
+    age: '歳',
+    temperature: '温度',
+    reviews: 'レビュー',
+    communicationScore: 'コミュニケーション',
+    kindnessScore: '親切さ',
+    locationScore: '場所',
+    totalScore: '総合評価',
+    reviewCount: 'レビュー数',
+    menu: 'メニュー',
+    travelPlan: '旅行プラン',
+    viewMore: 'もっと見る',
+    viewLess: '閉じる',
+    price: '料金:',
+    won: '￦',
+  },
+}
 
 interface GuideService {
   name: string
@@ -65,15 +165,15 @@ const GuideDetailPage = () => {
   const [isClickAtChat, setIsClickAtChat] = useRecoilState(IsClickAtMain)
   // 🌈 채팅 리스트
   // const [chatLists, setChatLists] = useState<Room[]>([])
-  // console.log('🩷채팅 리스트🩷 : ', chatLists)
 
   // 🌈 채팅 목록 리스트 Reocil값
   const [chatList, setChatList] = useRecoilState(ChatList)
-  console.log('chatList: ', chatList)
 
   // 가이드 서비스 값
   const [guideServices, setGuideServices] = useState<GuideService[]>(null)
-  console.log('🔶🔶🔶services: ', guideServices)
+
+  const [language] = useLanguage()
+  const message = messages[language]
 
   const createRoomHandler = async () => {
     let roomExists = false
@@ -83,21 +183,16 @@ const GuideDetailPage = () => {
     chatList.forEach((room) => {
       if (room.name === guideInfos.nickname) {
         roomExists = true
-        console.log('이미 존재하는 방입니다:', room.name)
       }
     })
 
     // 같은 이름의 방이 없을 경우 새로운 방을 생성
     if (!roomExists) {
-      console.log('새로운 가이드와의 대화 시작!')
       const newRoom = await createRoom({ me: Number(userId), counterpart: Number(id) })
-      console.log('🌝🌝새방 만듬:: ', newRoom)
 
       // 새로운 채팅방 정보를 상태에 추가
       if (newRoom) {
-        // setChatLists((prevRooms) => [...prevRooms, newRoom])
         setChatList((prev) => [...prev, newRoom])
-        console.log('새 방 추가됨:', newRoom)
       }
 
       return newRoom
@@ -122,7 +217,6 @@ const GuideDetailPage = () => {
   useEffect(() => {
     const fetchGetGuideServices = async () => {
       const data = await getGuideServices(Number(id))
-      console.log('🌝🌝data: ', data)
       setGuideServices(data)
     }
 
@@ -138,7 +232,6 @@ const GuideDetailPage = () => {
 
   // 🟡 각각의 전체 평점 🟡
   const [reviewCounts, setReviewCounts] = useState([0, 0, 0, 0, 0])
-  // console.log('reviewCounts: ', reviewCounts)
 
   // 플랜 여닫이 상태
   const [isPlanOpen, setIsPlanOpen] = useState<boolean[]>([])
@@ -150,7 +243,7 @@ const GuideDetailPage = () => {
   const startChatHandler = () => {
     // 1. 로그인 안되어 있으면 로그인 해라고 알려주기
     if (!localStorage.getItem('userInfo')) {
-      toast.error('로그인이 필요한 기능입니다.')
+      toast.error(message.loginRequired)
       return
     }
     // 2. 채팅 모달창 띄우기
@@ -173,8 +266,6 @@ const GuideDetailPage = () => {
     tags: [],
     plans: [],
   })
-  console.log('⭐️guideInfos: ', guideInfos)
-  console.log('⭐️guideInfos: ', guideInfos)
 
   /* 가이드 리뷰 */
   const [reviews, setReviews] = useState<Review[]>([])
@@ -197,7 +288,6 @@ const GuideDetailPage = () => {
     //* 1. 가이드 정보 가져오기
     const fetchGetSelectedGuide = async () => {
       const data = await getSelectedGuide(Number(id))
-      console.log('data: ', data)
       setguideInfos(data)
     }
     fetchGetSelectedGuide()
@@ -205,7 +295,6 @@ const GuideDetailPage = () => {
     // 2. 리뷰 정보
     const fetchGetReviews = async () => {
       const data = await getReviews(Number(id))
-      // console.log('🟡 가이드 리뷰 데이터: ', data)
 
       // 리뷰별 각각의 점수들의 총합
       let totalCommunication = 0,
@@ -238,11 +327,6 @@ const GuideDetailPage = () => {
     }
     fetchGetReviews()
   }, [id])
-
-  // 테스트
-  const myDivRef = useRef<HTMLDivElement | null>(null)
-  const serviceContent =
-    '韓国在住約10年になります。代行のご依頼500件以上、ご不満だったという評価は受けたことがありません♡日本・韓国でネットショップ経営中です。購入代行、仕入れ代行、予約代行、サイン会・ヨントン応募、K-pop、ショッピング、カフェ、観光、どれも得意です！韓国ソウル・ソウル郊外の現地人向けカフェやグルメ店を訪れるのが趣味です。旅行者向けよりは現地で人気のホットプレイスを探して回っています。オンラインショップを運営しているので、商品購入代行など、お任せください！特技は最低価格を探すことです^^ ドライブが趣味ですので、送迎などもお任せください。'
 
   // 최상단 이동 버튼
   const MoveTopClick = () => {
@@ -285,7 +369,7 @@ const GuideDetailPage = () => {
 
   // 나이계산
   const calculateAge = (birthdate: string) => {
-    return moment().diff(moment(birthdate), 'years')
+    return dayjs().diff(dayjs(birthdate), 'years')
   }
   return (
     <>
@@ -293,7 +377,7 @@ const GuideDetailPage = () => {
         {/* ------------------------------------------　左　 ------------------------------------------ */}
         <LeftSection>
           {/* 🟡 가이드 정보 CARD */}
-          <GuideInfoCard ref={myDivRef}>
+          <GuideInfoCard>
             <ImageAndTemperatureContainer>
               {/* 이미지 */}
               <GuideImageWrapper>
@@ -316,7 +400,7 @@ const GuideDetailPage = () => {
             {/* 이름 */}
             <NameAgeWapper>
               <UserName>{guideInfos.nickname}</UserName>
-              <UserAge>{`${calculateAge(guideInfos.birthdate)}세`}</UserAge>
+              <UserAge>{`${calculateAge(guideInfos.birthdate)}${message.age}`}</UserAge>
             </NameAgeWapper>
             {/* SNS */}
             <SnsWrapper>
@@ -332,7 +416,7 @@ const GuideDetailPage = () => {
               {/* 휴대폰 인증 */}
               {guideInfos.guideProfile.phoneNumber && (
                 <Autentification>
-                  <Method>{`휴대폰`}</Method>
+                  <Method>{message.phone}</Method>
                   <AuthIcon $width="0.3rem" $height="0.3rem" />
                 </Autentification>
               )}
@@ -340,14 +424,14 @@ const GuideDetailPage = () => {
               {/* 신분증 인증 */}
               {guideInfos.guideProfile.verifiedID && (
                 <Autentification>
-                  <Method>{`신분증`}</Method>
+                  <Method>{message.id}</Method>
                   <AuthIcon $width="0.3rem" $height="0.3rem" />
                 </Autentification>
               )}
               {/* 계좌 인증 */}
               {guideInfos.guideProfile.verifiedBankAccount && (
                 <Autentification>
-                  <Method>{`계좌`}</Method>
+                  <Method>{message.account}</Method>
                   <AuthIcon $width="0.3rem" $height="0.3rem" />
                 </Autentification>
               )}
@@ -356,16 +440,16 @@ const GuideDetailPage = () => {
             {/* 성별, 가이드 횟수 , 사용언어 */}
             <InfoContainer>
               <InfoWrapper>
-                <InfoTitle>{`성별`}</InfoTitle>
+                <InfoTitle>{message.gender}</InfoTitle>
                 <InfoValue>{guideInfos.gender === 'MALE' ? '남' : '여'}</InfoValue>
               </InfoWrapper>
               <InfoWrapper>
                 {/* FIXME: 가이드 횟수 없음 */}
-                <InfoTitle>{`가이드 횟수`}</InfoTitle>
+                <InfoTitle>{message.guideCount}</InfoTitle>
                 <InfoValue>없음{}회</InfoValue>
               </InfoWrapper>
               <InfoWrapper>
-                <InfoTitle>{`사용 언어`}</InfoTitle>
+                <InfoTitle>{message.language}</InfoTitle>
                 <InfoValue>일본어, 한국어{}</InfoValue>
               </InfoWrapper>
             </InfoContainer>
@@ -383,7 +467,7 @@ const GuideDetailPage = () => {
                 }}
               >
                 <ChatIcon style={{ width: '1.5rem', height: '1.5rem', fill: 'white' }} />
-                채팅하기
+                {message.chat}
               </ChatButton>
             </ChatBtnWrapper>
             {/* FIXME:  {isOpenChat && <Chatting onClick={openChatHandler} />} */}
@@ -393,16 +477,16 @@ const GuideDetailPage = () => {
               <Follow
                 onClick={() => {
                   true
-                    ? toast.success(`${guideInfos.nickname}님을 팔로우 했습니다!`)
-                    : toast.success(`${guideInfos.nickname}님을 팔로우 취소 했습니다!`)
+                    ? toast.success(`${guideInfos.nickname}${message.followSuccess}`)
+                    : toast.success(`${guideInfos.nickname}${message.unfollowSuccess}`)
                 }}
               >
                 <FollowIcon $width="20px" $height="20px" $fill="blue" />
-                {true ? '찜하기' : '내 가이드'}
+                {true ? message.myGuide : message.follow}
               </Follow>
-              <Report onClick={() => toast.error(`${guideInfos.nickname}님을 신고 했습니다!`, { icon: false })}>
+              <Report onClick={() => toast.error(`${guideInfos.nickname}${message.reportSuccess}`, { icon: false })}>
                 <CautionIcon $width={'20px'} $height={'20px'} />
-                신고
+                {message.report}
               </Report>
             </FollowReportWrapper>
 
@@ -414,18 +498,6 @@ const GuideDetailPage = () => {
               {guideInfos.tags.map((tag) => (
                 <Tag key={tag}>#{tag}</Tag>
               ))}
-              {/* <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dscdscdsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag>
-              <Tag>#{`dsc`}</Tag> */}
             </TagWrapper>
           </GuideInfoCard>
         </LeftSection>
@@ -471,7 +543,8 @@ const GuideDetailPage = () => {
                     <RightHover>&#62;</RightHover>
                     <RightTitle>{guideService.name}</RightTitle>
                     <RightPricingWrap>
-                      요금: <RightPricing>{guideService.price}</RightPricing>
+                      <RightPricing>{guideService.price}</RightPricing>
+                      {message.price}
                     </RightPricingWrap>
                     <RightContent>{guideService.description}</RightContent>
                   </RightContentWrap>
@@ -596,7 +669,7 @@ const GuideDetailPage = () => {
                       {/* FIXME: 누가 썼느지 이름 없음 */}
                       <CommentUserName>{review.reviewer?.nickname}</CommentUserName>
                       {/* FIXME: 날짜 다 동일한게 찍히네? */}
-                      <Created>{moment(review.createdAt).format('YYYY-MM-DD')}</Created>
+                      <Created>{dayjs(review.createdAt).format('YYYY-MM-DD')}</Created>
                     </CommentUserWrapper>
                     <CommentUserWrapper>
                       <ScoresContainer>

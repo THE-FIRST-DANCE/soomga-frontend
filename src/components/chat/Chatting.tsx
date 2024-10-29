@@ -1,6 +1,7 @@
 import SearchIcon from 'components/icons/Search'
 import { styled } from 'styled-components'
 import userImg from '../../assets/guideImg.png'
+import defaultAvatar from 'assets/default_avatar.webp'
 import Star from 'components/icons/Star'
 import { LegacyRef, useEffect, useRef, useState } from 'react'
 import { MouseEventHandler } from 'react'
@@ -16,7 +17,7 @@ import FromToIcon from 'components/icons/FromToIcon'
 import TimeIcon from 'components/icons/Time'
 import { useChat } from 'hooks/Chat/useChat'
 // import { Message, MouseAxis, Room, ServiceProps } from '../..hat'
-import { Message, MouseAxis, Room, ServiceProps } from '../../interfaces/chat'
+import { Message, MouseAxis, Plan, Room, ServiceProps } from '../../interfaces/chat'
 import { useRecoilState } from 'recoil'
 import { ChatList } from 'state/store/ChatList'
 import { AccessTokenAtom } from 'state/store/AccessTokenAtom'
@@ -26,7 +27,111 @@ import ServiceChat from './ServiceChat'
 import { IsClickAtMain } from 'state/store/IsClickAtMain'
 import logo from 'assets/logo.svg'
 import { ReservationPayload, createReservation, getServices } from 'api/ServiceAPI'
-import moment from 'moment'
+import dayjs from 'dayjs'
+import useLanguage from 'hooks/useLanguage'
+import { getPlanList } from 'api/PlanAPI'
+
+const messagesL = {
+  'ko-KR': {
+    guideSearchPlaceholder: '가이드 검색',
+
+    // 채팅 입력
+    inputPlaceholder: '메시지를 입력하세요...',
+    send: '보내기',
+
+    // 아이콘 툴팁
+    photoTooltip: '사진',
+    planTooltip: '플랜',
+    serviceTooltip: '서비스',
+
+    // 모달 타이틀
+    planTitle: '플랜',
+    serviceTitle: '서비스',
+    serviceSuggestionTitle: '서비스 제안',
+
+    // 서비스 제안 모달
+    title: '제목',
+    startTime: '시작 시간',
+    endTime: '종료 시간',
+    titlePlaceholder: '제목을 입력하세요..',
+
+    // 날짜 포맷
+    dateTimeFormat: 'yy년 MM월 DD일 HH:mm',
+
+    // 버튼
+    close: '✖',
+    select: '선택',
+
+    // 플랜 아이템
+    planItemTitle: '제목 : ',
+    planItemRegion: '지역 : ',
+    planItemPeriod: '기간 : ',
+    planSelectedMessage: '플랜이 선택되었어요!',
+  },
+  'en-US': {
+    guideSearchPlaceholder: 'Search guide',
+    inputPlaceholder: 'Type a message...',
+    send: 'Send',
+    photoTooltip: 'Photo',
+    planTooltip: 'Plan',
+    serviceTooltip: 'Service',
+    planTitle: 'Plan',
+    serviceTitle: 'Service',
+    serviceSuggestionTitle: 'Service Suggestion',
+    title: 'Title',
+    startTime: 'Start Time',
+    endTime: 'End Time',
+    titlePlaceholder: 'Enter title..',
+    dateTimeFormat: 'MM/DD/YY HH:mm',
+    close: '✖',
+    select: 'Select',
+    planItemTitle: 'Title : ',
+    planItemRegion: 'Region : ',
+    planItemPeriod: 'Period : ',
+    planSelectedMessage: 'Plan has been selected!',
+  },
+  'ja-JP': {
+    guideSearchPlaceholder: 'ガイド検索',
+    inputPlaceholder: 'メッセージを入力してください...',
+    send: '送信',
+    photoTooltip: '写真',
+    planTooltip: 'プラン',
+    serviceTooltip: 'サービス',
+    planTitle: 'プラン',
+    serviceTitle: 'サービス',
+    serviceSuggestionTitle: 'サービス提案',
+    title: 'タイトル',
+    startTime: '開始時間',
+    endTime: '終了時間',
+    titlePlaceholder: 'タイトルを入力してください..',
+    dateTimeFormat: 'yy年MM月DD日 HH:mm',
+    close: '✖',
+    select: '選択',
+    planItemTitle: 'タイトル : ',
+    planItemRegion: '地域 : ',
+    planItemPeriod: '期間 : ',
+    planSelectedMessage: 'プランが選択されました！',
+  },
+}
+
+const usePlans = (authorId?: number) => {
+  const [plans, setPlans] = useState<Plan[]>([])
+
+  if (!authorId) {
+    return plans
+  }
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      const result = await getPlanList(authorId)
+      setPlans(result)
+    }
+
+    fetchPlans()
+  }, [authorId])
+
+  return plans
+}
 
 const Chatting = ({
   userInfo,
@@ -40,42 +145,35 @@ const Chatting = ({
   isClickAtMain?: boolean
 }) => {
   const [isClickAtChat, setIsClickAtChat] = useRecoilState(IsClickAtMain)
-  console.log('😍😍😍😍', isClickAtChat)
-
-  console.log('🌈🌈🌈🌈🌈🌈전달 받은 가이드 정보들입니다. ', guideInfos)
-  console.log('유저 정보', userInfo)
 
   // 😙
   const [userInfo2, setUserInfo2] = useState(null)
 
   // 📍 클릭한 roomnumber 저장
   const [roomInfo, setRoomInfo] = useState('')
-  console.log('방금 클린한 roomInfo: ', roomInfo)
 
   // ❌ 삭제하려는 roomnumber 저장
   const [delRoomId, setDelRoomId] = useState('')
 
   // 리코일
   const [chatLists, setChatLists] = useRecoilState(ChatList)
-  console.log('chatList: ', chatLists)
 
   const [roomOwner, setRoomOwner] = useState('')
-
-  console.log('현재 방 주인: ', roomOwner)
 
   // 클릭여부 상태
   const [selectedGuideId, setSelectedGuideId] = useState(null)
 
   // 가이드 서비스 목록
   const [serviceList, setServiceList] = useState([])
-  console.log('😚😚😚😚😚😚: ', serviceList)
 
   // 선택된 서비스 목록
   const [selectedServiceList, setSelectedServiceList] = useState({
     serviceId: '',
     serviceName: '',
   })
-  console.log('😚😚😚😚😚😚: ', selectedServiceList)
+
+  const [language] = useLanguage()
+  const message = messagesL[language]
 
   // FIXME: 클릭한 룸id값 가져오느것 까지 완료함
   useEffect(() => {
@@ -92,15 +190,11 @@ const Chatting = ({
       setServiceList(result)
     }
 
-    console.log(fetchGetServices())
-
     const userInfo = localStorage.getItem('userInfo')
     setUserInfo2(userInfo ? JSON.parse(userInfo) : null)
-    console.log(userInfo2)
   }, [])
 
   const { isConnected, messages, sendMessage, fetchMessages, justRemoveMessage } = useChat(roomInfo)
-  console.log('messages: ', messages)
 
   let messageEndRef = useRef<HTMLDivElement | null>(null)
 
@@ -122,7 +216,6 @@ const Chatting = ({
 
   // 채팅글
   const [inputVal, setInputVal] = useState('')
-  // console.log('Sending message: ', inputVal)
 
   // 인풋 ref
   const inputTag = useRef<HTMLTextAreaElement>(null)
@@ -134,7 +227,6 @@ const Chatting = ({
 
   // 플랜 선택 내용
   const [selectePlanInfo, setSelectePlanInfo] = useState({ id: 0, title: '', time: '' })
-  // console.log('selectePlanInfo: ', selectePlanInfo)
 
   // 서비스 제안
   const [serviceSuggestion, setserviceSuggestion] = useState<ServiceProps>({
@@ -143,12 +235,12 @@ const Chatting = ({
     startDate: new Date(),
     endDate: new Date(),
   })
-  // console.log('serviceSuggestion: ', serviceSuggestion)
+
+  const plans = usePlans(guideInfos?.id)
 
   // 시작일
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [endDate, setEndDate] = useState<Date>(new Date())
-  console.log('시작시간:', startDate, ',', '끝시간', endDate)
 
   // 가이드 검색 입력 값
   const [searchedGuide, setSearchedGuide] = useState('') // 입력 받은 가이드 이름
@@ -176,7 +268,6 @@ const Chatting = ({
   })
 
   const [imageFile, setImageFile] = useState<string | null>('') // URL 인코딩된 데이터
-  console.log('imageFile: ', imageFile)
 
   const {
     isOpen: isContextOpen,
@@ -186,8 +277,6 @@ const Chatting = ({
 
   const handleContextMenu: MouseEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault() // 기본 우클릭 이벤트를 막기
-
-    // setDropdownOpen((prev) => !prev) // 드롭다운을 열기 위한 상태 업데이트
 
     setMousePosition({
       xAxis: e.clientX,
@@ -217,18 +306,16 @@ const Chatting = ({
     }
   }
 
-  const tmpReserve = async (guideId: string) => {
-    console.log('🟡🟡임시 예약 버튼 눌렀다.🟡🟡')
+  const reservePlan = async (planId: number) => {}
 
+  const tmpReserve = async (guideId: string) => {
     const data: ReservationPayload = {
-      // memberId: 68, // FIXME: change this hard-coded value
       guideId: guideInfos?.id,
       serviceId: parseInt(selectedServiceList.serviceId),
       startDate: startDate || new Date(),
       endDate: endDate || new Date(),
     }
 
-    // ( ReservationPayload , 방번호 )
     createReservation(data, roomInfo)
   }
 
@@ -237,26 +324,34 @@ const Chatting = ({
       {/* 플랜 */}
       {isPlanOpen && (
         <PlanLayout>
-          <CancleBtn onClick={() => setIsPlanOpen(false)}>✖</CancleBtn>
-          <IconTitle>플랜</IconTitle>
+          <CancleBtn onClick={() => setIsPlanOpen(false)}>{message.close}</CancleBtn>
+          <IconTitle>{message.planTitle}</IconTitle>
           <PlanWrapper>
-            {[1, 2, 3, 4, 5].map((item, index) => (
+            {plans.map((item, index) => (
               <PlanItem
                 onClick={() => {
-                  // FIXME: 뽑아오는 내용 스테이트에 저장
                   setSelectePlanInfo({
-                    id: index,
-                    title: '시간',
-                    time: '09:00 ~ 10:00',
+                    id: item.id,
+                    title: item.title,
+                    time: item.period,
                   })
                   setIsPlanOpen(false)
-                  toast.success(`${index}플랜이 선택되었어요!`)
+                  toast.success(message.planSelectedMessage)
                 }}
               >
                 <PlanContent>
-                  <Title>{'제목 : '}</Title>
-                  <Region>{'지역 : '}</Region>
-                  <Region>{'기간 : '}</Region>
+                  <Title>
+                    {message.planItemTitle}
+                    {item.title}
+                  </Title>
+                  <Region>
+                    {message.planItemRegion}
+                    {item.region}
+                  </Region>
+                  <Region>
+                    {message.planItemPeriod}
+                    {message.period}
+                  </Region>
                 </PlanContent>
                 <PlanStyletDiv />
               </PlanItem>
@@ -267,8 +362,8 @@ const Chatting = ({
       {/* 서비스 */}
       {isServiceOpen && (
         <ServiceLayout>
-          <CancleBtn onClick={() => setIsServiceOpen(false)}>✖</CancleBtn>
-          <IconTitle>서비스</IconTitle>
+          <CancleBtn onClick={() => setIsServiceOpen(false)}>{message.close}</CancleBtn>
+          <IconTitle>{message.serviceTitle}</IconTitle>
           <PlanWrapper>
             {serviceList.map((service, index) => (
               <PlanItem
@@ -285,10 +380,9 @@ const Chatting = ({
                 <PlanContent>
                   <Title
                     onClick={(e) => {
-                      // e.stopPropagation() // 이벤트 버블링 중지
                       setserviceSuggestion((prev) => ({
                         ...prev,
-                        serviceName: (e.target as Element).textContent ?? '', // serviceName을 업데이트
+                        serviceName: (e.target as Element).textContent ?? '',
                       }))
                     }}
                   >
@@ -299,58 +393,27 @@ const Chatting = ({
               </PlanItem>
             ))}
           </PlanWrapper>
-          {/* <PlanWrapper>
-            {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
-              <PlanItem
-                onClick={() => {
-                  setIsSuggestionOpen(true)
-                }}
-              >
-                <PlanContent>
-                  <Title
-                    onClick={(e) => {
-                      // e.stopPropagation() // 이벤트 버블링 중지
-                      setserviceSuggestion((prev) => ({
-                        ...prev,
-                        serviceName: (e.target as Element).textContent ?? '', // serviceName을 업데이트
-                      }))
-                    }}
-                  >{`${item}타이틀 제목 `}</Title>
-                </PlanContent>
-                <PlanStyletDiv />
-              </PlanItem>
-            ))}
-          </PlanWrapper> */}
         </ServiceLayout>
       )}
 
       {/* 🟡 서비스 제안 🟡 */}
       {isSuggestionOpen && (
         <Suggestionayout>
-          <CancleBtn onClick={() => setIsSuggestionOpen(false)}>✖</CancleBtn>
+          <CancleBtn onClick={() => setIsSuggestionOpen(false)}>{message.close}</CancleBtn>
           <PlanWrapper>
-            <IconTitle>서비스 제안</IconTitle>
+            <IconTitle>{message.serviceSuggestionTitle}</IconTitle>
 
             {/* 제목 */}
             <ItemWrapper>
-              <Title>제목</Title>
+              <Title>{message.title}</Title>
               <SuggestionInput>{selectedServiceList.serviceName}</SuggestionInput>
-              {/* <SuggestionInput
-                placeholder="제목을 입력하세요.."
-                onBlur={(e) => {
-                  setserviceSuggestion((prev) => ({
-                    ...prev,
-                    serviceTitle: e.target.value,
-                  }))
-                }}
-              /> */}
             </ItemWrapper>
 
             <ItemWrapper>
               <Items>
                 <Item>
                   <Title style={{ display: 'flex', alignItems: 'center' }}>
-                    시작 시간
+                    {message.startTime}
                     <TimeIcon $width="25px" $height="25px" $marginLeft="10px" />
                   </Title>
                   <DatePicker
@@ -361,13 +424,13 @@ const Chatting = ({
                     timeFormat="HH:mm"
                     timeIntervals={15}
                     timeCaption="time"
-                    dateFormat="MMMM d, yyyy h:mm aa"
+                    dateFormat={message.dateTimeFormat}
                   />
                 </Item>
                 <FromToIcon style={{ width: '30px', height: '30px', marginTop: '40px' }} />
                 <Item>
                   <Title style={{ display: 'flex', alignItems: 'center' }}>
-                    종료 시간 <TimeIcon $width="25px" $height="25px" $marginLeft="10px" />
+                    {message.endTime} <TimeIcon $width="25px" $height="25px" $marginLeft="10px" />
                   </Title>
 
                   <DatePicker
@@ -378,12 +441,10 @@ const Chatting = ({
                     timeFormat="HH:mm"
                     timeIntervals={15}
                     timeCaption="time"
-                    dateFormat="MMMM d, yyyy h:mm aa"
+                    dateFormat={message.dateTimeFormat}
                   />
                 </Item>
               </Items>
-
-              {/*  FIXME: */}
             </ItemWrapper>
             <SuggestionButton
               onClick={() => {
@@ -394,11 +455,9 @@ const Chatting = ({
                   startDate,
                   endDate,
                 }))
-
-                // 🌈🌈 ReservationPayload실행 시켜서 대화창에 해당 서비스 띄우기 🌈🌈
               }}
             >
-              선택
+              {message.select}
             </SuggestionButton>
           </PlanWrapper>
         </Suggestionayout>
@@ -420,7 +479,7 @@ const Chatting = ({
                     }))
                   }}
                 >
-                  ✖
+                  {message.close}
                 </CancleBtn>
 
                 {/* 🟡🟡🟡 가이드 검색 🟡🟡🟡 */}
@@ -432,7 +491,7 @@ const Chatting = ({
                         setSearchedGuide(e.target.value)
                         setSelectedGuides(chatLists.filter((data: any) => data.name.includes(e.target.value)))
                       }}
-                      placeholder="가이드 검색"
+                      placeholder={message.guideSearchPlaceholder}
                     />
                     <SearchIcon style={{ width: '30px', height: '30px' }} />
                   </TopSearchWrap>
@@ -441,51 +500,35 @@ const Chatting = ({
                 {/* 🟡🟡🟡🟡🟡🟡🟡현재 대화중인 사람들 🟡🟡🟡🟡🟡🟡🟡🟡 */}
                 <ChatListWrapper>
                   {(searchedGuide === '' ? chatLists : selectedGuides).map((chatList: any, index: Number) => (
-                    // {data.map((data, index) => (
                     <GuideWrapper
                       data-roomId={chatList.id}
                       key={index.toString()}
-                      isSelected={selectedGuideId === chatList.id} // 어떤 채팅창 클릭했는지 확인 => 후버 효과
+                      isSelected={selectedGuideId === chatList.id}
                       onContextMenu={handleContextMenu}
                       onClick={(e: any) => {
-                        // 여기서 roomId를 출력할 수 잇도록
                         setRoomInfo(e.currentTarget.dataset.roomid)
                         setIsClickAtChat((prev) => ({
                           ...prev,
                           isClicked: false,
                         }))
-                        setSelectedGuideId(chatList.id) // 클릭했는지 확인
+                        setSelectedGuideId(chatList.id)
                       }}
                     >
-                      {/* 만약 우측 버튼을 누른다면 ContextMenu를 보여줘라 */}
                       {isContextOpen && (
                         <ContextMenu data-liroom={chatList.id} ref={refForLangToggle} {...mousePosition}>
                           <ul>
                             <li>채팅방 열기</li>
-                            {/* <li style={{ borderTop: '1px solid #93939363', borderBottom: '1px solid #93939363' }}>
-                              즐겨 찾기
-                            </li> */}
-                            <li
-                              data-liroomid={chatList.id}
-                              onClick={(e) => {
-                                console.log('🟡', e.currentTarget.dataset.liroomid)
-
-                                // deleteRoom(e.currentTarget.dataset.roomid)
-                                console.log()
-                              }}
-                            >
+                            <li data-liroomid={chatList.id} onClick={(e) => {}}>
                               채팅방 나가기
                             </li>
                           </ul>
                         </ContextMenu>
                       )}
                       <Left>
-                        {/* 왼쪽 이미지 */}
                         <ImgWrapper>
-                          <img src={userImg} alt="nmo" />
+                          <img src={defaultAvatar} alt="nmo" />
                         </ImgWrapper>
                       </Left>
-                      {/* 오른쪽 대화 내용 이름 */}
                       <Right>
                         <ChatCard
                           data-guide-name={chatList.name}
@@ -537,7 +580,7 @@ const Chatting = ({
                       <Top>
                         <TopWrapper>
                           <Image>
-                            <img src={userImg} alt="NoImg" />
+                            <img src={defaultAvatar} alt="NoImg" />
                           </Image>
 
                           <GuideName>{roomOwner}</GuideName>
@@ -576,11 +619,11 @@ const Chatting = ({
                                                 messageInfo.sender.avatar
                                               }
                                               title={messageInfo.content.extra.data.service.name}
-                                              start={moment(messageInfo.content.extra.data.startDate).format(
-                                                'yy년 MM월 DD일 HH:mm',
+                                              start={dayjs(messageInfo.content.extra.data.startDate).format(
+                                                message.dateTimeFormat,
                                               )}
-                                              end={moment(messageInfo.content.extra.data.endDate).format(
-                                                'yy년 MM월 DD일 HH:mm',
+                                              end={dayjs(messageInfo.content.extra.data.endDate).format(
+                                                message.dateTimeFormat,
                                               )}
                                               content={messageInfo.content.extra.data.service.description}
                                             />
@@ -598,11 +641,11 @@ const Chatting = ({
                                                 messageInfo.sender.avatar
                                               }
                                               title={messageInfo.content.extra.data.service.name}
-                                              start={moment(messageInfo.content.extra.data.startDate).format(
-                                                'yy년 MM월 DD일 HH:mm',
+                                              start={dayjs(messageInfo.content.extra.data.startDate).format(
+                                                message.dateTimeFormat,
                                               )}
-                                              end={moment(messageInfo.content.extra.data.endDate).format(
-                                                'yy년 MM월 DD일 HH:mm',
+                                              end={dayjs(messageInfo.content.extra.data.endDate).format(
+                                                message.dateTimeFormat,
                                               )}
                                               content={messageInfo.content.extra.data.service.description}
                                             />
@@ -650,20 +693,20 @@ const Chatting = ({
                           value={inputVal}
                           onChange={(e) => setInputVal(e.target.value)}
                           onKeyDown={handleKeyPress} // 키 이벤트 핸들러 추가
-                          placeholder="메시지를 입력하세요..."
+                          placeholder={message.inputPlaceholder}
                         />
                         <IconsContainer>
                           <IconWrapper>
                             {/* 이미지 추가 아이콘  */}
                             <label htmlFor="file-input">
-                              <TooltipIcon data-tooltip="사진">
+                              <TooltipIcon data-tooltip={message.photoTooltip}>
                                 <ImageIcon />
                               </TooltipIcon>
                             </label>
                             <ImgInputTag id="file-input" type="file" onChange={handleFileUpload} />
 
                             {/* 플랜 추가 아이콘 */}
-                            <TooltipIcon data-tooltip="플랜">
+                            <TooltipIcon data-tooltip={message.planTooltip}>
                               <PlanIcon
                                 onClick={() => {
                                   setIsPlanOpen(true)
@@ -673,7 +716,7 @@ const Chatting = ({
                             </TooltipIcon>
 
                             {/* 서비스 추가 아이콘 */}
-                            <TooltipIcon data-tooltip="서비스">
+                            <TooltipIcon data-tooltip={message.serviceTooltip}>
                               <ServiceIcon
                                 onClick={() => {
                                   setIsServiceOpen(true) // 1. 서비스 모달창 띄우기
@@ -692,7 +735,7 @@ const Chatting = ({
                               inputTag.current?.focus()
                             }}
                           >
-                            보내기
+                            {message.send}
                           </SendBtn>
                         </IconsContainer>
                       </Bottom>

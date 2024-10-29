@@ -3,25 +3,65 @@ import styled from 'styled-components'
 import userImage from 'assets/userImage.svg'
 import { useNavigate } from 'react-router-dom'
 import { getGuideCount, getGuideList } from 'api/GuidePageAPI'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import useObserver from 'hooks/useObserver'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { selectedDatasState } from 'state/store/SelecteddatasAtom'
+import useLanguage from 'hooks/useLanguage'
+
+const messages = {
+  'ko-KR': {
+    guideTitle: 'SoomGa의 가이드님',
+    count: '명',
+    noData: '일치하는 데이터가 없습니다....',
+    temperature: '°C',
+    activityArea: '활동지역',
+    age: '나이',
+    years: '세',
+    languages: '사용언어',
+    guideCount: '가이드 횟수',
+    rating: '평점',
+  },
+  'en-US': {
+    guideTitle: 'SoomGa Guides',
+    count: 'guides',
+    noData: 'No matching data found....',
+    temperature: '°C',
+    activityArea: 'Activity Area',
+    age: 'Age',
+    years: 'years',
+    languages: 'Languages',
+    guideCount: 'Guide Count',
+    rating: 'Rating',
+  },
+  'ja-JP': {
+    guideTitle: 'SoomGaのガイド',
+    count: '名',
+    noData: '一致するデータがありません....',
+    temperature: '°C',
+    activityArea: '活動地域',
+    age: '年齢',
+    years: '歳',
+    languages: '対応言語',
+    guideCount: 'ガイド回数',
+    rating: '評価',
+  },
+}
 
 const GuideCard = () => {
   const navigate = useNavigate()
 
   const [guideDatas, setGuideDatas] = useState<any[]>([]) // 가이드 데이터
-  console.log('guideDatas: ', guideDatas)
+  const [totalGuideCount, setTotalGuideCount] = useState<number>()
 
   const [noData, setNoData] = useState('')
 
   const [nowCursor, setNowCursor] = useState<number | any>() // 페이지네이션 커서
-  console.log('🟢 nowCursor: ', nowCursor)
 
   const [selectedDatas, setSelectedDatas] = useRecoilState(selectedDatasState)
 
-  console.log('⭐️⭐️⭐️⭐️⭐️⭐️리코일에 저장된 값, isClick 변경되었니? : ', selectedDatas)
+  const [language] = useLanguage()
+  const message = messages[language]
 
   // fetchSelectedGuideList에서 rating의 booleanr값을 정수로 변환
   const selectedRatingsRating = selectedDatas.rating
@@ -34,7 +74,6 @@ const GuideCard = () => {
   // 🟡 데이터 가져오기 ->  옵져버에 닿을때 마다 실행된다.   🟡
   const fetchOriginalGuideList = useCallback(async () => {
     if (nowCursor === null) {
-      console.log('데이타 다 받아옴')
       return // nowCursor가 null이면 함수 실행 중지
     }
 
@@ -55,22 +94,19 @@ const GuideCard = () => {
 
       // 2. 요청하는 데이터 값들 ( 현재 커서, limit 수, 입력 받은 값들 )
       const result = await getGuideList({ cursor: nowCursor, limit: 10, requestParams })
-      console.log('🟠 받아온 값 🟠', result)
 
       // 3. 받아온 next cursor 값 저장
       setNowCursor(result.nextCursor)
+      setTotalGuideCount(result.count)
 
       // 4-1. 검색 버튼 눌렀을 때
       if (selectedDatas.isClick) {
-        console.log('🟢 검색 버튼 누름 = 입력받은 값들이 있음')
         setGuideDatas(result.items) // 검색 시 항상 새 데이터로 초기화
         return
       } else {
-        console.log('🟣 검색 버튼 누르지 않음 = 초기화 상태')
         if (result.items.length > 0) {
           setGuideDatas((prev) => [...prev, ...result.items])
         } else {
-          console.log('데이터 다 받아옴')
           return
         }
       }
@@ -95,13 +131,13 @@ const GuideCard = () => {
 
   // 나이 계산
   const calculateAge = (birthdate: string) => {
-    return moment().diff(moment(birthdate), 'years')
+    return dayjs().diff(dayjs(birthdate), 'years')
   }
 
   return (
     <>
       {/* 우측 상단 타잉틀 */}
-      <RightSectionTitle>{`SoomGa의 가이드님, ${guideDatas.length} 명`}</RightSectionTitle>
+      <RightSectionTitle>{`${message.guideTitle}, ${totalGuideCount} ${message.count}`}</RightSectionTitle>
 
       {/* 반복되는 가이드 카드 */}
       {guideDatas.length === 0 || noData === '데이터 없음' ? (
@@ -111,7 +147,7 @@ const GuideCard = () => {
           return (
             <CardLayout key={`CardLayout${i}`} onClick={() => navigate(`/guides/detail/${guideData.id}`)}>
               <CardContainer>
-                <Temperature>{`${guideData.temperature}°C`}</Temperature>
+                <Temperature>{`${guideData.temperature}${message.temperature}`}</Temperature>
                 {/* 🟡 왼쪽 🟡  */}
                 <LeftLayout>
                   <UserImageLayout>
@@ -132,11 +168,10 @@ const GuideCard = () => {
 
                 {/* 🟡 중앙 🟡 */}
                 <MiddleLayout>
-                  <UserInfo>활동지역: {guideData.areas?.map((area: any) => area.area.name).join(', ')}</UserInfo>
-                  <UserInfo>나이: {calculateAge(guideData.member.birthdate)} 세</UserInfo>
-
+                  <UserInfo>{`${message.activityArea}: ${guideData.areas?.map((area: any) => area.area.name).join(', ')}`}</UserInfo>
+                  <UserInfo>{`${message.age}: ${calculateAge(guideData.member.birthdate)} ${message.years}`}</UserInfo>
                   <UserInfo>
-                    사용언어: {guideData.member.languages?.map((language: any) => language.language.name).join(', ')}
+                    {`${message.languages}: ${guideData.member.languages?.map((language: any) => language.language.name).join(', ')}`}
                   </UserInfo>
                 </MiddleLayout>
 
@@ -145,14 +180,14 @@ const GuideCard = () => {
                   {/* 가이드 횟수 | 평점 */}
                   <RightTop>
                     <Partition>
-                      <Title>가이드 횟수</Title>
+                      <Title>{message.guideCount}</Title>
                       {/* FIXME: 가이드 횟수  FIXME: */}
                       <TitleValue>{guideData.guideCount}</TitleValue>
                       {/* <TitleValue>{guideData.guideCount}</TitleValue> */}
                     </Partition>
 
                     <Partition>
-                      <Title>평점</Title>
+                      <Title>{message.rating}</Title>
                       <TitleValue>{guideData.totalAvgScore}</TitleValue>
                     </Partition>
                   </RightTop>
