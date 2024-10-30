@@ -107,7 +107,7 @@ const Header = () => {
       {/* 3. 우측 : 언어 | 버거 + 사용자 아이콘 */}
       <HeaderRightContainer_div>
         {/* 3.1 우측 : 언어 선택 버튼 */}
-        <motion.div whileHover={{ scale: 1.2 }}>
+        <motion.div whileHover={{ scale: 1.2, zIndex: 100 }}>
           <HeaderIconContainer_div
             flex={0.3}
             ref={refForLangToggle}
@@ -147,6 +147,7 @@ const Header = () => {
               gap: '20px',
               justifyContent: 'center',
               textAlign: 'center',
+              position: 'relative',
             }}
           >
             <HambergIcon height="40px" width="40px" />
@@ -226,6 +227,10 @@ const HeaderLayout_div = styled.div`
   background-color: rgba(255, 255, 255, 0.175);
   backdrop-filter: blur(5px) !important;
   border-radius: 10px;
+
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+
   z-index: 5;
   box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
 `
@@ -278,8 +283,10 @@ const HeaderMiddleBtn = styled.button<{ value?: string }>`
 const HeaderRightContainer_div = styled.div`
   position: relative;
   display: flex;
-  justify-content: center;
+  width: 230px;
+  justify-content: space-between;
   align-items: center;
+  z-index: 100;
 `
 
 // 3.1 우측 : 언어 선택 버튼
@@ -288,7 +295,7 @@ const HeaderIconContainer_div = styled.div<IconWrapperProps>`
   flex: ${(props) => props.flex};
   justify-content: center;
   align-items: center;
-  margin-right: 30px;
+  /* margin-right: 30px; */
 `
 const StyledLanguageIcon = styled(motion(LanguageIcon))`
   :hover {
@@ -301,7 +308,7 @@ const LoginDropdown_div = styled(motion.div)`
   width: 200px;
   height: auto;
   position: absolute;
-  top: 100px;
+  top: 100%;
   right: 5px;
   border: 1px solid lightgray;
   border-radius: 20px;

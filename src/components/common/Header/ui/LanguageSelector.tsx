@@ -48,6 +48,7 @@ const LanguageSelector = ({ isLangOpen }: LanguageSelectorProps) => {
             display: 'flex',
             flexDirection: 'column',
             gap: '15px',
+            zIndex: 100,
           }}
         >
           <li onClick={handleLangClick} data-lang="ko-KR">
@@ -75,6 +76,7 @@ const LanguageDropdown_ul = styled.ul`
   width: 50px;
   font-weight: 700;
   cursor: pointer;
+
   li {
     box-sizing: border-box;
     &:hover {
