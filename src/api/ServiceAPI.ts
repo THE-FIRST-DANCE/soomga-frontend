@@ -39,3 +39,9 @@ export async function createReservation(payload: ReservationPayload, roomId?: st
     console.error(error)
   }
 }
+
+export async function getServicesByGuideId(guideId: number) {
+  const res = await baseApi.get(`/guides/${guideId}/services`)
+  console.log('🚀 ~ getServicesByGuideId ~ res:', res)
+  return res.data
+}

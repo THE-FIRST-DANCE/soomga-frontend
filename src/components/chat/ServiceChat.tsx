@@ -1,7 +1,44 @@
 import { acceptReservation, rejectReservation } from 'api/reservation'
+import useLanguage from 'hooks/useLanguage'
 import { ReservationExtra } from 'interfaces/chat'
 import React from 'react'
 import { styled } from 'styled-components'
+
+const messages = {
+  'ko-KR': {
+    bookingSchedule: '현재 예약 일정',
+    startDate: '시작 날짜',
+    endDate: '종료 날짜',
+    year: '년',
+    month: '월',
+    reject: '거절',
+    accept: '수락',
+    rejected: '예약을 거절하셨습니다 🥲',
+    accepted: '예약을 수락하셨습니다 😚',
+  },
+  'en-US': {
+    bookingSchedule: 'Current Booking Schedule',
+    startDate: 'Start Date',
+    endDate: 'End Date',
+    year: 'year',
+    month: 'month',
+    reject: 'Reject',
+    accept: 'Accept',
+    rejected: 'You rejected the reservation 🥲',
+    accepted: 'Your reservation has been accepted 😚',
+  },
+  'ja-JP': {
+    bookingSchedule: '現在の予約日程',
+    startDate: '開始日',
+    endDate: '終了日',
+    year: '年',
+    month: '月',
+    reject: '拒否',
+    accept: '承認',
+    rejected: '予約を拒否しました 🥲',
+    accepted: '予約を承認しました 😚',
+  },
+}
 
 const ServiceChat = ({
   // roomInfo 받아오기
@@ -23,6 +60,8 @@ const ServiceChat = ({
   end: string
   content: string
 }) => {
+  const [language] = useLanguage()
+  const message = messages[language]
   return (
     <>
       <Conversation $whose={who}>
@@ -30,23 +69,31 @@ const ServiceChat = ({
           <img src={imgUrl} />
           <SpeechContents>
             <SpeechTitle>{title}</SpeechTitle>
-            <SpeechStartEnd>시작일: {start}</SpeechStartEnd>
-            <SpeechStartEnd>종료일: {end}</SpeechStartEnd>
+            <SpeechStartEnd>
+              {message.startDate}: {start}
+            </SpeechStartEnd>
+            <SpeechStartEnd>
+              {message.endDate}: {end}
+            </SpeechStartEnd>
             <Speechcontent>{content}</Speechcontent>
             <SpeechBtnWrap>
               {/*  대기상태  */}
               {extra.data.status === 'PENDING' ? (
                 <>
-                  <SpeechBtn onClick={() => rejectReservation(extra.data.id, roomInfo)}>별로</SpeechBtn>
-                  <SpeechBtn onClick={() => acceptReservation(extra.data.id, roomInfo)}>신청</SpeechBtn>
+                  <SpeechBtn $color="#999999" onClick={() => rejectReservation(extra.data.id, roomInfo)}>
+                    {message.reject}
+                  </SpeechBtn>
+                  <SpeechBtn $color="#ff4444" onClick={() => acceptReservation(extra.data.id, roomInfo)}>
+                    {message.accept}
+                  </SpeechBtn>
                 </>
               ) : // 거절 상태
               extra.data.status === 'REJECTED' ? (
                 <>
-                  <div style={{ color: 'red' }}>예약을 거절하셨습니다 🥲</div>
+                  <div style={{ color: '#FF6B6B' }}>{message.rejected}</div>
                 </>
               ) : (
-                <div style={{ color: 'blue' }}>예약이 완료되었습니다 😚</div>
+                <div style={{ color: '#4CAF50' }}>{message.accepted}</div>
               )}
             </SpeechBtnWrap>
           </SpeechContents>
@@ -128,7 +175,7 @@ const SpeechBtnWrap = styled(FlexCenter)`
   margin: 0.8rem 0 0 0;
 `
 
-const SpeechBtn = styled.button`
+const SpeechBtn = styled.button<{ $color?: string }>`
   width: 5rem;
   border: none;
   border-radius: 7px;
@@ -138,10 +185,13 @@ const SpeechBtn = styled.button`
   cursor: pointer;
   font-size: 1rem;
   color: #727070;
-  background-color: var(--color-original);
+  background-color: ${(props) => props.$color || 'var(--color-original)'};
   color: white;
   transition: all 0.2s ease;
   &:hover {
-    background-color: #ff6021;
+    background-color: ${(props) =>
+      props.$color
+        ? `color-mix(in srgb, ${props.$color} 85%, black)`
+        : `color-mix(in srgb, var(--color-original) 85%, black)`};
   }
 `

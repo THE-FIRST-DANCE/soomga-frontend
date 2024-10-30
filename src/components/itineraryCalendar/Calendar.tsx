@@ -11,6 +11,7 @@ import { Title } from 'pages/guide/detail'
 import { targetDates } from '../../pages/itinerary/index'
 import { useRecoilState } from 'recoil'
 import { MonthAtom } from 'state/store/MonthAtom'
+import useLanguage from 'hooks/useLanguage'
 
 // import { targetDates } from
 type ValuePiece = Date | null
@@ -24,6 +25,24 @@ type Value = ValuePiece | [ValuePiece, ValuePiece]
 //   { id: 2, name: '오바 호노카', date: new Date(2024, 2, 5) },
 //   { id: 2, name: '야마츠 아스카', date: new Date(2024, 2, 10) },
 // ]
+
+const messages = {
+  'ko-KR': {
+    bookingSchedule: '현재 예약 일정',
+    year: '년',
+    month: '월',
+  },
+  'en-US': {
+    bookingSchedule: 'Current Booking Schedule',
+    year: '',
+    month: '',
+  },
+  'ja-JP': {
+    bookingSchedule: '現在の予約日程',
+    year: '年',
+    month: '月',
+  },
+}
 
 const CalendarComponent = () => {
   const tileContent = ({ date, view }: { date: Date; view: string }) => {
@@ -41,6 +60,9 @@ const CalendarComponent = () => {
   const [value, onChange] = useState<Value>(new Date())
   const [month, setMonth] = useRecoilState(MonthAtom)
 
+  const [language] = useLanguage()
+  const message = messages[language]
+
   useEffect(() => {
     const selectedDate = value as Date
     const selectedMonth = dayjs(selectedDate).format('M')
@@ -51,7 +73,7 @@ const CalendarComponent = () => {
 
   return (
     <BookingCheckLayout>
-      <Title>현재 예약 일정</Title>
+      <Title>{message.bookingSchedule}</Title>
       <BookingContainer>
         <CalendarWrapper>
           <Calendar
@@ -65,7 +87,9 @@ const CalendarComponent = () => {
             value={value}
             calendarType="gregory"
             formatDay={(locale, date: Date) => dayjs(date).format('D')}
-            formatMonthYear={(locale, date: Date) => dayjs(date).format('YYYY년 M월')}
+            formatMonthYear={(locale, date: Date) =>
+              `${dayjs(date).format('YYYY')}${message.year} ${dayjs(date).format('M')}${message.month}`
+            }
             tileContent={tileContent} // tileContent 적용
             next2Label={null}
             prev2Label={null}

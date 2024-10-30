@@ -29,7 +29,6 @@ import { ChatList } from 'state/store/ChatList'
 import { IsClickAtMain } from 'state/store/IsClickAtMain'
 import PlanItem from 'components/planner/PlanItem'
 import useLanguage from 'hooks/useLanguage'
-
 const messages = {
   'ko-KR': {
     gender: '성별',
@@ -62,12 +61,13 @@ const messages = {
     locationScore: '위치',
     totalScore: '전체 평점',
     reviewCount: '리뷰 수',
-    menu: '메뉴',
-    travelPlan: '여행 플랜',
+    menu: 'MENU',
+    travelPlan: '여행플랜',
     viewMore: '더보기',
     viewLess: '접기',
     price: '요금:',
     won: '원',
+    review: '리뷰',
   },
   'en-US': {
     gender: 'Gender',
@@ -100,12 +100,13 @@ const messages = {
     locationScore: 'Location',
     totalScore: 'Total Score',
     reviewCount: 'Review Count',
-    menu: 'Menu',
+    menu: 'MENU',
     travelPlan: 'Travel Plan',
     viewMore: 'View More',
     viewLess: 'View Less',
     price: 'Price:',
     won: 'KRW',
+    review: 'Reviews',
   },
   'ja-JP': {
     gender: '性別',
@@ -144,6 +145,7 @@ const messages = {
     viewLess: '閉じる',
     price: '料金:',
     won: '￦',
+    review: 'レビュー',
   },
 }
 
@@ -265,6 +267,7 @@ const GuideDetailPage = () => {
     },
     tags: [],
     plans: [],
+    languages: [],
   })
 
   /* 가이드 리뷰 */
@@ -446,11 +449,11 @@ const GuideDetailPage = () => {
               <InfoWrapper>
                 {/* FIXME: 가이드 횟수 없음 */}
                 <InfoTitle>{message.guideCount}</InfoTitle>
-                <InfoValue>없음{}회</InfoValue>
+                {/* <InfoValue>없음{}회</InfoValue> */}
               </InfoWrapper>
               <InfoWrapper>
                 <InfoTitle>{message.language}</InfoTitle>
-                <InfoValue>일본어, 한국어{}</InfoValue>
+                <InfoValue>{guideInfos.languages.map(({ language }) => language.name).join(', ')}</InfoValue>
               </InfoWrapper>
             </InfoContainer>
 
@@ -508,7 +511,7 @@ const GuideDetailPage = () => {
           <BlankTop10Rem />
           {/* FIXME: 1. 서비스  => null 값임*/}
           <IntroLayout>
-            <Title>소개</Title>
+            <Title>{message.intro}</Title>
             {guideInfos.guideProfile.service}
             {/* <ImageContainer>
               <IntroImageWrapper>
@@ -532,7 +535,7 @@ const GuideDetailPage = () => {
           {/* 🟢 서비스 */}
           <ServiceLayout ref={serviceRef}>
             <ServiceContainer>
-              <Title>서비스</Title>
+              <Title>{message.service}</Title>
               {guideServices?.map((guideService) => (
                 <Service key={guideService.name}>
                   <LeftImg>
@@ -543,8 +546,8 @@ const GuideDetailPage = () => {
                     <RightHover>&#62;</RightHover>
                     <RightTitle>{guideService.name}</RightTitle>
                     <RightPricingWrap>
+                      {message.price + ' '}
                       <RightPricing>{guideService.price}</RightPricing>
-                      {message.price}
                     </RightPricingWrap>
                     <RightContent>{guideService.description}</RightContent>
                   </RightContentWrap>
@@ -580,7 +583,7 @@ const GuideDetailPage = () => {
 
           {/* 2. 여행 플랜  */}
           <TravelPlanLayout>
-            <Title>여행 플랜</Title>
+            <Title>{message.travelPlan}</Title>
             {guideInfos?.plans.map((plan: Plans) => <PlanItem key={plan.id} data={plan} />)}
           </TravelPlanLayout>
           <Partition>
@@ -598,7 +601,7 @@ const GuideDetailPage = () => {
           </Partition>
           {/* 4. 리뷰 */}
           <ReviewLayout ref={reviewRef}>
-            <Title>리뷰</Title>
+            <Title>{message.reviews}</Title>
             <ReviewScoreContainer>
               {/* 🟠 왼쪽 */}
               <ReviewScoreLeft>
@@ -608,17 +611,17 @@ const GuideDetailPage = () => {
                 <ScoreListContainer>
                   <ListContainer>
                     <Comunication $width=" 2rem" $height=" 2rem" />
-                    <CheckPoint>의사소통</CheckPoint>
+                    <CheckPoint>{message.communicationScore}</CheckPoint>
                     <CheckScore>{averageCommunicationScore}</CheckScore>
                   </ListContainer>
                   <ListContainer>
                     <CircleCheck $width=" 2rem" $height=" 2rem" />
-                    <CheckPoint>친절함</CheckPoint>
+                    <CheckPoint>{message.kindnessScore}</CheckPoint>
                     <CheckScore>{averageKindnessScore}</CheckScore>
                   </ListContainer>
                   <ListContainer>
                     <Location $width=" 2rem" $height=" 2rem" />
-                    <CheckPoint>위치</CheckPoint>
+                    <CheckPoint>{message.totalScore}</CheckPoint>
                     <CheckScore>{averageLocationScore}</CheckScore>
                   </ListContainer>
                 </ScoreListContainer>
@@ -627,8 +630,10 @@ const GuideDetailPage = () => {
               {/* FIXME: 오른쪽 */}
               <ReviewScoreRight>
                 <ReviewTitleContainer>
-                  <ReviewTitle>전체 평점</ReviewTitle>
-                  <TotalReviewCount>리뷰수 {reviews.length} 개</TotalReviewCount>
+                  <ReviewTitle>{message.reviews}</ReviewTitle>
+                  <TotalReviewCount>
+                    {message.reviewCount} {reviews.length} {message.times}
+                  </TotalReviewCount>
                 </ReviewTitleContainer>
                 <ScoreBarContainer>
                   {reviewCounts
@@ -673,22 +678,22 @@ const GuideDetailPage = () => {
                     </CommentUserWrapper>
                     <CommentUserWrapper>
                       <ScoresContainer>
-                        <Score>{`전체 평점: ${totalAverage}`}</Score>
+                        <Score>{`${message.totalScore}: ${totalAverage}`}</Score>
                       </ScoresContainer>
                       <ScoresContainer>
-                        <Score>{`의사소통: `}</Score>
+                        <Score>{`${message.communicationScore}: `}</Score>
                         {Array.from({ length: review.communicationScore }, (_, index) => (
                           <Star key={index} $width="20px" $height="20px" $color="var(--color-primary)" />
                         ))}
                       </ScoresContainer>
                       <ScoresContainer>
-                        <Score>{`친절함: `}</Score>
+                        <Score>{`${message.kindnessScore}: `}</Score>
                         {Array.from({ length: review.kindnessScore }, (_, index) => (
                           <Star key={index} $width="20px" $height="20px" $color="var(--color-primary)" />
                         ))}
                       </ScoresContainer>
                       <ScoresContainer>
-                        <Score>{`위치: `}</Score>
+                        <Score>{`${message.locationScore}: `}</Score>
                         {Array.from({ length: review.locationScore }, (_, index) => (
                           <Star key={index} $width="20px" $height="20px" $color="var(--color-primary)" />
                         ))}
@@ -709,10 +714,10 @@ const GuideDetailPage = () => {
         {/*　------------------------------------------ 右 ------------------------------------------　*/}
         <RightSection>
           <MenuBanner>
-            <MenuTitle>MENU</MenuTitle>
-            <MenuItem onClick={() => scrollToRef(serviceRef)}>서비스</MenuItem>
-            <MenuItem onClick={() => scrollToRef(travelPlanRef)}>여행플랜</MenuItem>
-            <MenuItem onClick={() => scrollToRef(reviewRef)}>리뷰</MenuItem>
+            <MenuTitle>{message.menu}</MenuTitle>
+            <MenuItem onClick={() => scrollToRef(serviceRef)}>{message.service}</MenuItem>
+            <MenuItem onClick={() => scrollToRef(travelPlanRef)}>{message.travelPlan}</MenuItem>
+            <MenuItem onClick={() => scrollToRef(reviewRef)}>{message.review}</MenuItem>
             <MoveTopTab onClick={MoveTopClick}>▲ TOP</MoveTopTab>
           </MenuBanner>
         </RightSection>

@@ -26,7 +26,7 @@ import PlanChat from './PlanChat'
 import ServiceChat from './ServiceChat'
 import { IsClickAtMain } from 'state/store/IsClickAtMain'
 import logo from 'assets/logo.svg'
-import { ReservationPayload, createReservation, getServices } from 'api/ServiceAPI'
+import { ReservationPayload, createReservation, getServices, getServicesByGuideId } from 'api/ServiceAPI'
 import dayjs from 'dayjs'
 import useLanguage from 'hooks/useLanguage'
 import { getPlanList } from 'api/PlanAPI'
@@ -56,7 +56,7 @@ const messagesL = {
     titlePlaceholder: '제목을 입력하세요..',
 
     // 날짜 포맷
-    dateTimeFormat: 'yy년 MM월 DD일 HH:mm',
+    dateTimeFormat: 'YY년 MM월 DD일 HH:mm',
 
     // 버튼
     close: '✖',
@@ -104,7 +104,7 @@ const messagesL = {
     startTime: '開始時間',
     endTime: '終了時間',
     titlePlaceholder: 'タイトルを入力してください..',
-    dateTimeFormat: 'yy年MM月DD日 HH:mm',
+    dateTimeFormat: 'YY年MM月DD日 HH:mm',
     close: '✖',
     select: '選択',
     planItemTitle: 'タイトル : ',
@@ -186,12 +186,14 @@ const Chatting = ({
 
     // 가이드 서비스 가져오기
     const fetchGetServices = async () => {
-      const result = await getServices()
+      const result = await getServicesByGuideId(guideInfos?.id)
+      console.log('🚀 ~ fetchGetServices ~ result:', result)
       setServiceList(result)
     }
 
     const userInfo = localStorage.getItem('userInfo')
     setUserInfo2(userInfo ? JSON.parse(userInfo) : null)
+    fetchGetServices()
   }, [])
 
   const { isConnected, messages, sendMessage, fetchMessages, justRemoveMessage } = useChat(roomInfo)
@@ -455,6 +457,7 @@ const Chatting = ({
                   startDate,
                   endDate,
                 }))
+                tmpReserve(guideInfos?.id)
               }}
             >
               {message.select}
